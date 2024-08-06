@@ -1,0 +1,161 @@
+import 'package:flutter/material.dart';
+import 'package:limcad/resources/routes.dart';
+import 'package:limcad/resources/utils/custom_colors.dart';
+import 'package:limcad/resources/utils/extensions/size_util.dart';
+import 'package:limcad/resources/utils/extensions/widget_extension.dart';
+import 'package:nb_utils/nb_utils.dart';
+
+class ViewUtil {
+  late BuildContext context;
+
+
+  static showDynamicDialogWithButton({
+    required BuildContext context,
+    Color button2outlineColor = CustomColors.limcadPrimary,
+    Color button1color = CustomColors.limcadPrimary,
+    String title = "",
+    required Widget content,
+    required String buttonText,
+    required VoidCallback dialogAction1,
+    VoidCallback? dialogAction2,
+    String buttonText2 = "Close",
+    bool button2 = false,
+    bool titlePresent = true,
+    bool barrierDismissible = true,
+  }) {
+    return showDialog(
+        barrierDismissible: barrierDismissible,
+        context: context,
+        builder: (context) {
+          return WillPopScope(
+            onWillPop: () async {
+              // Return the value of allowBackNavigation to determine whether to allow or disallow back navigation
+              return barrierDismissible;
+            },
+            child: AlertDialog(
+                surfaceTintColor: Colors.white,
+                backgroundColor: Colors.white,
+                shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                //contentPadding: EdgeInsets.zero,
+                content: SizedBox(
+                  width: 328,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (titlePresent)
+                        Text(title,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineLarge),
+                      Column(
+                        children: [
+                          content,
+                          ElevatedButton(
+                            style: ButtonStyle(
+                              backgroundColor:
+                              MaterialStateProperty.all(button1color),
+                              minimumSize: MaterialStateProperty.all(
+                                Size(double.infinity, 48),
+                              ),
+                            ),
+                            onPressed: dialogAction1
+                            // () {
+                            //   Navigator.pop(context);
+                            //   Navigator.pushReplacement(
+                            //       context,
+                            //       MaterialPageRoute(
+                            //           builder: (context) =>
+                            //               navigatingWidget)); //close Dialog
+                            // }
+                            ,
+                            child: Text(buttonText),
+                          ).padding(bottom: 20, top: 10),
+                          if (button2)
+                            ElevatedButton(
+                              style: OutlinedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                                backgroundColor: Colors.white,
+                                minimumSize: const Size(double.infinity, 48),
+                                side: BorderSide(color: button2outlineColor),
+                              ),
+                              onPressed: dialogAction2 ??
+                                      () {
+                                    Navigator.pop(context); //close Dialog
+                                  },
+                              child: Text(
+                                buttonText2,
+                                style: TextStyle(color: button2outlineColor),
+                              ),
+                            )
+                        ],
+                      ),
+                    ],
+                  ),
+                )),
+          );
+        });
+  }
+
+  static Widget eachDetailOrders(String title, Map<String, dynamic> details) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w400,
+              fontSize: 20,
+            )).padding(bottom: 24, left: 16),
+        ...List.generate(
+            details.length,
+                (index) => Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              // Changed for even spacing
+              children: [
+                Expanded(
+                  child: Text(details.keys.elementAt(index),
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w300,
+                          fontSize: 16,
+                          color: CustomColors.grey600))
+                      .padding(left: 16),
+                ),
+                Expanded(
+                  child: Text(details.values.elementAt(index) ?? "",
+                      textAlign: TextAlign.right,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16,
+                        color: Colors.black,
+                      )).padding(right: 16),
+                )
+              ],
+            ).padding(bottom: 8))
+      ],
+    );
+  }
+
+
+  static showSnackBarDown(String? message,
+      {Color? bgColor, Color? textColor}) {
+    ScaffoldMessenger.of(NavigationService.navigatorKey.currentContext!).showSnackBar(SnackBar(
+      backgroundColor: bgColor ?? CustomColors.neutral9,
+      content: Text(message ?? "", style: TextStyle(
+          fontSize: 14, color: textColor ?? CustomColors.kWhite, fontWeight: FontWeight.w500)),
+    ));
+  }
+
+  static showSnackBar(String? message, bool error ) {
+    Fluttertoast.showToast(
+      backgroundColor: error ? Colors.red : CustomColors.greenPrimary,
+      textColor: Colors.white,
+      gravity: ToastGravity.TOP,
+      msg: message!,
+      toastLength: Toast.LENGTH_LONG,
+    );
+  }
+
+}

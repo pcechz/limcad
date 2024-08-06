@@ -1,0 +1,37 @@
+class AssetUtil {
+  static const String limcadLogo = "assets/images/primary_logo.png";
+  static const String back = "assets/images/back.png";
+  static const String otpEmail = "assets/images/otp_email.png";
+  static const String otpEmailVerified = "assets/images/otp_verified.png";
+  static const String individualAccount = "assets/images/individual_account.png";
+  static const String businessAccount = "assets/images/business_account.png";
+  static const String individualAccountBanner = "assets/images/individual_banner.png";
+  static const String businessAccountBanner = "assets/images/business_banner.png";
+  static const String successCheck = "assets/images/check_success.png";
+  static const String editAvatar = "assets/images/edit_avatar.png";
+  static const String laundryWall = "assets/images/laundry_wall.png";
+  static const String washingMenuIcon = "assets/images/washing_menu_icon.png";
+  static const String clotheMenuIcon = "assets/images/clothe_menu_icon.png";
+  static const String ironMenuIcon = "assets/images/iron_menu_icon.png";
+  static const String packageMenuIcon = "assets/images/package_menu_icon.png";
+  static const String filterIcon = "assets/images/filter_icon.png";
+  static const String suitIcon = "assets/images/suit.png";
+  static const String summerIcon = "assets/images/summer.png";
+  static const String homeIcon = "assets/images/home_icon.svg";
+  static const String exploreIcon = "assets/images/explore_icon.svg";
+  static const String orderIcon = "assets/images/order_icon.svg";
+  static const String chatIcon = "assets/images/chat_icon.svg";
+  static const String profileIcon = "assets/images/profile_icon.svg";
+  static const String waitingIcon = "assets/images/wait_clock.png";
+  static const String user = "assets/images/user.png";
+  static const String masterCardIcon = "assets/images/master_card.png";
+  static const String referralGift = "assets/images/referral_gift.png";
+
+
+
+
+
+
+
+
+}
