@@ -27,7 +27,7 @@ class ProfileVM extends BaseVM {
   final instructionController = TextEditingController();
   final addressController = TextEditingController();
   final addressNameController = TextEditingController();
-
+  final profile = locator<AuthenticationService>().profile;
   bool isPreview = false;
   bool isButtonEnabled = false;
   AboutResponse? laundryAbout;
@@ -45,9 +45,17 @@ class ProfileVM extends BaseVM {
   init(BuildContext context, ProfileOption profileOption) {
     this.context = context;
     this.profileOption = profileOption;
+
+    if (profileOption == ProfileOption.addAddress) {
+     fetchState();
+    }
   }
 
-
+fetchState() async {
+  final response = await locator<AuthenticationService>().getStates();
+  states.addAll(response.data?.toList() ?? []);
+  notifyListeners();
+}
 
 
   Future<void> setStateValue(StateResponse value) async {
@@ -83,10 +91,12 @@ class ProfileVM extends BaseVM {
     lgaReference.id = signupRes.Id(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId);
     lgaReference.state = signupRes.State(stateId: selectedState?.stateId, stateName: selectedState?.stateName);
     address?.lgaReference = lgaReference;
-    address?.genericUserId = locator<AuthenticationService>().profile?.id;
+    address?.genericUserId = profile?.id;
     address?.latitude = num.tryParse(predict?.lat ?? "0.0");
     address?.longitude = num.tryParse(predict?.lng ?? "0.0");
     notifyListeners();
   }
+
+  void updateUserAddress() {}
 
 }

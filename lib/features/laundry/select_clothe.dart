@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
+import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -21,9 +22,7 @@ import 'package:stacked/stacked.dart';
 class SelectClothesPage extends StatefulWidget {
   static const String routeName = "/SelectClothesPage";
 
-  const SelectClothesPage({
-    Key? key,
-  }) : super(key: key);
+  const SelectClothesPage({Key? key}) : super(key: key);
 
   @override
   State<SelectClothesPage> createState() => _SelectClothesPageState();
@@ -31,82 +30,80 @@ class SelectClothesPage extends StatefulWidget {
 
 class _SelectClothesPageState extends State<SelectClothesPage> {
   late LaundryVM model;
-  int itemCount = 1;
 
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LaundryVM>.reactive(
-        viewModelBuilder: () => LaundryVM(),
-        onViewModelReady: (model) {
-          this.model = model;
-          model.context = context;
-          model.init(context, LaundryOption.selectClothe);
-        },
-        builder: (BuildContext context, model, child) => DefaultScaffold2(
-              showAppBar: true,
-              includeAppBarBackButton: true,
-              title: "Helen Laundry",
-              backgroundColor: CustomColors.backgroundColor,
-              busy: model.loading,
-              body: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Select cloths type(s) and quantity(ies)",
-                      style: Theme.of(context).textTheme.bodyMedium!.merge(
-                          const TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.w600)),
-                      textAlign: TextAlign.center,
-                    ).padding(bottom: 24),
-                    Container(
-                        margin: EdgeInsets.zero,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: gray.withOpacity(0.5), width: 0.5),
-                          color: Colors.white,
-                        ),
-                        child: clothesView(model.isPreview)),
-                    16.height,
-                    CustomTextArea(
-                      controller: model.instructionController,
-                      keyboardType: TextInputType.name,
-                      label: "Instruction (Optional)",
-                      showLabel: true,
-                      //labelText: "Please type instruction here, if there is any...",
-                      formatter: InputFormatter.stringOnly,
-                      maxLines: 5,
-                      autocorrect: false,
-                      //validate: (value) => ValidationUtil.validateLastName(value),
-                      onSave: (value) =>
-                          model.instructionController.text = value,
-                    ).padding(bottom: 20).hideIf(model.isPreview),
-                    ElevatedButton(
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-
-                        model.proceed();
-                      },
-                      child:  Text(
-                       model.isPreview ? "Proceed to payment"  : "Preview order",
-                        style: const TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-                    ),
-                    16.height.hideIf(!model.isPreview),
-                    OutlinedButton(onPressed:  (){
-                      model.proceedToPay();
-                    }, child: Text( "Pay on delivery",
-                      style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.w500),
-
-                    )).hideIf(!model.isPreview)
-                  ],
-                ).paddingSymmetric(horizontal: 16, vertical: 16),
+      viewModelBuilder: () => LaundryVM(),
+      onViewModelReady: (model) {
+        this.model = model;
+        model.context = context;
+        model.init(context, LaundryOption.selectClothe);
+      },
+      builder: (BuildContext context, model, child) => DefaultScaffold2(
+        showAppBar: true,
+        includeAppBarBackButton: true,
+        title: "Helen Laundry",
+        backgroundColor: CustomColors.backgroundColor,
+        busy: model.loading,
+        body: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Select cloths type(s) and quantity(ies)",
+                style: Theme.of(context).textTheme.bodyMedium!.merge(
+                    const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                textAlign: TextAlign.center,
+              ).padding(bottom: 24),
+              Container(
+                margin: EdgeInsets.zero,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: gray.withOpacity(0.5), width: 0.5),
+                  color: Colors.white,
+                ),
+                child: clothesView(model.isPreview),
               ),
-            ));
+              16.height,
+              CustomTextArea(
+                controller: model.instructionController,
+                keyboardType: TextInputType.name,
+                label: "Instruction (Optional)",
+                showLabel: true,
+                formatter: InputFormatter.stringOnly,
+                maxLines: 5,
+                autocorrect: false,
+                onSave: (value) => model.instructionController.text = value,
+              ).padding(bottom: 20).hideIf(model.isPreview),
+              ElevatedButton(
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  model.proceed();
+                },
+                child: Text(
+                  model.isPreview ? "Proceed to payment" : "Preview order",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ),
+              16.height.hideIf(!model.isPreview),
+              OutlinedButton(
+                onPressed: () {
+                  model.proceedToPay();
+                },
+                child: Text(
+                  "Pay on delivery",
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w500),
+                ),
+              ).hideIf(!model.isPreview),
+            ],
+          ).paddingSymmetric(horizontal: 16, vertical: 16),
+        ),
+      ),
+    );
   }
 
   Widget clothesView(bool showPreview) {
@@ -115,11 +112,12 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ListView.builder(
-          itemCount: getClothes().length ?? 0,
+          itemCount: model.items?.length ?? 0,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            Clothe clothe = getClothes()[index];
+            LaundryServiceItem? clothe = model.items?[index];
+            double quantity = model.selectedItems[clothe] ?? 0;
 
             return GestureDetector(
               onTap: () {},
@@ -129,88 +127,82 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
                     height: 60,
                     child: ListTile(
                       leading: commonCachedNetworkImage(
-                        clothe.image!,
+                        "assets/images/placeholder.jpg",
                         height: 32,
                         width: 32,
                         fit: BoxFit.cover,
                       ),
                       title: Text(
-                        clothe.title ?? "",
+                        clothe?.itemName ?? "",
                         style: const TextStyle(
                             fontSize: 12, fontWeight: FontWeight.w600),
                       ),
-                      onTap: () {},
-                      subtitle: Text(clothe.subtitle ?? "",
+                      subtitle: Text(clothe?.itemDescription ?? "",
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                               fontSize: 12, fontWeight: FontWeight.w400)),
                       trailing: showPreview
-                          ? const Text(
-                              "N100",
-                              style: TextStyle(
-                                  fontSize: 12, fontWeight: FontWeight.w600),
-                            )
+                          ? Text(
+                        clothe?.price.toString() ?? "",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w600),
+                      )
                           : Container(
-                              width: 80,
-                              child: const InputQty(
-                                maxVal: 100,
-                                initVal: 1,
-                                steps: 1,
-                                minVal: 0,
-                                qtyFormProps: QtyFormProps(enableTyping: false),
-                                decoration: QtyDecorationProps(
-                                  btnColor: black,
-                                  isBordered: false,
-                                  minusBtn: Icon(
-                                    Icons.remove,
-                                  ),
-                                  plusBtn: Icon(Icons.add),
-                                ),
-                              ),
-                            ),
+                        width: 80,
+                        child: InputQty(
+                          maxVal: 100,
+                          initVal: quantity,
+                          steps: 1,
+                          minVal: 0,
+                          qtyFormProps: QtyFormProps(enableTyping: false),
+                          decoration: QtyDecorationProps(
+                            btnColor: black,
+                            isBordered: false,
+                            minusBtn: Icon(Icons.remove),
+                            plusBtn: Icon(Icons.add),
+                          ),
+                          onQtyChanged: (val) {
+                            model.updateSelectedItem(clothe!, val);
+                          },
+                        ),
+                      ),
                     ),
                   ),
-                  const Divider().paddingSymmetric(horizontal: 16)
+                  const Divider().paddingSymmetric(horizontal: 16),
                 ],
               ),
             );
           },
         ),
-        const Row(
+         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
               "Total",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
-
             Text(
-              "N1000",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w600),
-            )
+              "N${model.calculateTotalPrice()}",
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+            ),
           ],
         ).padding(top: 32, bottom: 32, left: 16, right: 16).hideIf(!showPreview),
-
-         Column(
+        Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Text(
               "Instruction",
-              style: TextStyle(
-                  fontSize: 18, fontWeight: FontWeight.w600),
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
             8.height,
             const Text(
               "Please, don’t use detergent and brush on the jeans.",
-              style: TextStyle(
-                  fontSize: 12, fontWeight: FontWeight.w400),
-            )
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400),
+            ),
           ],
         ).padding(left: 16, right: 16, bottom: 18).hideIf(!showPreview),
-
       ],
     );
   }

@@ -53,11 +53,9 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
 
-                CustomTextArea(
+                CustomTextFields(
                   controller: model.addressNameController,
-                  keyboardType: TextInputType.name,
-                  label: "",
-                  icon: Icon(IconsaxBold.location),
+                  label: "Address Name",
                   labelText: "Add Name (e.g Home Address, Delivery Address)",
                   showLabel: true,
                   formatter: InputFormatter.stringOnly,
@@ -65,7 +63,7 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
                   autocorrect: false,
                   validate: (value) => ValidationUtil.validateText,
 
-                ).padding(bottom: 8),
+                ).padding(bottom: 16),
 
                 Text( "Address",
                   style: Theme.of(context).textTheme.bodyMedium!,
@@ -117,7 +115,7 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
                   model.setAddress(prediction);
                 }
 
-            ).padding(bottom: 8),
+            ).padding(bottom: 16),
 
                 Text(
                   "State",
@@ -177,23 +175,133 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
                   },
                 ).padding(bottom: 20),
 
-              ],
-        ),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
                 Text(
-                  "48, Jane Doe Avenue",
-                  style: TextStyle(
-                      fontSize: 16,
-                      color: black,
-                      fontWeight: FontWeight.w500),
-                ).padding(top: 8),
+                  "LGA",
+                  style: Theme.of(context).textTheme.bodyMedium!,
+                ).padding(bottom: 6),
+                DropdownButtonFormField<LGAResponse>(
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.only(left: 27),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            width: 1.0,
+                            color: CustomColors.limcardFaded)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            width: 1.0,
+                            color: CustomColors.limcardFaded)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            width: 1.0,
+                            color: CustomColors.limcardFaded)),
+                  ),
+                  style: const TextStyle(color: CustomColors.blackPrimary),
+                  icon: const Icon(CupertinoIcons.chevron_down, size: 18)
+                      .padding(right: 16),
+                  hint:  Text( model.selectedLGA?.lgaName ?? "LGA",
+                      style: TextStyle(
+                          color: CustomColors.smallTextGrey,
+                          fontSize: 14)),
+                  borderRadius: BorderRadius.circular(30),
+                  items: model.lgas
+                      .map((e) => DropdownMenuItem<LGAResponse>(
+                    value: e,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(e.lgaName ?? "",
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: CustomColors.blackPrimary)),
+                    ),
+                  ))
+                      .toList(),
+                  validator: (value) =>
+                      ValidationUtil.validateInput(
+                          value?.lgaName, "LGA"),
+                  onSaved: (LGAResponse? value) =>
+                  model.selectedLGA = value,
+                  value: model.selectedLGA,
+                  onChanged: (value) {
+                    if (value != null) {
+                      model.setLGAValue(value);
+                    }
+                  },
+                ).padding(bottom: 20),
 
-                Container(decoration: BoxDecoration(shape: BoxShape.circle, color: CustomColors.limcadPrimaryLight.withOpacity(0.2)), width: 42, height: 42, child: Center(child: Icon(Icons.delete_outline, color: Colors.red, size: 24, ),),)
+
+                ElevatedButton(
+                  onPressed:  () {
+                    FocusScope.of(context).unfocus();
+
+                    model.updateUserAddress();
+                  },
+                  child: const Text("Add Address"),
+                )
+
               ],
+        ).padding(bottom: 20),
+
+            Container(
+              height: 300,
+              child: ListView.builder(
+                itemCount: model.profile?.address?.length,
+                itemBuilder: (context, index) {
+                  final address = model.profile?.address?[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${address?.additionalInfo} (${address?.name}) ",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.red.withOpacity(0.2),
+                          ),
+                          width: 42,
+                          height: 42,
+                          child: Center(
+                            child: Icon(
+                              Icons.delete_outline,
+                              color: Colors.red,
+                              size: 24,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             )
+            // Row(
+            //   crossAxisAlignment: CrossAxisAlignment.start,
+            //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            //   children: [
+            //     Text(
+            //       "48, Jane Doe Avenue",
+            //       style: TextStyle(
+            //           fontSize: 16,
+            //           color: black,
+            //           fontWeight: FontWeight.w500),
+            //     ).padding(top: 8),
+            //
+            //     Container(decoration: BoxDecoration(shape: BoxShape.circle, color: CustomColors.limcadPrimaryLight.withOpacity(0.2)), width: 42, height: 42, child: Center(child: Icon(Icons.delete_outline, color: Colors.red, size: 24, ),),)
+            //   ],
+            // )
           ],
         ).paddingSymmetric(vertical: 40, horizontal: 16),
       ),

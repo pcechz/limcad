@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
+import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/base_vm.dart';
@@ -11,8 +12,11 @@ import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
+import 'package:logger/logger.dart';
 
 enum LaundryOption {about, selectClothe, review, orders, order_details, businessOrder, businessOrderDetails}
+
+
 class LaundryVM extends BaseVM {
   final apiService = locator<APIClient>();
   late BuildContext context;
@@ -22,24 +26,43 @@ class LaundryVM extends BaseVM {
   bool isButtonEnabled = false;
   AboutResponse? laundryAbout;
   LaundryOption? laundryOption;
+  List<LaundryServiceItem>? items = [];
+  LaundryServiceResponse? laundryServiceResponse;
+  Map<LaundryServiceItem, double> selectedItems = {};
 
-
-
-
-  init(BuildContext context, LaundryOption laundryOpt)  {
+  void init(BuildContext context, LaundryOption laundryOpt) {
     this.context = context;
     this.laundryOption = laundryOpt;
-    if(laundryOpt == LaundryOption.about){
+    if (laundryOpt == LaundryOption.about) {
       getLaundryAbout();
-
     }
+    if (laundryOpt == LaundryOption.selectClothe) {
+      getLaundryItems();
+    }
+  }
 
+  void updateSelectedItem(LaundryServiceItem item, double quantity) {
+    if (quantity > 0) {
+      selectedItems[item] = quantity;
+    } else {
+      selectedItems.remove(item);
+    }
+    notifyListeners();
   }
 
   void proceed() {
     isPreview = true;
     notifyListeners();
   }
+
+  double calculateTotalPrice() {
+    double total = 0.0;
+    selectedItems.forEach((item, quantity) {
+      total += (item.price ?? 0.0) * quantity;
+    });
+    return total;
+  }
+
 
   void reviewOrder() {
 
@@ -84,16 +107,31 @@ class LaundryVM extends BaseVM {
         });
   }
 
+  void proceedToPay() {
+    isLoading(true);
+    // Log the selected items and quantities
+    selectedItems.forEach((item, quantity) {
+      print('Item: ${item.itemName}, Quantity: $quantity');
+    });
+    isLoading(false);
+  }
+
   Future<void> getLaundryAbout() async {
-    laundryAbout = await  locator<LaundryService>().getAbout();
+    laundryAbout = await locator<LaundryService>().getAbout();
     notifyListeners();
   }
 
-  void proceedToPay() {
+  Future<void> getLaundryItems() async {
     isLoading(true);
-    print("yes");
-   // isLoading(false);
+    final response = await locator<LaundryService>().getLaundryServiceItems();
+    laundryServiceResponse = response?.data;
+    if (laundryServiceResponse!.items!.isNotEmpty) {
+      items?.addAll(laundryServiceResponse!.items?.toList() ?? []);
+      Logger().i(response?.data);
+    }
+    isLoading(false);
+    notifyListeners();
   }
-
-
 }
+
+
