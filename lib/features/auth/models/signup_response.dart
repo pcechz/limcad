@@ -80,6 +80,8 @@ class Address {
   String? name;
   String? additionalInfo;
   String? lga;
+  num? latitude;
+  num? longitude;
   int? lgaId;
   String? stateId;
   LgaReference? lgaReference;
@@ -91,6 +93,8 @@ class Address {
     this.name,
     this.additionalInfo,
     this.lga,
+    this.latitude,
+    this.longitude,
     this.lgaId,
     this.stateId,
     this.lgaReference,
@@ -103,6 +107,8 @@ class Address {
     name = json['name'];
     additionalInfo = json['additionalInfo'];
     lga = json['lga'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     lgaId = json['lgaId'];
     stateId = json['stateId'];
     lgaReference = json['lgaReference'] != null
@@ -118,6 +124,8 @@ class Address {
     data['name'] = name;
     data['additionalInfo'] = additionalInfo;
     data['lga'] = lga;
+    data['latitude'] = latitude;
+    data['longitude'] = longitude;
     data['lgaId'] = lgaId;
     data['stateId'] = stateId;
     if (lgaReference != null) {
