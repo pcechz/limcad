@@ -1,12 +1,20 @@
 import 'package:ficonsax/ficonsax.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
+import 'package:google_places_autocomplete_text_field/model/prediction.dart';
+import 'package:limcad/config/flavor.dart';
+import 'package:limcad/features/profile/model/profile_view_model.dart';
+import 'package:limcad/resources/models/state_model.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/size_util.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
+import 'package:limcad/resources/utils/validation_util.dart';
 import 'package:limcad/resources/widgets/default_scafold.dart';
 import 'package:limcad/resources/widgets/view_utils/custom_text_field.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:stacked/stacked.dart';
 
 class ProfileAddressPage extends StatefulWidget {
   @override
@@ -14,9 +22,22 @@ class ProfileAddressPage extends StatefulWidget {
 }
 
 class _ProfileAddressPageState extends State<ProfileAddressPage> {
+  late ProfileVM model;
+
+
+
   @override
   Widget build(BuildContext context) {
-    return DefaultScaffold2(
+    return
+      ViewModelBuilder<ProfileVM>.reactive(
+        viewModelBuilder: () => ProfileVM(),
+    onViewModelReady: (model) {
+    this.model = model;
+    model.context = context;
+    model.init(context, ProfileOption.addAddress);
+    },
+    builder: (BuildContext context, model, child) =>
+      DefaultScaffold2(
       showAppBar: true,
       title: 'Address',
       backgroundColor: white,
@@ -24,21 +45,140 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
         // If content might overflow
         child: Column(
           children: [
-            CustomTextArea(
-              controller: TextEditingController(),
-              keyboardType: TextInputType.name,
-              label: "",
-              icon: Icon(IconsaxBold.location),
-              labelText: "Add new address",
-              showLabel: true,
-              //labelText: "Please type instruction here, if there is any...",
-              formatter: InputFormatter.stringOnly,
-              maxLines: 1,
-              autocorrect: false,
-              //validate: (value) => ValidationUtil.validateLastName(value),
-              // onSave: (value) =>
-              // model.instructionController.text = value,
+
+
+
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+
+                CustomTextArea(
+                  controller: model.addressNameController,
+                  keyboardType: TextInputType.name,
+                  label: "",
+                  icon: Icon(IconsaxBold.location),
+                  labelText: "Add Name (e.g Home Address, Delivery Address)",
+                  showLabel: true,
+                  formatter: InputFormatter.stringOnly,
+                  maxLines: 1,
+                  autocorrect: false,
+                  validate: (value) => ValidationUtil.validateText,
+
+                ).padding(bottom: 8),
+
+                Text( "Address",
+                  style: Theme.of(context).textTheme.bodyMedium!,
+                ).padding(bottom: 6),
+            GooglePlacesAutoCompleteTextFormField(
+                textEditingController: model.addressController,
+                googleAPIKey: FlavorConfig.instance?.values.googleAPIKey ?? "",
+                decoration:   InputDecoration(
+                    fillColor: model.addressController?.text.isEmpty == true
+                        ? Colors.white
+                        : Colors.transparent,
+                    hintText: "Enter Address",
+                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    contentPadding: EdgeInsets.only(left: 27),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide:
+                        const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide:
+                        const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide:
+                        const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                    labelText: "Address"),
+                style: const TextStyle(
+                    fontWeight: FontWeight.w400, fontSize: 14, color: Colors.black),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter address';
+                  }
+                  return null;
+                },
+                // proxyURL: _yourProxyURL,
+                maxLines: 1,
+                overlayContainer: (child) => Material(
+                  elevation: 1.0,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  child: child,
+                ),
+                getPlaceDetailWithLatLng: (prediction) {
+                  print('placeDetails${prediction.lng}');
+                },
+                itmClick: (Prediction prediction) {
+                  model.addressController.text = prediction.description ?? "";
+                  model.setAddress(prediction);
+                }
+
             ).padding(bottom: 8),
+
+                Text(
+                  "State",
+                  style: Theme.of(context).textTheme.bodyMedium!,
+                ).padding(bottom: 6),
+                DropdownButtonFormField<StateResponse>(
+                  decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    contentPadding: const EdgeInsets.only(left: 27),
+                    focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            width: 1.0,
+                            color: CustomColors.limcardFaded)),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            width: 1.0,
+                            color: CustomColors.limcardFaded)),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(
+                            width: 1.0,
+                            color: CustomColors.limcardFaded)),
+                  ),
+                  style: const TextStyle(color: CustomColors.blackPrimary),
+                  icon: const Icon(CupertinoIcons.chevron_down, size: 18)
+                      .padding(right: 16),
+                  hint:  Text( model.selectedState?.stateName ?? "State",
+                      style: TextStyle(
+                          color: CustomColors.smallTextGrey,
+                          fontSize: 14)),
+                  borderRadius: BorderRadius.circular(30),
+                  items: model.states
+                      .map((e) => DropdownMenuItem<StateResponse>(
+                    value: e,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(e.stateName ?? "",
+                          style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: CustomColors.blackPrimary)),
+                    ),
+                  ))
+                      .toList(),
+                  validator: (value) =>
+                      ValidationUtil.validateInput(
+                          value?.stateName, "State"),
+                  onSaved: (StateResponse? value) =>
+                  model.selectedState = value,
+                  value: model.selectedState,
+                  onChanged: (value) {
+                    if (value != null) {
+                      model.setStateValue(value);
+                    }
+                  },
+                ).padding(bottom: 20),
+
+              ],
+        ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,7 +197,7 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
           ],
         ).paddingSymmetric(vertical: 40, horizontal: 16),
       ),
-    );
+    ));
   }
 
   // Helper to build sections

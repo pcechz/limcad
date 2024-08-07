@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
+import 'package:limcad/config/flavor.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/resources/models/state_model.dart';
@@ -120,7 +121,7 @@ late AuthVM model;
                       ).padding(bottom: 6),
                       GooglePlacesAutoCompleteTextFormField(
                         textEditingController: model.addressController,
-                        googleAPIKey: "AIzaSyDmq2C1vmDwUr0cnIAX6djCFspyIHJ5V48",
+                        googleAPIKey: FlavorConfig.instance?.values.googleAPIKey ?? "",
                         decoration:   InputDecoration(
                             fillColor: model.addressController?.text.isEmpty == true
                                 ? Colors.white
@@ -240,70 +241,11 @@ late AuthVM model;
                             model.setStateValue(value);
                           }
                         },
-                      ).padding(bottom: 20),                    ],
+                      ).padding(bottom: 20),
+
+                    ],
                   ),
-                  // Column(
-                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                  //   mainAxisAlignment: MainAxisAlignment.start,
-                  //   children: [
-                  //     Text(
-                  //       "LGA",
-                  //       style: Theme.of(context).textTheme.bodyMedium!,
-                  //     ).padding(bottom: 6),
-                  //     DropdownButtonFormField<LGAResponse>(
-                  //       decoration: InputDecoration(
-                  //         fillColor: Colors.white,
-                  //         contentPadding: const EdgeInsets.only(left: 27),
-                  //         focusedBorder: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(30),
-                  //             borderSide: const BorderSide(
-                  //                 width: 1.0,
-                  //                 color: CustomColors.limcardFaded)),
-                  //         enabledBorder: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(30),
-                  //             borderSide: const BorderSide(
-                  //                 width: 1.0,
-                  //                 color: CustomColors.limcardFaded)),
-                  //         border: OutlineInputBorder(
-                  //             borderRadius: BorderRadius.circular(30),
-                  //             borderSide: const BorderSide(
-                  //                 width: 1.0,
-                  //                 color: CustomColors.limcardFaded)),
-                  //       ),
-                  //       style: const TextStyle(color: CustomColors.blackPrimary),
-                  //       icon: const Icon(CupertinoIcons.chevron_down, size: 18)
-                  //           .padding(right: 16),
-                  //       hint:  Text( model.selectedLGA?.lgaName ?? "LGA",
-                  //           style: TextStyle(
-                  //               color: CustomColors.smallTextGrey,
-                  //               fontSize: 14)),
-                  //       borderRadius: BorderRadius.circular(30),
-                  //       items: model.lgas
-                  //           .map((e) => DropdownMenuItem<LGAResponse>(
-                  //         value: e,
-                  //         child: Padding(
-                  //           padding: const EdgeInsets.all(16.0),
-                  //           child: Text(e.lgaName ?? "",
-                  //               style: const TextStyle(
-                  //                   fontSize: 14,
-                  //                   fontWeight: FontWeight.w400,
-                  //                   color: CustomColors.blackPrimary)),
-                  //         ),
-                  //       ))
-                  //           .toList(),
-                  //       validator: (value) =>
-                  //           ValidationUtil.validateInput(
-                  //               value?.lgaName, "LGA"),
-                  //       onSaved: (LGAResponse? value) =>
-                  //       model.selectedLGA = value,
-                  //       value: model.selectedLGA,
-                  //       onChanged: (value) {
-                  //         if (value != null) {
-                  //           model.setLGAValue(value);
-                  //         }
-                  //       },
-                  //     ).padding(bottom: 20),                    ],
-                  // ),
+
 
 
                   Column(

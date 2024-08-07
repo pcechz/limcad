@@ -40,4 +40,11 @@ class ValidationUtil {
   static String? validateInput(String? value, String name) {
     return (value == null || value.isEmpty) ? "$name is required" : null;
   }
+
+  static String? validateText(String text) {
+    if (text.isEmpty) {
+      return "Input cannot be empty";
+    }
+    return null;
+  }
 }

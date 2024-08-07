@@ -77,6 +77,7 @@ abstract class Env {
   late String baseUrl;
   late int connectionTimeout;
   late int readTimeout;
+  late String googleAPIKey;
 }
 
 
@@ -90,6 +91,9 @@ class ProdEnv implements Env {
   @override
   int readTimeout = 120000;
 
+  @override
+  String googleAPIKey = "AIzaSyDmq2C1vmDwUr0cnIAX6djCFspyIHJ5V48";
+
 }
 
 class DevEnv implements Env {
@@ -102,6 +106,10 @@ class DevEnv implements Env {
 
   @override
   int readTimeout = 180000;
+
+
+  @override
+  String googleAPIKey =  "AIzaSyDmq2C1vmDwUr0cnIAX6djCFspyIHJ5V48";
 
 
 }
