@@ -1,6 +1,5 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:limcad/features/auth/auth/reset_password.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -18,8 +17,7 @@ class LoginPage extends StatefulWidget {
 
   final UserType? theUsertype;
 
-
-  const LoginPage({Key? key,  this.theUsertype}) : super(key: key);
+  const LoginPage({Key? key, this.theUsertype}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -36,19 +34,17 @@ class _LoginPageState extends State<LoginPage> {
           this.model = model;
           model.context = context;
           model.userType = widget.theUsertype;
-          model.init(context, OnboardingPageType.login,  widget.theUsertype);
+          model.init(context, OnboardingPageType.login, widget.theUsertype);
         },
-        builder: (BuildContext context, model, child) =>
-            DefaultScaffold(
+        builder: (BuildContext context, model, child) => DefaultScaffold(
               showAppBar: true,
-              includeAppBarBackButton:false,
+              includeAppBarBackButton: false,
               overrideBackButton: () {
                 model.exitApp(context);
               },
               title: model.title,
               busy: model.loading,
-              body:
-              SingleChildScrollView(
+              body: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,9 +53,11 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Sign In",
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.headlineMedium!.merge(
-                          const TextStyle(color: CustomColors.limcadPrimary),
-                        ),
+                        style:
+                            Theme.of(context).textTheme.headlineMedium!.merge(
+                                  const TextStyle(
+                                      color: CustomColors.limcadPrimary),
+                                ),
                       ).padding(bottom: 8, top: 30),
                     ),
                     Center(
@@ -83,21 +81,20 @@ class _LoginPageState extends State<LoginPage> {
                             //validate: (value) => ValidationUtil.validateLastName(value),
                             onSave: (value) => model.email = value,
                           ).padding(bottom: 20),
-
                           PasswordInputField(
                             controller: model.password,
                             labelText: "Password",
                             keyboardType: TextInputType.text,
                             node: model.passwordFocusNode,
                           ).padding(bottom: 10),
-
-                          const Row(
+                          Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text("forgot password? "),
                               TextButton(
-                                  onPressed: null,
-                                  child:  Text(
+                                  onPressed: () => Navigator.pushNamed(
+                                      context, ResetPassword.routeName),
+                                  child: const Text(
                                     'reset here',
                                     style: TextStyle(
                                         decoration: TextDecoration.underline,
@@ -105,17 +102,15 @@ class _LoginPageState extends State<LoginPage> {
                                   )),
                             ],
                           ).paddingSymmetric(horizontal: 16),
-
-
                           ElevatedButton(
                             onPressed: !model.isButtonEnabled
                                 ? null
                                 : () {
-                              FocusScope.of(context).unfocus();
-                              model.formKey.currentState!.save();
+                                    FocusScope.of(context).unfocus();
+                                    model.formKey.currentState!.save();
 
-                              model.proceedLogin(widget.theUsertype);
-                            },
+                                    model.proceedLogin(widget.theUsertype);
+                                  },
                             child: const Text("Sign In"),
                           )
                         ],
@@ -127,7 +122,7 @@ class _LoginPageState extends State<LoginPage> {
                         Text("Do not have an account? "),
                         TextButton(
                             onPressed: null,
-                            child:  Text(
+                            child: Text(
                               'Sign Up',
                               style: TextStyle(
                                   decoration: TextDecoration.underline,

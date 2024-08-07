@@ -11,10 +11,10 @@ PODS:
   - google_maps_flutter_ios (0.0.1):
     - Flutter
     - GoogleMaps (< 9.0)
-  - GoogleMaps (6.2.1):
-    - GoogleMaps/Maps (= 6.2.1)
-  - GoogleMaps/Base (6.2.1)
-  - GoogleMaps/Maps (6.2.1):
+  - GoogleMaps (8.4.0):
+    - GoogleMaps/Maps (= 8.4.0)
+  - GoogleMaps/Base (8.4.0)
+  - GoogleMaps/Maps (8.4.0):
     - GoogleMaps/Base
   - nb_utils (0.0.1):
     - Flutter
@@ -23,7 +23,7 @@ PODS:
     - FlutterMacOS
   - permission_handler_apple (9.1.1):
     - Flutter
-  - ReachabilitySwift (5.0.0)
+  - ReachabilitySwift (5.2.3)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
@@ -34,7 +34,7 @@ PODS:
   - sqflite (0.0.3):
     - Flutter
     - FlutterMacOS
-  - Toast (4.1.0)
+  - Toast (4.1.1)
 
 DEPENDENCIES:
   - camera_avfoundation (from `.symlinks/plugins/camera_avfoundation/ios`)
@@ -88,17 +88,17 @@ SPEC CHECKSUMS:
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   fluttertoast: 9f2f8e81bb5ce18facb9748d7855bf5a756fe3db
   google_maps_flutter_ios: d1318b4ff711612cab16862d7a87e31a7403d458
-  GoogleMaps: 20d7b12be49a14287f797e88e0e31bc4156aaeb4
+  GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   nb_utils: ada4338858d8827ec92fdab2a545206b4ba4cfb1
   path_provider_foundation: 3784922295ac71e43754bd15e0653ccfd36a147c
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
-  ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
+  ReachabilitySwift: 7f151ff156cea1481a8411701195ac6a984f4979
   shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
   smart_auth: 4bedbc118723912d0e45a07e8ab34039c19e04f2
   sms_autofill: c461043483362c3f1709ee76eaae6eb570b31686
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec
-  Toast: ec33c32b8688982cecc6348adeae667c1b9938da
+  Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
 
-PODFILE CHECKSUM: 4bb0d5af7b0a7a18570b26cd09a55bf9a905f81f
+PODFILE CHECKSUM: f393a3e970b6bcad3ccd24fdc079653b90c459b1
 
-COCOAPODS: 1.14.3
+COCOAPODS: 1.15.2

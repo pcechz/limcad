@@ -1,6 +1,17 @@
 import 'package:dio/dio.dart';
 
-enum ApiType { registerUser, requestEmailOtp, validateEmailOtp, states, lgas, login, profile, laundyAbout }
+enum ApiType {
+  registerUser,
+  requestEmailOtp,
+  validateEmailOtp,
+  states,
+  lgas,
+  login,
+  profile,
+  laundyAbout,
+  passwordResetCodeRequest,
+  passwordReset
+}
 
 class ApiRoute implements APIRouteConfigurable {
   final ApiType type;
@@ -58,7 +69,21 @@ class ApiRoute implements APIRouteConfigurable {
 
       case ApiType.laundyAbout:
         return RequestOptions(
-            path: '/laundry-about/organizations/$routeParams', method: ApiMethod.get);
+            path: '/laundry-about/organizations/$routeParams',
+            method: ApiMethod.get);
+
+      case ApiType.passwordResetCodeRequest:
+        return RequestOptions(
+            path: '/auth/password-reset-code-request',
+            method: ApiMethod.post,
+            data: data);
+
+      case ApiType.passwordReset:
+        return RequestOptions(
+            path: "/api/auth/password-reset",
+            method: ApiMethod.post,
+            data: data);
+
       default:
         return null;
     }

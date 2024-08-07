@@ -8,11 +8,11 @@ class ValidationUtil {
     }
     if (!RegExp(r"[A-Z]").hasMatch(password)) {
       errMessage =
-      "${errMessage}Password must contain at least an upper case alphabet. ";
+          "${errMessage}Password must contain at least an upper case alphabet. ";
     }
     if (!RegExp(r"[a-z]").hasMatch(password)) {
       errMessage =
-      "${errMessage}Password must contain at least lower case alphabet. ";
+          "${errMessage}Password must contain at least lower case alphabet. ";
     }
     if (!RegExp(r"[0-9]").hasMatch(password)) {
       errMessage = "${errMessage}Password must contain at least a digit. ";
@@ -39,5 +39,17 @@ class ValidationUtil {
 
   static String? validateInput(String? value, String name) {
     return (value == null || value.isEmpty) ? "$name is required" : null;
+  }
+
+  static String? isValidEmail(String email) {
+    final RegExp emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$',
+    );
+
+    if (emailRegex.hasMatch(email)) {
+      return null;
+    } else {
+      return 'Invalid email address';
+    }
   }
 }

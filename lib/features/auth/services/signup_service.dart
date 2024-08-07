@@ -14,7 +14,6 @@ import 'package:limcad/resources/models/state_model.dart';
 import 'package:limcad/resources/storage/base_preference.dart';
 import 'package:stacked/stacked.dart';
 
-
 class AuthenticationService with ListenableServiceMixin {
   final apiService = locator<APIClient>();
 
@@ -29,23 +28,21 @@ class AuthenticationService with ListenableServiceMixin {
   //profile
   ProfileResponse? get profile => _profile;
 
-
-
-
-
-  Future<BaseResponse<RegistrationResponse>> signUp(SignupRequest? signupRequest) async {
+  Future<BaseResponse<RegistrationResponse>> signUp(
+      SignupRequest? signupRequest) async {
     var signupResponse = await apiService.request(
         route: ApiRoute(ApiType.registerUser),
         data: signupRequest?.toJson(),
-        create: () =>
-            BaseResponse<RegistrationResponse>(create: () => RegistrationResponse()));
+        create: () => BaseResponse<RegistrationResponse>(
+            create: () => RegistrationResponse()));
     return signupResponse.response;
   }
 
-  Future<BaseResponse<LoginResponse>> login(SignupRequest? signupRequest, UserType? userType) async {
+  Future<BaseResponse<LoginResponse>> login(
+      SignupRequest? signupRequest, UserType? userType) async {
     final loginRequest = {
       "email": signupRequest?.email,
-      "password":signupRequest?.password,
+      "password": signupRequest?.password,
       "userType": userType?.name.toUpperCase()
     };
 
@@ -58,8 +55,8 @@ class AuthenticationService with ListenableServiceMixin {
     return loginResponse.response;
   }
 
-
-  Future<BaseResponse<GeneralResponse>> requestOtp(SignupRequest? signupRequest, UserType? userType) async {
+  Future<BaseResponse<GeneralResponse>> requestOtp(
+      SignupRequest? signupRequest, UserType? userType) async {
     final otprequest = {
       "email": signupRequest?.email,
       "userType": userType?.name.toUpperCase()
@@ -72,8 +69,21 @@ class AuthenticationService with ListenableServiceMixin {
     return loginResponse.response;
   }
 
+  Future<BaseResponse<GeneralResponse>> requestResetPasswordCode(
+      UserType? userType, String? email) async {
+    final request = {"email": email, "userType": userType?.name.toUpperCase()};
+    var response = await apiService.request(
+      route: ApiRoute(ApiType.passwordResetCodeRequest),
+      data: request,
+      create: () =>
+          BaseResponse<GeneralResponse>(create: () => GeneralResponse()),
+    );
 
-  Future<BaseResponse<LoginResponse>> validateOtp(String? email, String? otp, String userType) async {
+    return response.response;
+  }
+
+  Future<BaseResponse<LoginResponse>> validateOtp(
+      String? email, String? otp, String userType) async {
     final otprequest = {
       "email": email,
       "code": otp,
@@ -90,24 +100,26 @@ class AuthenticationService with ListenableServiceMixin {
   Future<BaseAPIListPaginationResponse<StateResponse>> getStates() async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.states, routeParams: "offset=0&size=40"),
-        create: () => BaseAPIListPaginationResponse<StateResponse>(create: () => StateResponse()));
+        create: () => BaseAPIListPaginationResponse<StateResponse>(
+            create: () => StateResponse()));
     return response.response;
   }
 
-
-  Future<BaseAPIListResponse<LGAResponse>>   getLGAs(String? stateId) async {
+  Future<BaseAPIListResponse<LGAResponse>> getLGAs(String? stateId) async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.lgas, routeParams: "$stateId"),
-        create: () => BaseAPIListResponse<LGAResponse>(create: () => LGAResponse()));
+        create: () =>
+            BaseAPIListResponse<LGAResponse>(create: () => LGAResponse()));
     return response.response;
   }
 
   Future<BaseResponse<ProfileResponse>> getProfile() async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.profile),
-        create: () => BaseResponse<ProfileResponse>(create: () => ProfileResponse()));
+        create: () =>
+            BaseResponse<ProfileResponse>(create: () => ProfileResponse()));
     _profile = response.response.data;
-    if(response.response.status == ResponseCode.success){
+    if (response.response.status == ResponseCode.success) {
       BasePreference basePreference = await BasePreference.getInstance();
       basePreference.saveProfileDetails(_profile!);
     }

@@ -29,7 +29,13 @@ import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:logger/logger.dart';
 import 'package:stacked/stacked_annotations.dart';
 
-enum OnboardingPageType { signup, signupOtp, createPassword, login }
+enum OnboardingPageType {
+  signup,
+  signupOtp,
+  createPassword,
+  login,
+  resetPassword
+}
 
 enum IdType { document, nin }
 
@@ -83,7 +89,8 @@ class AuthVM extends BaseVM {
   LGAResponse? selectedLGA;
   Prediction? prediction;
 
-  Future<void> init(BuildContext context, [OnboardingPageType? route, UserType? userT]) async {
+  Future<void> init(BuildContext context,
+      [OnboardingPageType? route, UserType? userT]) async {
     this.context = context;
     userType = userT;
 
@@ -117,25 +124,34 @@ class AuthVM extends BaseVM {
     signupRequest?.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
-        lgaRequest: LgaRequest(
-            lgaId: 9, stateId: "LA")));
+        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
     NavigationService.pushScreen(context,
         screen: CreatePassword(request: signupRequest, userType: userType),
         withNavBar: false);
   }
 
+  Future<void> sendResetPasswordCode() async {
+    isLoading(true);
+    final response = await locator<AuthenticationService>()
+        .requestResetPasswordCode(userType, emailController.text);
+    Logger().i(response.status);
+    isLoading(false);
+  }
+
   Future<void> proceedVerifyOTP() async {
     isLoading(true);
-    final response = await locator<AuthenticationService>().validateOtp(signupRequest?.email, otpController.text, userType!.name!);
+    final response = await locator<AuthenticationService>()
+        .validateOtp(signupRequest?.email, otpController.text, userType!.name!);
     isLoading(false);
-    if(response.status == ResponseCode.created || response.status == ResponseCode.success){
-
-      if(response.data?.token != null){
-        _preference.saveToken(Tokens(token: response.data?.token, refreshToken: response.data?.refreshToken));
+    if (response.status == ResponseCode.created ||
+        response.status == ResponseCode.success) {
+      if (response.data?.token != null) {
+        _preference.saveToken(Tokens(
+            token: response.data?.token,
+            refreshToken: response.data?.refreshToken));
       }
-      if(response.data?.user != null){
+      if (response.data?.user != null) {
         _preference.saveLoginDetails(response.data!.user!);
-
       }
       ViewUtil.showDynamicDialogWithButton(
           barrierDismissible: false,
@@ -176,30 +192,25 @@ class AuthVM extends BaseVM {
             Navigator.pop(context);
             _preference.saveLoginDetails(response.data!.user!);
             isLoading(true);
-            final profileResponse = await locator<AuthenticationService>().getProfile();
+            final profileResponse =
+                await locator<AuthenticationService>().getProfile();
             isLoading(false);
 
-            if(profileResponse.status == ResponseCode.success && profileResponse.data != null){
+            if (profileResponse.status == ResponseCode.success &&
+                profileResponse.data != null) {
               if (context.mounted) {
                 NavigationService.pushScreen(context,
-                    screen:  const HomePage("PERSONAL"),
-                    withNavBar: false
-                );
+                    screen: const HomePage("PERSONAL"), withNavBar: false);
               }
             }
             // Navigator.pushReplacement(
             //     context,
             //     MaterialPageRoute(
             //         builder: (context) => VerifyIdPage(request: signupRequest)));
-
-
           });
 
       notifyListeners();
-
     }
-
-
   }
 
   onFormKeyChanged() {
@@ -217,12 +228,12 @@ class AuthVM extends BaseVM {
   Future<void> proceedPassword() async {
     signupRequest?.password = password.text;
     isLoading(true);
-    final response = await locator<AuthenticationService>()
-        .signUp(signupRequest);
-    
-    if(response.status == 200 || response.status == 201){
-      if(response.data != null){
-       // _preference.saveProfile(response.data!.);
+    final response =
+        await locator<AuthenticationService>().signUp(signupRequest);
+
+    if (response.status == 200 || response.status == 201) {
+      if (response.data != null) {
+        // _preference.saveProfile(response.data!.);
         NavigationService.pushScreen(context,
             screen: SignupOtpPage(
               request: signupRequest,
@@ -231,8 +242,7 @@ class AuthVM extends BaseVM {
             ),
             withNavBar: true);
       }
-
-    }else{
+    } else {
       //ViewUtil.sh
     }
     isLoading(false);
@@ -244,47 +254,41 @@ class AuthVM extends BaseVM {
     signupRequest?.password = password.text;
     signupRequest?.email = emailController.text;
     isLoading(true);
-    final response = await locator<AuthenticationService>().login(signupRequest, theUsertype);
+    final response = await locator<AuthenticationService>()
+        .login(signupRequest, theUsertype);
     isLoading(false);
-    if(response.status == ResponseCode.success){
-      if(response.data?.token != null){
+    if (response.status == ResponseCode.success) {
+      if (response.data?.token != null) {
         final tokenJson = {
           "token": response.data?.token,
-          "refreshToken" : response.data?.refreshToken
+          "refreshToken": response.data?.refreshToken
         };
         _preference.saveToken(Tokens.fromJson(tokenJson));
       }
-      if(response.data?.user != null){
+      if (response.data?.user != null) {
         _preference.saveLoginDetails(response.data!.user!);
         isLoading(true);
-        final profileResponse = await locator<AuthenticationService>().getProfile();
+        final profileResponse =
+            await locator<AuthenticationService>().getProfile();
         isLoading(false);
 
-        if(profileResponse.status == ResponseCode.success && profileResponse.data != null){
+        if (profileResponse.status == ResponseCode.success &&
+            profileResponse.data != null) {
           if (context.mounted) {
             NavigationService.pushScreen(context,
-                screen:  const HomePage("PERSONAL"),
-                withNavBar: false
-            );
+                screen: const HomePage("PERSONAL"), withNavBar: false);
           }
         }
-
       }
-
-
-    }
-    else if(response.status == ResponseCode.unauthorized) {
+    } else if (response.status == ResponseCode.unauthorized) {
       NavigationService.pushScreen(context,
           screen: SignupOtpPage(
-            request: signupRequest,
-            userType: theUsertype,
-            from: LoginPage.routeName
-          ),
+              request: signupRequest,
+              userType: theUsertype,
+              from: LoginPage.routeName),
           withNavBar: true);
-    }
-    else{
+    } else {
       ViewUtil.showSnackBar(response.message ?? "An error occurred", true);
-
     }
   }
 
