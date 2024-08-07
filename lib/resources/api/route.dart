@@ -10,7 +10,9 @@ enum ApiType {
   profile,
   laundyAbout,
   passwordResetCodeRequest,
-  passwordReset
+  passwordReset,
+  laundyServiceItems,
+  updateProfile,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -80,9 +82,20 @@ class ApiRoute implements APIRouteConfigurable {
 
       case ApiType.passwordReset:
         return RequestOptions(
-            path: "/api/auth/password-reset",
-            method: ApiMethod.post,
-            data: data);
+            path: "/auth/password-reset", method: ApiMethod.post, data: data);
+
+      case ApiType.laundyServiceItems:
+        return RequestOptions(
+            path: '/laundry-service-items?$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
+
+      case ApiType.updateProfile:
+        return RequestOptions(
+            path: '/users',
+            method: ApiMethod.patch,
+            data: data,
+            extra: authorize);
 
       default:
         return null;

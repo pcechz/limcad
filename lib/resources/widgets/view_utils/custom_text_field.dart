@@ -1,10 +1,8 @@
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
-
 
 class CustomTextFields extends StatefulWidget {
   final Color iconColor;
@@ -35,6 +33,7 @@ class CustomTextFields extends StatefulWidget {
   final bool disabled;
   final Widget? suffixWidget;
   final TextInputAction? textInputAction;
+  final Color? textBackgroundColor;
 
   const CustomTextFields({
     Key? key,
@@ -66,6 +65,7 @@ class CustomTextFields extends StatefulWidget {
     this.disabled = false,
     this.suffixWidget,
     this.textInputAction,
+    this.textBackgroundColor,
   }) : super(key: key);
 
   @override
@@ -84,11 +84,10 @@ class _CustomInputfieldsFieldState extends State<CustomTextFields> {
           style: Theme.of(context).textTheme.bodyMedium!,
         ).padding(bottom: 6).hideIf(!widget.showLabel),
         TextFormField(
-          decoration:
-          InputDecoration(
+          decoration: InputDecoration(
               fillColor: widget.controller?.text.isEmpty == true
-                  ? Colors.white
-                  : Colors.transparent,
+                  ? widget.textBackgroundColor ?? Colors.white
+                  : widget.textBackgroundColor ?? Colors.transparent,
               hintText: widget.hintText,
               hintStyle: TextStyle(color: Colors.grey[400]),
               contentPadding: EdgeInsets.only(left: 27),
@@ -112,16 +111,16 @@ class _CustomInputfieldsFieldState extends State<CustomTextFields> {
               // suffix: widget.suffixWidget,
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide:
-                  const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                  borderSide: const BorderSide(
+                      width: 1.0, color: CustomColors.limcardFaded)),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide:
-                  const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                  borderSide: const BorderSide(
+                      width: 1.0, color: CustomColors.limcardFaded)),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
-                  borderSide:
-                  const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                  borderSide: const BorderSide(
+                      width: 1.0, color: CustomColors.limcardFaded)),
               labelText: widget.labelText,
               suffixIcon: const CupertinoActivityIndicator()
                   .hideIf(!widget.showSuffixBusy)),
@@ -135,9 +134,10 @@ class _CustomInputfieldsFieldState extends State<CustomTextFields> {
           onFieldSubmitted: widget.onFieldSubmitted,
           autovalidateMode: widget.autovalidateMode,
           textInputAction: widget.textInputAction,
-          textCapitalization:widget.textCapitalization ?? (widget.keyboardType != TextInputType.emailAddress
-              ? TextCapitalization.sentences
-              : TextCapitalization.none),
+          textCapitalization: widget.textCapitalization ??
+              (widget.keyboardType != TextInputType.emailAddress
+                  ? TextCapitalization.sentences
+                  : TextCapitalization.none),
           inputFormatters: [
             LengthLimitingTextInputFormatter(widget.inputLimit),
             if (widget.formatter == InputFormatter.stringOnly)
@@ -150,13 +150,15 @@ class _CustomInputfieldsFieldState extends State<CustomTextFields> {
           keyboardType: widget.keyboardType,
           maxLines: widget.maxLines,
           validator: (value) =>
-          widget.validate != null ? widget.validate!(value) : null,
-          onSaved: (value) => widget.onSave != null ? widget.onSave!(value) : null,
+              widget.validate != null ? widget.validate!(value) : null,
+          onSaved: (value) =>
+              widget.onSave != null ? widget.onSave!(value) : null,
           onChanged: (value) =>
-          widget.onchange != null ? widget.onchange!(value) : null,
+              widget.onchange != null ? widget.onchange!(value) : null,
           onTap: () => widget.onTap != null ? widget.onTap!() : null,
-          onEditingComplete: () =>
-          widget.onEditingComplete != null ? widget.onEditingComplete!() : null,
+          onEditingComplete: () => widget.onEditingComplete != null
+              ? widget.onEditingComplete!()
+              : null,
         ),
       ],
     );
@@ -164,10 +166,6 @@ class _CustomInputfieldsFieldState extends State<CustomTextFields> {
 }
 
 enum InputFormatter { stringOnly, digitOnly, alphaNumericOnly }
-
-
-
-
 
 class CustomTextArea extends StatefulWidget {
   final Color iconColor;
@@ -253,21 +251,24 @@ class _CustomTextAreaState extends State<CustomTextArea> {
                   : Colors.white,
               hintText: widget.hintText,
               prefixIcon: widget.icon,
-              hintStyle: TextStyle(color:CustomColors.smallTextGrey.withOpacity(0.5)),
+              hintStyle:
+                  TextStyle(color: CustomColors.smallTextGrey.withOpacity(0.5)),
               contentPadding: EdgeInsets.only(left: 16, top: 16),
-
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                   BorderSide(width: 1.0, color: CustomColors.smallTextGrey.withOpacity(0.5))),
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: CustomColors.smallTextGrey.withOpacity(0.5))),
               enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                   BorderSide(width: 1.0, color: CustomColors.smallTextGrey.withOpacity(0.5))),
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: CustomColors.smallTextGrey.withOpacity(0.5))),
               border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide:
-                   BorderSide(width: 1.0, color: CustomColors.smallTextGrey.withOpacity(0.5))),
+                  borderSide: BorderSide(
+                      width: 1.0,
+                      color: CustomColors.smallTextGrey.withOpacity(0.5))),
               labelText: widget.labelText,
               suffixIcon: const CupertinoActivityIndicator()
                   .hideIf(!widget.showSuffixBusy)),
@@ -281,9 +282,10 @@ class _CustomTextAreaState extends State<CustomTextArea> {
           onFieldSubmitted: widget.onFieldSubmitted,
           autovalidateMode: widget.autovalidateMode,
           textInputAction: widget.textInputAction,
-          textCapitalization:widget.textCapitalization ?? (widget.keyboardType != TextInputType.emailAddress
-              ? TextCapitalization.sentences
-              : TextCapitalization.none),
+          textCapitalization: widget.textCapitalization ??
+              (widget.keyboardType != TextInputType.emailAddress
+                  ? TextCapitalization.sentences
+                  : TextCapitalization.none),
           inputFormatters: [
             LengthLimitingTextInputFormatter(widget.inputLimit),
             if (widget.formatter == InputFormatter.stringOnly)
@@ -296,14 +298,15 @@ class _CustomTextAreaState extends State<CustomTextArea> {
           keyboardType: widget.keyboardType,
           maxLines: widget.maxLines,
           validator: (value) =>
-          widget.validate != null ? widget.validate!(value) : null,
-          onSaved: (value) => widget.onSave != null ? widget.onSave!(value) : null,
+              widget.validate != null ? widget.validate!(value) : null,
+          onSaved: (value) =>
+              widget.onSave != null ? widget.onSave!(value) : null,
           onChanged: (value) =>
-          widget.onchange != null ? widget.onchange!(value) : null,
+              widget.onchange != null ? widget.onchange!(value) : null,
           onTap: () => widget.onTap != null ? widget.onTap!() : null,
-          onEditingComplete: () =>
-          widget.onEditingComplete != null ? widget.onEditingComplete!() : null,
-
+          onEditingComplete: () => widget.onEditingComplete != null
+              ? widget.onEditingComplete!()
+              : null,
         ),
       ],
     );

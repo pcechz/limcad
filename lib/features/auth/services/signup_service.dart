@@ -5,6 +5,7 @@ import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/api/base_response.dart';
 import 'package:limcad/resources/api/response_code.dart';
+import 'package:limcad/resources/models/change_profile_response.dart';
 import 'package:limcad/resources/models/general_response.dart';
 import 'package:limcad/resources/models/no_object_response.dart';
 import 'package:limcad/resources/api/route.dart';
@@ -77,6 +78,29 @@ class AuthenticationService with ListenableServiceMixin {
       data: request,
       create: () =>
           BaseResponse<GeneralResponse>(create: () => GeneralResponse()),
+    );
+
+    return response.response;
+  }
+
+  Future<BaseResponse<ChangeProfileResponse>> changeProfile(
+      String? name, String? phoneNumber, String? email) async {
+    final Map<String, dynamic> request = {};
+    if (name != null && name.isNotEmpty) {
+      request['name'] = name;
+    }
+    if (phoneNumber != null && phoneNumber.isNotEmpty) {
+      request['phoneNumber'] = phoneNumber;
+    }
+    if (email != null && email.isNotEmpty) {
+      request['email'] = email;
+    }
+
+    var response = await apiService.request(
+      route: ApiRoute(ApiType.updateProfile),
+      data: request,
+      create: () => BaseResponse<ChangeProfileResponse>(
+          create: () => ChangeProfileResponse()),
     );
 
     return response.response;

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
@@ -18,7 +16,8 @@ class CreatePassword extends StatefulWidget {
   static const String routeName = "/createpassword";
   final SignupRequest? request;
   final UserType? userType;
-  const CreatePassword({Key? key, this.request, this.userType }) : super(key: key);
+  const CreatePassword({Key? key, this.request, this.userType})
+      : super(key: key);
 
   @override
   State<CreatePassword> createState() => _CreatePasswordState();
@@ -38,10 +37,9 @@ class _CreatePasswordState extends State<CreatePassword> {
           model.context = context;
           model.init(context, OnboardingPageType.createPassword);
         },
-        builder: (BuildContext context, model, child) =>
-            DefaultScaffold(
+        builder: (BuildContext context, model, child) => DefaultScaffold(
               showAppBar: true,
-              includeAppBarBackButton:true,
+              includeAppBarBackButton: true,
               showAppBarWithStringTitle: true,
               title: "Create Password",
               busy: model.loading,
@@ -50,7 +48,6 @@ class _CreatePasswordState extends State<CreatePassword> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Center(
                       child: Text(
                         "Choose a strong password to protect your account",
@@ -69,30 +66,30 @@ class _CreatePasswordState extends State<CreatePassword> {
                             keyboardType: TextInputType.text,
                             node: model.passwordFocusNode,
                             validate: (value) =>
-                                ValidationUtil.validatePassword(value) ,
+                                ValidationUtil.validatePassword(value),
                             // onSave: (value) =>
                             // model.loginRequest.password = value,
                           ).padding(bottom: 10),
-
                           PasswordInputField(
                             controller: model.confirmPassword,
                             labelText: "Confirm New Password",
                             keyboardType: TextInputType.text,
                             node: model.confirmPasswordFocusNode,
-                            validate: (value) => ValidationUtil.validateConfirmPassword(value, model.password.text),
+                            validate: (value) =>
+                                ValidationUtil.validateConfirmPassword(
+                                    value, model.password.text),
                             // onSave: (value) =>
                             // model.loginRequest.password = value,
                           ).padding(bottom: 10),
-
                           ElevatedButton(
                             onPressed: !model.isButtonEnabled
                                 ? null
                                 : () {
-                              FocusScope.of(context).unfocus();
-                              model.formKey.currentState!.save();
+                                    FocusScope.of(context).unfocus();
+                                    model.formKey.currentState!.save();
 
-                              model.proceedPassword();
-                            },
+                                    model.proceedPassword();
+                                  },
                             child: const Text("Done"),
                           )
                         ],
@@ -103,6 +100,4 @@ class _CreatePasswordState extends State<CreatePassword> {
               ),
             ));
   }
-
-// ... (Add dispose method to clean up controllers)
 }

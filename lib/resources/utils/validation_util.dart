@@ -52,4 +52,11 @@ class ValidationUtil {
       return 'Invalid email address';
     }
   }
+
+  static String? validateText(String text) {
+    if (text.isEmpty) {
+      return "Input cannot be empty";
+    }
+    return null;
+  }
 }
