@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+enum ApiType { registerUser, requestEmailOtp, validateEmailOtp, states, lgas, login, profile, laundyAbout, laundyServiceItems, submitOrder }
 enum ApiType {
   registerUser,
   requestEmailOtp,
