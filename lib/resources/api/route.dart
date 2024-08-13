@@ -13,7 +13,21 @@ enum ApiType {
   passwordReset,
   laundyServiceItems,
   updateProfile,
+  submitOrder
 }
+
+// enum ApiType {
+//   registerUser,
+//   requestEmailOtp,
+//   validateEmailOtp,
+//   states,
+//   lgas,
+//   login,
+//   profile,
+//   laundyAbout,
+//   laundyServiceItems,
+//   submitOrder
+// }
 
 class ApiRoute implements APIRouteConfigurable {
   final ApiType type;
@@ -65,6 +79,13 @@ class ApiRoute implements APIRouteConfigurable {
       case ApiType.validateEmailOtp:
         return RequestOptions(
             path: '/auth/email-verification',
+            method: ApiMethod.post,
+            data: data,
+            extra: authorize);
+
+      case ApiType.submitOrder:
+        return RequestOptions(
+            path: '/laundry-orders?$routeParams',
             method: ApiMethod.post,
             data: data,
             extra: authorize);

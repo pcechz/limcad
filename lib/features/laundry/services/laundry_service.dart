@@ -1,9 +1,11 @@
 
+import 'package:limcad/features/auth/services/signup_service.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/api/route.dart';
 import 'package:limcad/resources/locator.dart';
+import 'package:limcad/resources/models/no_object_response.dart';
 import 'package:stacked/stacked.dart';
 
 import '../../../resources/api/base_response.dart';
@@ -26,4 +28,28 @@ class LaundryService with ListenableServiceMixin {
         create: () => BaseResponse<LaundryServiceResponse>(create: () => LaundryServiceResponse()));
     return response.response;
   }
+
+
+  Future<BaseResponse<NoObjectResponse>> submitOrder(Map<String, dynamic> orderItemJson) async {
+    final orderRequest = {
+      "organizationId": 1,
+      "orderDetails":  // Use a list instead of a set
+        orderItemJson,
+      "deliveryDetails": {
+        "addressId": locator<AuthenticationService>().profile?.address?[0].toJson(),
+        "pickupDate": "2024-08-20"
+      }
+    };
+    var loginResponse = await apiService.request(
+        route: ApiRoute(ApiType.submitOrder, routeParams: "paymentMode=CASH"),
+        data: orderRequest,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse())
+    );
+    return loginResponse.response;
+  }
+
+
+
+
 }

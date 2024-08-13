@@ -290,7 +290,6 @@ class ProfileVM extends BaseVM {
     }
   }
 
-// Helper function to show an error dialog
   void showErrorDialog(BuildContext context, String message) {
     showDialog(
       context: context,

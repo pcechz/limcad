@@ -6,6 +6,7 @@ import 'package:limcad/features/laundry/model/about_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
+import 'package:limcad/resources/api/response_code.dart';
 import 'package:limcad/resources/base_vm.dart';
 import 'package:limcad/resources/locator.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -107,14 +108,34 @@ class LaundryVM extends BaseVM {
         });
   }
 
-  void proceedToPay() {
+  Map<String, dynamic> generateOrderJson() {
+    List<Map<String, dynamic>> itemsJson = selectedItems.entries.map((entry) {
+      int itemId = items!.indexOf(entry.key) + 1; // 1-based index
+      return {
+        "itemId": itemId,
+        "quantity":  entry.value.toInt(),
+      };
+    }).toList();
+
+    return {
+      "items": itemsJson,
+    };
+  }
+
+
+
+  Future<void> proceedToPay() async {
     isLoading(true);
-    // Log the selected items and quantities
-    selectedItems.forEach((item, quantity) {
-      print('Item: ${item.itemName}, Quantity: $quantity');
-    });
+    Map<String, dynamic> orderJson = generateOrderJson();
+    print('Order JSON: $orderJson');
+    final response = await locator<LaundryService>().submitOrder(orderJson);
+
+    if (response.status == ResponseCode.success || response.status == ResponseCode.created) {
+      Logger().i(response.data);
+    }
     isLoading(false);
   }
+
 
   Future<void> getLaundryAbout() async {
     laundryAbout = await locator<LaundryService>().getAbout();
