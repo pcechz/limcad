@@ -215,8 +215,71 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                           "Gender",
                           style: Theme.of(context).textTheme.bodyMedium!,
                         ).padding(bottom: 6),
+                        // DropdownButtonFormField<String>(
+                        //   value: model.gender,
+                        //   decoration: InputDecoration(
+                        //     prefixIcon:
+                        //         const Icon(CupertinoIcons.person, size: 18)
+                        //             .padding(left: 4),
+                        //     fillColor: Colors.white,
+                        //     contentPadding: const EdgeInsets.only(left: 27),
+                        //     focusedBorder: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //       borderSide: const BorderSide(
+                        //           width: 1.0, color: CustomColors.limcardFaded),
+                        //     ),
+                        //     enabledBorder: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //       borderSide: const BorderSide(
+                        //           width: 1.0, color: CustomColors.limcardFaded),
+                        //     ),
+                        //     border: OutlineInputBorder(
+                        //       borderRadius: BorderRadius.circular(30),
+                        //       borderSide: const BorderSide(
+                        //           width: 1.0, color: CustomColors.limcardFaded),
+                        //     ),
+                        //   ),
+                        //   style: const TextStyle(color: CustomColors.red400),
+                        //   icon:
+                        //       const Icon(CupertinoIcons.chevron_down, size: 18)
+                        //           .padding(right: 16),
+                        //   hint: const Text(
+                        //     "Gender",
+                        //     style: TextStyle(
+                        //         color: CustomColors.smallTextGrey,
+                        //         fontSize: 14),
+                        //   ),
+                        //   borderRadius: BorderRadius.circular(30),
+                        //   items: model.genderList
+                        //       .map((e) => DropdownMenuItem<String>(
+                        //             value: e,
+                        //             child: Padding(
+                        //               padding: const EdgeInsets.all(16.0),
+                        //               child: Text(
+                        //                 e,
+                        //                 style: const TextStyle(
+                        //                   fontSize: 14,
+                        //                   fontWeight: FontWeight.w400,
+                        //                   color: CustomColors
+                        //                       .blackPrimary, // Ensure color is visible
+                        //                 ),
+                        //               ),
+                        //             ),
+                        //           ))
+                        //       .toList(),
+                        //   validator: (value) =>
+                        //       ValidationUtil.validateInput(value, "Gender"),
+                        //   onSaved: (String? value) =>
+                        //       model.gender = value?.toUpperCase(),
+                        //   onChanged: (value) {
+                        //     if (value != null) {
+                        //       print(value);
+                        //       model.setGender(value);
+                        //     }
+                        //   },
+                        // ).padding(bottom: 20),
+
                         DropdownButtonFormField<String>(
-                          value: model.gender,
                           decoration: InputDecoration(
                             prefixIcon:
                                 const Icon(CupertinoIcons.person, size: 18)
@@ -239,7 +302,7 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                                   width: 1.0, color: CustomColors.limcardFaded),
                             ),
                           ),
-                          style: const TextStyle(color: CustomColors.red400),
+                          style: const TextStyle(color: CustomColors.black900),
                           icon:
                               const Icon(CupertinoIcons.chevron_down, size: 18)
                                   .padding(right: 16),
@@ -250,36 +313,24 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                                 fontSize: 14),
                           ),
                           borderRadius: BorderRadius.circular(30),
-                          items: model.genderList
-                              .map((e) => DropdownMenuItem<String>(
-                                    value: e,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Text(
-                                        e,
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          color: CustomColors
-                                              .blackPrimary, // Ensure color is visible
-                                        ),
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
-                          validator: (value) =>
-                              ValidationUtil.validateInput(value, "Gender"),
-                          onSaved: (String? value) =>
-                              model.gender = value?.toUpperCase(),
-                          onChanged: (value) {
-                            if (value != null) {
-                              print(value);
-                              model.setGender(value);
-                            }
+                          value: model.gender,
+                          isExpanded: true,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              model.gender = newValue;
+                            });
+                            model.setGender(newValue!);
                           },
-                        ).padding(bottom: 20),
+                          items: <String>['MALE', 'FEMALE']
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        )
                       ],
-                    ),
+                    ).padding(bottom: 40),
                     ElevatedButton(
                       onPressed: () {
                         FocusScope.of(context).unfocus();

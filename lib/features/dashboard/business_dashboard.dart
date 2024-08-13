@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:limcad/features/dashboard/widgets/services_widget.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/laundry_detail.dart';
+import 'package:limcad/resources/models/profile.dart';
 import 'package:limcad/resources/routes.dart';
+import 'package:limcad/resources/storage/base_preference.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
@@ -19,6 +21,8 @@ class BusinessDashboard extends StatefulWidget {
 }
 
 class BusinessDashboardState extends State<BusinessDashboard> {
+  ProfileResponse? profileResponse = ProfileResponse();
+
   List<ServiceModel> getTopServiceList() {
     return [
       ServiceModel(
@@ -62,6 +66,13 @@ class BusinessDashboardState extends State<BusinessDashboard> {
   }
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProfile();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return DefaultScaffold2(
       showAppBar: false,
@@ -95,7 +106,7 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                       title: Text('Welcome Back,',
                           style: primaryTextStyle(
                               size: 16, weight: FontWeight.w400)),
-                      subtitle: Text('Helen laundry',
+                      subtitle: Text(profileResponse?.name ?? 'Helen laundry',
                           style: primaryTextStyle(
                               size: 18, weight: FontWeight.w600)),
                     ),
@@ -157,8 +168,7 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                               18,
                               backgroundColor: white,
                             ),
-                            child:
-                            ListTile(
+                            child: ListTile(
                               horizontalTitleGap: 8,
                               leading: Container(
                                   decoration: const BoxDecoration(
@@ -243,7 +253,6 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                     ],
                   ),
                 ),
-
                 Container(
                   decoration: const BoxDecoration(color: white),
                   child: Column(
@@ -297,7 +306,10 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                                       children: [
                                         SizedBox(
                                           width: 122,
-                                          child: Text(index.isEven ? 'Alice Johnson' : 'David Adelaja',
+                                          child: Text(
+                                              index.isEven
+                                                  ? 'Alice Johnson'
+                                                  : 'David Adelaja',
                                               overflow: TextOverflow.ellipsis,
                                               style: primaryTextStyle(
                                                   size: 18,
@@ -311,10 +323,15 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(index.isEven ? 'Paid' : 'Paid on delivery',
+                                        Text(
+                                            index.isEven
+                                                ? 'Paid'
+                                                : 'Paid on delivery',
                                             style: primaryTextStyle(
                                                 size: 12,
-                                                color: index.isEven ? Colors.green : Colors.orange,
+                                                color: index.isEven
+                                                    ? Colors.green
+                                                    : Colors.orange,
                                                 weight: FontWeight.w400)),
                                         Text('Delivery: 13/05/24',
                                             style: primaryTextStyle(
@@ -334,7 +351,6 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                     ],
                   ),
                 ),
-
                 Container(
                   decoration:
                       const BoxDecoration(color: CustomColors.backgroundColor),
@@ -370,45 +386,66 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                Row(children: [
-                                  Container(
-                                      decoration:  BoxDecoration(
-                                          shape: BoxShape.rectangle, color: index.isEven  ? Colors.green : CustomColors.clotheColor.withOpacity(0.8), borderRadius: BorderRadius.all(Radius.circular(8))),
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.rectangle,
+                                          color: index.isEven
+                                              ? Colors.green
+                                              : CustomColors.clotheColor
+                                                  .withOpacity(0.8),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(8))),
                                       width: 28,
-                                      height: 28,),
-                                  8.width,
-
-                                  Text(index.isEven ?  "Total orders" : "Total deliveries",
-                                      style: primaryTextStyle(
-                                          size: 16,
-                                          color: Colors.black
-                                              .withOpacity(0.6),
-                                          weight: FontWeight.w500))
-                                ],).paddingBottom(14),
-
+                                      height: 28,
+                                    ),
+                                    8.width,
+                                    Text(
+                                        index.isEven
+                                            ? "Total orders"
+                                            : "Total deliveries",
+                                        style: primaryTextStyle(
+                                            size: 16,
+                                            color:
+                                                Colors.black.withOpacity(0.6),
+                                            weight: FontWeight.w500))
+                                  ],
+                                ).paddingBottom(14),
                                 Text("48.4k",
-                                    style: primaryTextStyle(
-                                        size: 32,
-                                        color: Colors.black,
-                                        weight: FontWeight.w600)).paddingBottom(22),
-
-                                Row(children: [
-                                  Container(
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle, color: Colors.green),
-                                    width: 20,
-                                    height: 20,  child: Center(child: Icon(Icons.trending_up_outlined, color: white, size: 10,),),),
-                                  8.width,
-
-                                  Text(index.isEven ?  "Total orders" : "Total deliveries",
-                                      style: primaryTextStyle(
-                                          size: 16,
-                                          color: Colors.black
-                                              .withOpacity(0.6),
-                                          weight: FontWeight.w500))
-                                ],)
-
-
+                                        style: primaryTextStyle(
+                                            size: 32,
+                                            color: Colors.black,
+                                            weight: FontWeight.w600))
+                                    .paddingBottom(22),
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.green),
+                                      width: 20,
+                                      height: 20,
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.trending_up_outlined,
+                                          color: white,
+                                          size: 10,
+                                        ),
+                                      ),
+                                    ),
+                                    8.width,
+                                    Text(
+                                        index.isEven
+                                            ? "Total orders"
+                                            : "Total deliveries",
+                                        style: primaryTextStyle(
+                                            size: 16,
+                                            color:
+                                                Colors.black.withOpacity(0.6),
+                                            weight: FontWeight.w500))
+                                  ],
+                                )
                               ],
                             ).padding(left: 22, top: 14),
                           );
@@ -417,7 +454,6 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                     ],
                   ),
                 ),
-
                 Container(
                   decoration: const BoxDecoration(color: white),
                   child: Column(
@@ -425,8 +461,8 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                       Row(
                         children: [
                           Text('Delivery history',
-                              style: primaryTextStyle(
-                                  size: 24, weight: FontWeight.w500))
+                                  style: primaryTextStyle(
+                                      size: 24, weight: FontWeight.w500))
                               .expand(),
                           TextButton(
                               onPressed: () {
@@ -465,32 +501,34 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                                   children: [
                                     Row(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         SizedBox(
                                           width: 122,
-                                          child: Text(index.isEven ? 'Alice Johnson' : 'Samson Dapo',
+                                          child: Text(
+                                              index.isEven
+                                                  ? 'Alice Johnson'
+                                                  : 'Samson Dapo',
                                               overflow: TextOverflow.ellipsis,
                                               style: primaryTextStyle(
                                                   size: 18,
                                                   weight: FontWeight.w400)),
-
                                         ),
-
                                         Text('See all',
                                             style: primaryTextStyle(
                                                 size: 12,
-                                                color: CustomColors.limcadPrimary,
+                                                color:
+                                                    CustomColors.limcadPrimary,
                                                 weight: FontWeight.w400))
                                       ],
                                     ).paddingBottom(10),
                                     Row(
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                          CrossAxisAlignment.start,
                                       mainAxisAlignment:
-                                      MainAxisAlignment.start,
+                                          MainAxisAlignment.start,
                                       children: [
                                         Text('Delivery: Today, 03:30pm',
                                             style: primaryTextStyle(
@@ -516,5 +554,12 @@ class BusinessDashboardState extends State<BusinessDashboard> {
         ),
       ),
     );
+  }
+
+  getProfile() async {
+    BasePreference basePreference = await BasePreference.getInstance();
+    setState(() {
+      profileResponse = basePreference.getProfileDetails();
+    });
   }
 }

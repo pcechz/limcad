@@ -58,10 +58,12 @@ class ProfileVM extends BaseVM {
   StateResponse? selectedState;
   LGAResponse? selectedLGA;
   ProfileResponse? profileResponse = ProfileResponse();
+  String? role;
 
   init(BuildContext context, ProfileOption profileOption) {
     this.context = context;
     this.profileOption = profileOption;
+    this.role = role;
 
     if (profileOption == ProfileOption.addAddress) {
       fetchState();
@@ -73,7 +75,9 @@ class ProfileVM extends BaseVM {
 
   getProfile() async {
     BasePreference basePreference = await BasePreference.getInstance();
+
     profileResponse = basePreference.getProfileDetails();
+
     notifyListeners();
   }
 

@@ -9,6 +9,7 @@ import 'package:limcad/features/auth/auth/business_signup_continuation.dart';
 import 'package:limcad/features/auth/auth/login.dart';
 import 'package:limcad/features/auth/auth/signup.dart';
 import 'package:limcad/features/auth/models/business_onboarding_request.dart';
+import 'package:limcad/features/auth/models/login_response.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_response.dart';
 import 'package:limcad/features/auth/services/signup_service.dart';
@@ -24,6 +25,7 @@ import 'package:limcad/resources/base_vm.dart';
 import 'package:limcad/resources/bottom_home.dart';
 import 'package:limcad/resources/locator.dart';
 import 'package:limcad/resources/models/general_response.dart';
+import 'package:limcad/resources/models/profile.dart';
 import 'package:limcad/resources/models/state_model.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/storage/base_preference.dart';
@@ -154,7 +156,7 @@ class AuthVM extends BaseVM {
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
         lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
-    onboardingRequest?.staffRequest?.gender = "MALE";
+    onboardingRequest?.staffRequest?.gender = gender;
     onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
     onboardingRequest?.staffRequest?.userType = userType?.name.toString();
     onboardingRequest?.organizationRequest?.address = addressController.text;
@@ -352,45 +354,87 @@ class AuthVM extends BaseVM {
     //  }
   }
 
-  Future<void> proceedLogin(UserType? theUsertype) async {
-    signupRequest?.password = password.text;
-    signupRequest?.email = emailController.text;
-    isLoading(true);
-    final response = await locator<AuthenticationService>()
-        .login(signupRequest, theUsertype);
-    isLoading(false);
-    if (response.status == ResponseCode.success) {
-      if (response.data?.token != null) {
-        final tokenJson = {
-          "token": response.data?.token,
-          "refreshToken": response.data?.refreshToken
-        };
-        _preference.saveToken(Tokens.fromJson(tokenJson));
+  Future<void> proceedLogin(UserType? userType) async {
+    try {
+      if (signupRequest == null || userType == null) {
+        throw Exception('Invalid signup request or user type');
       }
-      if (response.data?.user != null) {
-        _preference.saveLoginDetails(response.data!.user!);
-        isLoading(true);
-        final profileResponse =
-            await locator<AuthenticationService>().getProfile();
-        isLoading(false);
 
-        if (profileResponse.status == ResponseCode.success &&
-            profileResponse.data != null) {
-          if (context.mounted) {
-            NavigationService.pushScreen(context,
-                screen: const HomePage("PERSONAL"), withNavBar: false);
-          }
-        }
-      }
-    } else if (response.status == ResponseCode.unauthorized) {
-      NavigationService.pushScreen(context,
-          screen: SignupOtpPage(
+      signupRequest!.password = password.text;
+      signupRequest!.email = emailController.text;
+      isLoading(true);
+      final response = await locator<AuthenticationService>()
+          .login(signupRequest!, userType);
+
+      if (response.status == ResponseCode.success) {
+        await _handleSuccessfulLogin(response.data, userType);
+      } else if (response.status == ResponseCode.unauthorized) {
+        if (context.mounted) {
+          NavigationService.pushScreen(
+            context,
+            screen: SignupOtpPage(
               request: signupRequest,
-              userType: theUsertype,
-              from: LoginPage.routeName),
-          withNavBar: true);
+              userType: userType,
+              from: LoginPage.routeName,
+            ),
+            withNavBar: true,
+          );
+        }
+      } else {
+        ViewUtil.showSnackBar(response.message ?? "An error occurred", true);
+      }
+    } finally {
+      isLoading(false);
+    }
+  }
+
+  Future<void> _handleSuccessfulLogin(
+      LoginResponse? data, UserType userType) async {
+    if (data?.token != null) {
+      await _saveToken(data!);
+    }
+
+    if (data?.user != null) {
+      await _saveUserDetails(data!.user!, userType);
+      await _fetchAndNavigateToProfile(userType);
+    }
+  }
+
+  Future<void> _saveToken(LoginResponse data) async {
+    final tokenJson = {"token": data.token, "refreshToken": data.refreshToken};
+    _preference.saveToken(Tokens.fromJson(tokenJson));
+  }
+
+  Future<void> _saveUserDetails(User user, UserType userType) async {
+    if (userType == UserType.personal) {
+      _preference.saveLoginDetails(user);
     } else {
-      ViewUtil.showSnackBar(response.message ?? "An error occurred", true);
+      _preference.saveBusinessLoginDetails(user);
+    }
+  }
+
+  Future<void> _fetchAndNavigateToProfile(UserType userType) async {
+    isLoading(true);
+    try {
+      final profileResponse = userType == UserType.personal
+          ? await locator<AuthenticationService>().getProfile()
+          : await locator<AuthenticationService>().getBusinessProfile();
+
+      if (profileResponse.status == ResponseCode.success &&
+          profileResponse.data != null) {
+        if (context.mounted) {
+          NavigationService.pushScreen(
+            context,
+            screen: HomePage(
+                userType == UserType.personal ? "personal" : "business"),
+            withNavBar: false,
+          );
+        }
+      } else {
+        throw Exception('Failed to fetch user profile');
+      }
+    } finally {
+      isLoading(false);
     }
   }
 

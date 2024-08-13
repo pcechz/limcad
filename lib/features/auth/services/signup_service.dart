@@ -190,4 +190,17 @@ class AuthenticationService with ListenableServiceMixin {
     }
     return response.response;
   }
+
+  Future<BaseResponse<ProfileResponse>> getBusinessProfile() async {
+    var response = await apiService.request(
+        route: ApiRoute(ApiType.businessProfile),
+        create: () =>
+            BaseResponse<ProfileResponse>(create: () => ProfileResponse()));
+    _profile = response.response.data;
+    if (response.response.status == ResponseCode.success) {
+      BasePreference basePreference = await BasePreference.getInstance();
+      basePreference.saveProfileDetails(_profile!);
+    }
+    return response.response;
+  }
 }

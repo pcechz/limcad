@@ -19,11 +19,12 @@ class BasePreference {
       return BasePreference(preferences: preferences);
     }
   }
+
   static const _token = "token";
   static const _loginResponse = "loginResponse";
   static const _profile = "profile";
   static const _isRegistered = "isRegistered";
-
+  static const _businessLoginResponse = "businessloginResponse";
 
   void saveIsRegistered(bool isRegistered) {
     preferences.setBool(_isRegistered, isRegistered);
@@ -41,6 +42,19 @@ class BasePreference {
     preferences.setString(_loginResponse, json.encode(profile.toJson()));
   }
 
+  void saveBusinessLoginDetails(User profile) {
+    preferences.setString(
+        _businessLoginResponse, json.encode(profile.toJson()));
+  }
+
+  User? getBusinessLoginDetails() {
+    String? string = preferences.getString(_businessLoginResponse);
+    if (string != null) {
+      return User().fromJson(json.decode(string));
+    }
+    return null;
+  }
+
   User? getLoginDetails() {
     String? string = preferences.getString(_loginResponse);
     if (string != null) {
@@ -48,7 +62,6 @@ class BasePreference {
     }
     return null;
   }
-
 
   void saveProfileDetails(ProfileResponse profile) {
     preferences.setString(_profile, json.encode(profile.toJson()));

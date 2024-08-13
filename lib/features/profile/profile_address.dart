@@ -31,7 +31,10 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, ProfileOption.addAddress);
+          model.init(
+            context,
+            ProfileOption.addAddress,
+          );
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,

@@ -4,28 +4,14 @@ class ValidationUtil {
   static String? validatePassword(String password) {
     String errMessage = "";
     if (password.isEmpty) {
-      errMessage = "${errMessage}Password is required. ";
+      errMessage = "Password is required. ";
     }
-    if (!RegExp(r"[A-Z]").hasMatch(password)) {
-      errMessage =
-          "${errMessage}Password must contain at least an upper case alphabet. ";
-    }
-    if (!RegExp(r"[a-z]").hasMatch(password)) {
-      errMessage =
-          "${errMessage}Password must contain at least lower case alphabet. ";
-    }
-    if (!RegExp(r"[0-9]").hasMatch(password)) {
-      errMessage = "${errMessage}Password must contain at least a digit. ";
-    }
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {
-      errMessage = "${errMessage}Password must contain a special character. ";
-    }
-    if (password.length < 8 || password.length > 30) {
-      errMessage = "${errMessage}Password length must be between 8 and 30. ";
-    }
-    if (password.contains(" ")) {
-      errMessage = "${errMessage}Passowrd cannot contain whitespace. ";
-    }
+    if (!RegExp(r"[A-Z]").hasMatch(password)) {}
+    if (!RegExp(r"[a-z]").hasMatch(password)) {}
+    if (!RegExp(r"[0-9]").hasMatch(password)) {}
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {}
+    if (password.length < 8 || password.length > 30) {}
+    if (password.contains(" ")) {}
     return errMessage.isEmpty ? null : errMessage;
   }
 

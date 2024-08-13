@@ -15,6 +15,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfilePage extends StatefulWidget {
+  final String? role;
+  ProfilePage({super.key, this.role});
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }

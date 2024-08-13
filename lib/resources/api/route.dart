@@ -15,6 +15,7 @@ enum ApiType {
   updateProfile,
   submitOrder,
   businessOnboarding,
+  businessProfile,
 }
 
 // enum ApiType {
@@ -124,7 +125,11 @@ class ApiRoute implements APIRouteConfigurable {
             method: ApiMethod.post,
             data: data,
             extra: authorize);
-
+      case ApiType.businessProfile:
+        return RequestOptions(
+            path: "/business/staff/profile",
+            method: ApiMethod.get,
+            extra: authorize);
       default:
         return null;
     }
