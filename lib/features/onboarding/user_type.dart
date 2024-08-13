@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:limcad/features/onboarding/constants/constants.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
@@ -19,9 +17,9 @@ class UserTypePage extends StatefulWidget {
 class _UserTypePageState extends State<UserTypePage> {
   @override
   Widget build(BuildContext context) {
-    return  DefaultScaffold(
+    return DefaultScaffold(
       showAppBar: false,
-      includeAppBarBackButton:false,
+      includeAppBarBackButton: false,
       title: "",
       backgroundColor: Colors.white,
       body: SingleChildScrollView(child: onBordingBody()),
@@ -29,134 +27,138 @@ class _UserTypePageState extends State<UserTypePage> {
   }
 
   Widget onBordingBody() => Container(
-    child: Column(
-      children: [
-        Center(child: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: "Choose the option that ",
-                style: TextStyle(
-                  fontFamily: Constants.POPPINS,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 32,
-                  color: Colors.black,
+        child: Column(
+          children: [
+            Center(
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Choose the option that ",
+                      style: TextStyle(
+                        fontFamily: Constants.POPPINS,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 32,
+                        color: Colors.black,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "best suits ",
+                      style: TextStyle(
+                        fontFamily: Constants.POPPINS,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 32,
+                        color: CustomColors.limcadPrimary,
+                      ),
+                    ),
+                    TextSpan(
+                      text: "you",
+                      style: TextStyle(
+                        fontFamily: Constants.POPPINS,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 32,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              TextSpan(
-                text: "best suits ",
-                style: TextStyle(
-                  fontFamily: Constants.POPPINS,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 32,
-                  color: CustomColors.limcadPrimary,
-
-                ),
-              ),
-              TextSpan(
-                text: "you",
-                style: TextStyle(
-                  fontFamily: Constants.POPPINS,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 32,
-                  color: Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ).padding(top: 100, bottom: 72),),
-        personalBody().padding(bottom: 40),
-        Center(
-          child: Text( "OR",
-            style: TextStyle(
-              fontFamily: Constants.POPPINS,
-              fontWeight: FontWeight.w400,
-              fontSize: 28,
-              color: Colors.black,
+              ).padding(top: 100, bottom: 72),
             ),
-          ),
-        ),
-        businessBody().padding(top: 40)
-      ],
-    ).paddingSymmetric(horizontal: 16, vertical: 16),
-  );
-
+            personalBody().padding(bottom: 40),
+            Center(
+              child: Text(
+                "OR",
+                style: TextStyle(
+                  fontFamily: Constants.POPPINS,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 28,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            businessBody().padding(top: 40)
+          ],
+        ).paddingSymmetric(horizontal: 16, vertical: 16),
+      );
 
   Widget personalBody() => Container(
-    child: Column(
-      children: [
-        Center(child:
-            SizedBox( width: 64, height: 64, child: Image.asset(AssetUtil.individualAccount, scale: 1.5,))).padding(bottom: 16),
-
-        Center(
-          child: Container(
-            width: 331,
-            child: RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Create your ",
-                    style: TextStyle(
-                      fontFamily: Constants.OPEN_SANS,
-                      fontWeight: FontWeight.w500,
-                      
-                      height: 2,
-                      fontSize: 12.5,
-                      color: CustomColors.kBlack
+        child: Column(
+          children: [
+            Center(
+                child: SizedBox(
+                    width: 64,
+                    height: 64,
+                    child: Image.asset(
+                      AssetUtil.individualAccount,
+                      scale: 1.5,
+                    ))).padding(bottom: 16),
+            Center(
+                child: Container(
+              width: 331,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Create your ",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w500,
+                          height: 2,
+                          fontSize: 12.5,
+                          color: CustomColors.kBlack),
                     ),
-                  ),
-                  TextSpan(
-                    text: "personal account ",
-                    style: TextStyle(
-                      fontFamily: Constants.OPEN_SANS,
-                      fontWeight: FontWeight.w500,
-                      
-                      height: 2,
-                      fontSize: 12.5,
-                      color: CustomColors.limcadPrimary
+                    TextSpan(
+                      text: "personal account ",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w500,
+                          height: 2,
+                          fontSize: 12.5,
+                          color: CustomColors.limcadPrimary),
                     ),
-                  ),
-                  TextSpan(
-                    text: "to enjoy seamless booking and tracking of laundry services",
-                    style: TextStyle(
-                      fontFamily: Constants.OPEN_SANS,
-                      fontWeight: FontWeight.w500,
-                      
-                      height: 2,
-                      fontSize: 12.5,
-                      color: CustomColors.kBlack
-
+                    TextSpan(
+                      text:
+                          "to enjoy seamless booking and tracking of laundry services",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w500,
+                          height: 2,
+                          fontSize: 12.5,
+                          color: CustomColors.kBlack),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          )
-        ).padding(bottom: 16),
-
-        ElevatedButton(
-          onPressed: (){
-            NavigationService.pushScreen(context,
-                screen:  const GetStartedPage(theUsertype: UserType.personal,),
-                withNavBar: false
-            );
-          },
-          child: const Text("Personal account"),
-        )
-      ],
-    ).paddingSymmetric(horizontal: 16, vertical: 16),
-  );
+            )).padding(bottom: 16),
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.pushScreen(context,
+                    screen: const GetStartedPage(
+                      theUsertype: UserType.personal,
+                    ),
+                    withNavBar: false);
+              },
+              child: const Text("Personal account"),
+            )
+          ],
+        ).paddingSymmetric(horizontal: 16, vertical: 16),
+      );
 
   Widget businessBody() => Container(
-    child: Column(
-      children: [
-        Center(child:
-        SizedBox( width: 64, height: 64, child: Image.asset(AssetUtil.businessAccount, scale: 2,))).padding(bottom: 16),
-
-        Center(
-            child: Container(
+        child: Column(
+          children: [
+            Center(
+                child: SizedBox(
+                    width: 64,
+                    height: 64,
+                    child: Image.asset(
+                      AssetUtil.businessAccount,
+                      scale: 2,
+                    ))).padding(bottom: 16),
+            Center(
+                child: Container(
               width: 331,
               child: RichText(
                 textAlign: TextAlign.center,
@@ -167,53 +169,42 @@ class _UserTypePageState extends State<UserTypePage> {
                       style: TextStyle(
                           fontFamily: Constants.OPEN_SANS,
                           fontWeight: FontWeight.w500,
-                          
                           height: 2,
                           fontSize: 12.5,
-                          color: CustomColors.kBlack
-                      ),
+                          color: CustomColors.kBlack),
                     ),
                     TextSpan(
                       text: " laundry or ride business ",
                       style: TextStyle(
                           fontFamily: Constants.OPEN_SANS,
                           fontWeight: FontWeight.w500,
-                          
                           height: 2,
                           fontSize: 12.5,
-                          color: CustomColors.limcadPrimary
-                      ),
+                          color: CustomColors.limcadPrimary),
                     ),
                     TextSpan(
                       text: "tto connect with customers and expand your reach.",
                       style: TextStyle(
                           fontFamily: Constants.OPEN_SANS,
                           fontWeight: FontWeight.w500,
-                          
                           height: 2,
                           fontSize: 12.5,
-                          color: CustomColors.kBlack
-
-                      ),
+                          color: CustomColors.kBlack),
                     ),
                   ],
                 ),
               ),
+            )).padding(bottom: 16),
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.pushScreen(context,
+                    screen:
+                        const GetStartedPage(theUsertype: UserType.business),
+                    withNavBar: false);
+              },
+              child: const Text("Business account"),
             )
-        ).padding(bottom: 16),
-
-        ElevatedButton(
-          onPressed: (){
-            NavigationService.pushScreen(context,
-                screen:  const GetStartedPage(theUsertype: UserType.businness),
-                withNavBar: false
-            );
-          },
-          child: const Text("Business account"),
-        )
-      ],
-    ).paddingSymmetric(horizontal: 16, vertical: 16),
-  );
-
-
+          ],
+        ).paddingSymmetric(horizontal: 16, vertical: 16),
+      );
 }

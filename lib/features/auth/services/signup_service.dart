@@ -1,3 +1,5 @@
+import 'package:limcad/features/auth/models/business_onboarding_request.dart';
+import 'package:limcad/features/auth/models/business_onboarding_response.dart';
 import 'package:limcad/features/auth/models/login_response.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_response.dart';
@@ -57,9 +59,9 @@ class AuthenticationService with ListenableServiceMixin {
   }
 
   Future<BaseResponse<GeneralResponse>> requestOtp(
-      SignupRequest? signupRequest, UserType? userType) async {
+      String? email, UserType? userType) async {
     final otprequest = {
-      "email": signupRequest?.email,
+      "email": email,
       "userType": userType?.name.toUpperCase()
     };
     var loginResponse = await apiService.request(
@@ -79,6 +81,45 @@ class AuthenticationService with ListenableServiceMixin {
       create: () =>
           BaseResponse<GeneralResponse>(create: () => GeneralResponse()),
     );
+
+    return response.response;
+  }
+
+  Future<BaseResponse<BusinessOnboardingResponse>> createBusinessAccount(
+      BusinessOnboardingRequest businessRequest) async {
+    final staffRequest = businessRequest.staffRequest;
+    final organizationRequest = businessRequest.organizationRequest;
+
+    final request = {
+      "staffRequest": staffRequest != null
+          ? {
+              "name": staffRequest.name,
+              "email": staffRequest.email,
+              "phoneNumber": staffRequest.phoneNumber,
+              "password": staffRequest.password,
+              "roleEnums": staffRequest.roleEnums,
+              "userType": staffRequest.userType?.toUpperCase(),
+              "gender": staffRequest.gender,
+              "addressRequest":
+                  staffRequest.addressRequest?.map((e) => e.toJson()).toList(),
+            }
+          : null,
+      "organizationRequest": organizationRequest != null
+          ? {
+              "name": organizationRequest.name,
+              "address": organizationRequest.address,
+              "location": organizationRequest.location,
+              "email": organizationRequest.email,
+              "phoneNumber": organizationRequest.phoneNumber,
+            }
+          : null
+    };
+
+    var response = await apiService.request(
+        route: ApiRoute(ApiType.businessOnboarding),
+        data: request,
+        create: () => BaseResponse<BusinessOnboardingResponse>(
+            create: () => BusinessOnboardingResponse()));
 
     return response.response;
   }

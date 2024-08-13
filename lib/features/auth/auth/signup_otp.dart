@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/auth/models/business_onboarding_request.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
@@ -13,8 +14,15 @@ class SignupOtpPage extends StatefulWidget {
   static const String routeName = "/signupotp";
   final SignupRequest? request;
   final UserType? userType;
+  final BusinessOnboardingRequest? businessRequest;
   final String from;
-  const SignupOtpPage({Key? key, this.request, this.userType, required this.from }) : super(key: key);
+  const SignupOtpPage(
+      {Key? key,
+      this.request,
+      this.userType,
+      required this.from,
+      this.businessRequest})
+      : super(key: key);
 
   @override
   State<SignupOtpPage> createState() => _SignupOtpPageState();
@@ -22,7 +30,6 @@ class SignupOtpPage extends StatefulWidget {
 
 class _SignupOtpPageState extends State<SignupOtpPage> {
   late AuthVM model;
-
 
   @override
   Widget build(BuildContext context) {
@@ -35,10 +42,9 @@ class _SignupOtpPageState extends State<SignupOtpPage> {
           model.context = context;
           model.init(context, OnboardingPageType.signupOtp, widget.userType);
         },
-        builder: (BuildContext context, model, child) =>
-            DefaultScaffold(
+        builder: (BuildContext context, model, child) => DefaultScaffold(
               showAppBar: true,
-              includeAppBarBackButton:true,
+              includeAppBarBackButton: true,
               title: model.title,
               busy: model.loading,
               body: SingleChildScrollView(
@@ -46,24 +52,24 @@ class _SignupOtpPageState extends State<SignupOtpPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                  otpForm().hideIf(model.verified),
-                  otpFeedback().hideIf(!model.verified)
+                    otpForm().hideIf(model.verified),
+                    otpFeedback().hideIf(!model.verified)
                   ],
                 ),
               ),
             ));
   }
 
-  Widget otpForm(){
-    return   Column(
+  Widget otpForm() {
+    return Column(
       children: [
         Center(
           child: Text(
             "Verify Email Address",
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.headlineMedium!.merge(
-              const TextStyle(color: CustomColors.limcadPrimary),
-            ),
+                  const TextStyle(color: CustomColors.limcadPrimary),
+                ),
           ).padding(bottom: 8, top: 30),
         ),
         Center(
@@ -85,14 +91,13 @@ class _SignupOtpPageState extends State<SignupOtpPage> {
                 digitCount: 6,
                 // onSaved: (value) => otpValue = value,
               ).padding(bottom: 24),
-
               const Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text("Didn’t receive any OTP code? "),
                   TextButton(
                       onPressed: null,
-                      child:  Text(
+                      child: Text(
                         'Resend code',
                         style: TextStyle(
                             decoration: TextDecoration.underline,
@@ -100,17 +105,15 @@ class _SignupOtpPageState extends State<SignupOtpPage> {
                       )),
                 ],
               ).padding(bottom: 24),
-
-
               ElevatedButton(
                 onPressed: !model.isButtonEnabled
                     ? null
                     : () {
-                  FocusScope.of(context).unfocus();
-                  model.formKey.currentState!.save();
+                        FocusScope.of(context).unfocus();
+                        model.formKey.currentState!.save();
 
-                  model.proceedVerifyOTP();
-                },
+                        model.proceedVerifyOTP();
+                      },
                 child: const Text("Verify OTP"),
               )
             ],
@@ -122,18 +125,19 @@ class _SignupOtpPageState extends State<SignupOtpPage> {
     );
   }
 
-
-  Widget otpFeedback(){
-    return   Column(
+  Widget otpFeedback() {
+    return Column(
       children: [
-        Center(child: Image.asset(AssetUtil.otpEmailVerified, scale: 2.0),),
+        Center(
+          child: Image.asset(AssetUtil.otpEmailVerified, scale: 2.0),
+        ),
         Center(
           child: Text(
             "Email Verified",
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.headlineMedium!.merge(
-              const TextStyle(color: CustomColors.limcadPrimary),
-            ),
+                  const TextStyle(color: CustomColors.limcadPrimary),
+                ),
           ).padding(bottom: 8, top: 30),
         ),
         Center(
@@ -145,25 +149,22 @@ class _SignupOtpPageState extends State<SignupOtpPage> {
         ),
         Column(
           children: [
-
             ElevatedButton(
               onPressed: !model.isButtonEnabled
                   ? null
                   : () {
-                FocusScope.of(context).unfocus();
-               // model.formKey.currentState!.save();
+                      FocusScope.of(context).unfocus();
+                      // model.formKey.currentState!.save();
 
-                model.proceedFromVerifyOTP();
-              },
+                      model.proceedFromVerifyOTP();
+                    },
               child: const Text("Continue"),
             )
           ],
         ).paddingSymmetric(horizontal: 16, vertical: 20),
-     
       ],
     ).paddingSymmetric(
       horizontal: 24,
     );
   }
-
 }

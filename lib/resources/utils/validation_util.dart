@@ -37,6 +37,24 @@ class ValidationUtil {
     return null;
   }
 
+  static String? validatePhoneNumber(String? value) {
+    final RegExp phoneRegex = RegExp(r'^\+?[0-9]{10,15}$');
+
+    if (value == null || value.isEmpty) {
+      return 'Phone number is required';
+    } else if (!phoneRegex.hasMatch(value)) {
+      return 'Please enter a valid phone number';
+    }
+    return null;
+  }
+
+  static bool isValidPassword(String password) {
+    return password.length >= 8 &&
+        password.contains(RegExp(r'[A-Za-z]')) &&
+        password.contains(RegExp(r'[0-9]')) &&
+        password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+  }
+
   static String? validateInput(String? value, String name) {
     return (value == null || value.isEmpty) ? "$name is required" : null;
   }

@@ -4,8 +4,11 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
+import 'package:limcad/features/auth/auth/business_signup.dart';
+import 'package:limcad/features/auth/auth/business_signup_continuation.dart';
 import 'package:limcad/features/auth/auth/login.dart';
 import 'package:limcad/features/auth/auth/signup.dart';
+import 'package:limcad/features/auth/models/business_onboarding_request.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_response.dart';
 import 'package:limcad/features/auth/services/signup_service.dart';
@@ -15,10 +18,12 @@ import 'package:limcad/features/auth/auth/signup_payment_details.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/onboarding/verify_id.dart';
 import 'package:limcad/resources/api/api_client.dart';
+import 'package:limcad/resources/api/base_response.dart';
 import 'package:limcad/resources/api/response_code.dart';
 import 'package:limcad/resources/base_vm.dart';
 import 'package:limcad/resources/bottom_home.dart';
 import 'package:limcad/resources/locator.dart';
+import 'package:limcad/resources/models/general_response.dart';
 import 'package:limcad/resources/models/state_model.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/storage/base_preference.dart';
@@ -43,6 +48,7 @@ class AuthVM extends BaseVM {
   final apiService = locator<APIClient>();
   late BuildContext context;
   SignupRequest? signupRequest = SignupRequest();
+  BusinessOnboardingRequest? onboardingRequest = BusinessOnboardingRequest();
   final formKey = GlobalKey<FormState>();
   final completeFormKey = GlobalKey<FormState>();
   final fullNameController = TextEditingController();
@@ -91,12 +97,11 @@ class AuthVM extends BaseVM {
 
   Future<void> init(BuildContext context,
       [OnboardingPageType? route, UserType? userT]) async {
-    this.context = context;
     userType = userT;
 
     if (route == OnboardingPageType.signupOtp) {
       final response = await locator<AuthenticationService>()
-          .requestOtp(signupRequest, userType);
+          .requestOtp(signupRequest?.email, userType);
       Logger().i(response.data);
       //otpId = response.data?.otpId;
     }
@@ -108,6 +113,10 @@ class AuthVM extends BaseVM {
     }
 
     _preference = await BasePreference.getInstance();
+
+    print("Email: ${onboardingRequest?.staffRequest?.email}");
+    print("Name: ${onboardingRequest?.staffRequest?.name}");
+    print("Password: ${onboardingRequest?.staffRequest?.password}");
   }
 
   void _initializeController() async {
@@ -128,6 +137,99 @@ class AuthVM extends BaseVM {
     NavigationService.pushScreen(context,
         screen: CreatePassword(request: signupRequest, userType: userType),
         withNavBar: false);
+  }
+
+  void createAccount() async {
+    onboardingRequest ??= BusinessOnboardingRequest(
+        staffRequest: StaffRequest(addressRequest: []),
+        organizationRequest: OrganizationRequest());
+    onboardingRequest!.staffRequest ??= StaffRequest(addressRequest: []);
+    onboardingRequest!.staffRequest!.addressRequest ??= [];
+    onboardingRequest!.organizationRequest ??= OrganizationRequest();
+    onboardingRequest!.staffRequest!.addressRequest!.add(AddressRequest(
+        additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
+        name: addressController.text,
+        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
+    onboardingRequest?.staffRequest?.addressRequest?.add(AddressRequest(
+        additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
+        name: addressController.text,
+        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
+    onboardingRequest?.staffRequest?.gender = "MALE";
+    onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
+    onboardingRequest?.staffRequest?.userType = userType?.name.toString();
+    onboardingRequest?.organizationRequest?.address = addressController.text;
+    onboardingRequest?.organizationRequest?.name =
+        onboardingRequest?.staffRequest?.name;
+    onboardingRequest?.organizationRequest?.email =
+        onboardingRequest?.staffRequest?.email;
+    onboardingRequest?.organizationRequest?.location = addressController.text;
+    onboardingRequest?.organizationRequest?.phoneNumber =
+        onboardingRequest?.staffRequest?.phoneNumber;
+
+    isLoading(true);
+    final response = await locator<AuthenticationService>()
+        .createBusinessAccount(onboardingRequest!);
+    isLoading(false);
+
+    if (response.status == 200) {
+      if (context.mounted) {
+        NavigationService.pushScreen(context,
+            screen: const HomePage("business"), withNavBar: false);
+      }
+    }
+  }
+
+  void proceedToSecondPage() {
+    onboardingRequest?.staffRequest ??= StaffRequest();
+
+    onboardingRequest?.staffRequest?.email = emailController.text;
+    onboardingRequest?.staffRequest?.name = fullNameController.text;
+    onboardingRequest?.staffRequest?.password = password.text;
+    onboardingRequest?.staffRequest?.phoneNumber = phoneNumberController.text;
+    NavigationService.pushScreen(context,
+        screen: BusinessSignUpSecondPage(
+          theUsertype: userType!,
+          businessRequest: onboardingRequest,
+        ));
+  }
+
+  void proceedToVerifyEmail() async {
+    onboardingRequest ??= BusinessOnboardingRequest();
+    onboardingRequest?.staffRequest ??= StaffRequest();
+
+    onboardingRequest?.staffRequest?.email = emailController.text;
+    onboardingRequest?.staffRequest?.name = fullNameController.text;
+    onboardingRequest?.staffRequest?.password = password.text;
+
+    print("Email: ${onboardingRequest?.staffRequest?.email}");
+    print("Name: ${onboardingRequest?.staffRequest?.name}");
+    print("Password: ${onboardingRequest?.staffRequest?.password}");
+
+    try {
+      final response = await locator<AuthenticationService>()
+          .requestOtp(onboardingRequest?.staffRequest?.email, userType);
+
+      Logger().i(response.status);
+
+      isLoading(false);
+
+      if (response.status == 200 && context.mounted) {
+        NavigationService.pushScreen(
+          context,
+          screen: SignupOtpPage(
+            businessRequest: onboardingRequest,
+            userType: userType,
+            from: BusinessSignUpPage.routeName,
+          ),
+          withNavBar: true,
+        );
+      } else {
+        print("Failed to request OTP or context not mounted.");
+      }
+    } catch (e) {
+      print("Error during OTP request: $e");
+      Logger().e('Error requesting OTP: $e');
+    }
   }
 
   Future<void> sendResetPasswordCode() async {

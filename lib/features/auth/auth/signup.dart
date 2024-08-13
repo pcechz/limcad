@@ -2,11 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
-import 'package:limcad/config/flavor.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/resources/models/state_model.dart';
-import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/utils/validation_util.dart';
@@ -31,12 +29,14 @@ class _SignupPageState extends State<SignupPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<AuthVM>.reactive(
+    return ViewModelBuilder.reactive(
         viewModelBuilder: () => AuthVM(),
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, OnboardingPageType.signup, widget.theUsertype);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            model.init(context, OnboardingPageType.signup, widget.theUsertype);
+          });
         },
         builder: (BuildContext context, model, child) => DefaultScaffold(
               showAppBar: true,
@@ -125,11 +125,10 @@ class _SignupPageState extends State<SignupPage> {
                                   googleAPIKey:
                                       "AIzaSyDmq2C1vmDwUr0cnIAX6djCFspyIHJ5V48",
                                   decoration: InputDecoration(
-                                      fillColor: model.addressController?.text
-                                                  .isEmpty ==
-                                              true
-                                          ? Colors.white
-                                          : Colors.transparent,
+                                      fillColor:
+                                          model.addressController.text.isEmpty == true
+                                              ? Colors.white
+                                              : Colors.transparent,
                                       hintText: "Enter Address",
                                       hintStyle:
                                           TextStyle(color: Colors.grey[400]),
@@ -149,8 +148,10 @@ class _SignupPageState extends State<SignupPage> {
                                               color:
                                                   CustomColors.limcardFaded)),
                                       border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.circular(30),
-                                          borderSide: const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          borderSide:
+                                              const BorderSide(width: 1.0, color: CustomColors.limcardFaded)),
                                       labelText: "Address"),
                                   style: const TextStyle(fontWeight: FontWeight.w400, fontSize: 14, color: Colors.black),
                                   validator: (value) {
@@ -177,6 +178,7 @@ class _SignupPageState extends State<SignupPage> {
                                   }).padding(bottom: 20),
                             ],
                           ),
+
                           // CustomTextFields(
                           //   controller: model.addressController,
                           //   keyboardType: TextInputType.name,
@@ -257,6 +259,7 @@ class _SignupPageState extends State<SignupPage> {
                               ).padding(bottom: 20),
                             ],
                           ),
+
                           // Column(
                           //   crossAxisAlignment: CrossAxisAlignment.start,
                           //   mainAxisAlignment: MainAxisAlignment.start,

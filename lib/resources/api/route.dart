@@ -13,7 +13,8 @@ enum ApiType {
   passwordReset,
   laundyServiceItems,
   updateProfile,
-  submitOrder
+  submitOrder,
+  businessOnboarding,
 }
 
 // enum ApiType {
@@ -115,6 +116,12 @@ class ApiRoute implements APIRouteConfigurable {
         return RequestOptions(
             path: '/users',
             method: ApiMethod.patch,
+            data: data,
+            extra: authorize);
+      case ApiType.businessOnboarding:
+        return RequestOptions(
+            path: "/business/onboard",
+            method: ApiMethod.post,
             data: data,
             extra: authorize);
 
