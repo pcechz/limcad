@@ -34,6 +34,8 @@ class LaundryVM extends BaseVM {
   LaundryServiceResponse? laundryServiceResponse;
   Map<LaundryServiceItem, double> selectedItems = {};
 
+  int? orderId;
+
   void init(BuildContext context, LaundryOption laundryOpt) {
     this.context = context;
     this.laundryOption = laundryOpt;
@@ -42,6 +44,10 @@ class LaundryVM extends BaseVM {
     }
     if (laundryOpt == LaundryOption.selectClothe) {
       getLaundryItems();
+    }
+
+    if (laundryOpt == LaundryOption.order_details) {
+    //  getorderDetails();
     }
 
     if (laundryOpt == LaundryOption.orders) {
