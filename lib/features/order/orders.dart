@@ -114,6 +114,15 @@ class _OrdersPageState extends State<OrdersPage> {
                                     ),
                                   ],
                                 ),
+                                subtitle: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
+                                    Text(item.status ?? "", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
+
+                                  ],
+                                ),
                               );
                             },
                           ),
@@ -148,15 +157,15 @@ class _OrdersPageState extends State<OrdersPage> {
                                       ),
                                     ],
                                   ),
-                                  // subtitle: Row(
-                                  //   crossAxisAlignment: CrossAxisAlignment.start,
-                                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  //   children: [
-                                  //     Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-                                  //     Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-                                  //
-                                  //   ],
-                                  // ),
+                                  subtitle: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
+                                      Text(item.status ?? "", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
+
+                                    ],
+                                  ),
 
                                 );
 

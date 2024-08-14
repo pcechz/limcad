@@ -57,7 +57,7 @@ class LaundryVM extends BaseVM {
     }
 
     if (laundryOpt == LaundryOption.order_details) {
-    //  getorderDetails();
+      getOrderDetail(orderId!);
     }
 
     if (laundryOpt == LaundryOption.orders) {
