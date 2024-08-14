@@ -31,7 +31,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.about);
+          model.init(context, LaundryOption.about, 0);
         },
         builder: (BuildContext context, model, child) => Scaffold(
               body: DefaultTabController(

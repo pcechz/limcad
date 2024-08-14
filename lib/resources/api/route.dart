@@ -19,6 +19,7 @@ enum ApiType {
   businessProfile,
   businessOrders,
   businessOrdersDetails,
+  updateBusinessOrdersDetails,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -135,6 +136,13 @@ class ApiRoute implements APIRouteConfigurable {
           path: "/laundry-orders/$routeParams",
           method: ApiMethod.get,
           extra: authorize,
+        );
+      case ApiType.updateBusinessOrdersDetails:
+        return RequestOptions(
+          path: "/laundry-orders/$routeParams",
+          method: ApiMethod.put,
+          extra: authorize,
+          data: data,
         );
       default:
         return null;

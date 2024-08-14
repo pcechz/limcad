@@ -38,7 +38,7 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.selectClothe);
+        model.init(context, LaundryOption.selectClothe, 0);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,
@@ -143,29 +143,29 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
                               fontSize: 12, fontWeight: FontWeight.w400)),
                       trailing: showPreview
                           ? Text(
-                        clothe?.price.toString() ?? "",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w600),
-                      )
+                              clothe?.price.toString() ?? "",
+                              style: TextStyle(
+                                  fontSize: 12, fontWeight: FontWeight.w600),
+                            )
                           : Container(
-                        width: 80,
-                        child: InputQty(
-                          maxVal: 100,
-                          initVal: quantity,
-                          steps: 1,
-                          minVal: 0,
-                          qtyFormProps: QtyFormProps(enableTyping: false),
-                          decoration: QtyDecorationProps(
-                            btnColor: black,
-                            isBordered: false,
-                            minusBtn: Icon(Icons.remove),
-                            plusBtn: Icon(Icons.add),
-                          ),
-                          onQtyChanged: (val) {
-                            model.updateSelectedItem(clothe!, val);
-                          },
-                        ),
-                      ),
+                              width: 80,
+                              child: InputQty(
+                                maxVal: 100,
+                                initVal: quantity,
+                                steps: 1,
+                                minVal: 0,
+                                qtyFormProps: QtyFormProps(enableTyping: false),
+                                decoration: QtyDecorationProps(
+                                  btnColor: black,
+                                  isBordered: false,
+                                  minusBtn: Icon(Icons.remove),
+                                  plusBtn: Icon(Icons.add),
+                                ),
+                                onQtyChanged: (val) {
+                                  model.updateSelectedItem(clothe!, val);
+                                },
+                              ),
+                            ),
                     ),
                   ),
                   const Divider().paddingSymmetric(horizontal: 16),
@@ -174,7 +174,7 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
             );
           },
         ),
-         Row(
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -187,7 +187,9 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
             ),
           ],
-        ).padding(top: 32, bottom: 32, left: 16, right: 16).hideIf(!showPreview),
+        )
+            .padding(top: 32, bottom: 32, left: 16, right: 16)
+            .hideIf(!showPreview),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,

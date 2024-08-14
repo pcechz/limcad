@@ -34,436 +34,538 @@ class _OrdersPageState extends State<OrdersPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context,  LaundryOption.orders);
+          model.init(context, LaundryOption.orders, 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
-          showAppBar: true,
-          includeAppBarBackButton: true,
-          title: "Orders",
-          backgroundColor: CustomColors.backgroundColor,
-          busy: model.loading,
-          body: DefaultTabController(
-            length: 2,
-            child: Scaffold(
-              appBar: AppBar(
-                toolbarHeight: 10,
-                bottom:
-                TabBar(
-                  onTap: (index) {
-                    setState(() {
-                      selectedTab = index; // Update the current tab index
-                    });
-                    print(index);
-                  },
-                  indicator:  BoxDecoration(
-                    color: CustomColors.limcadPrimary,
-                    borderRadius: BorderRadius.circular(5)
-                  ),
-                  labelColor: Colors.white, // Selected tab text color
-                  unselectedLabelColor: Colors.black, // Unselected tab text color
-                  indicatorColor: CustomColors.limcadPrimary,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans"),
-                  tabs: const [
-                    Tab(
-
-                      text: "Ongoing",
-                    ),
-                    Tab(
-                      text: "Completed",
-                    ),
-                  ],
-                ),
-              ),
-              body:
-              Column(
-                children: [
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          alignment: Alignment.center,
-                          width: context.width(),
-                          child:  ListView.builder(
-                            itemCount: model.laundryOrderItems!.length,
-                            itemBuilder: (context, index) {
-                              var item = model.laundryOrderItems![index];
-                              return ListTile(
-                                onTap: () {
-                                  NavigationService.pushScreen(context,
-                                      screen: OrdersDetailsPage(item.id), withNavBar: true);
-                                },
-                                contentPadding: EdgeInsets.zero,
-                                title: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          item.organization?.name ?? "",
-                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily: "Josefin Sans", color: Colors.black),
-                                        ).padding(bottom: 8),
-                                        Text(
-                                          'Order ${item.id}',
-                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily: "Josefin Sans", color: Colors.black),
-                                        ).padding(bottom: 8),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                subtitle: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-                                    Text(item.status ?? "", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
+              showAppBar: true,
+              includeAppBarBackButton: true,
+              title: "Orders",
+              backgroundColor: CustomColors.backgroundColor,
+              busy: model.loading,
+              body: DefaultTabController(
+                length: 2,
+                child: Scaffold(
+                  appBar: AppBar(
+                    toolbarHeight: 10,
+                    bottom: TabBar(
+                      onTap: (index) {
+                        setState(() {
+                          selectedTab = index; // Update the current tab index
+                        });
+                        print(index);
+                      },
+                      indicator: BoxDecoration(
+                          color: CustomColors.limcadPrimary,
+                          borderRadius: BorderRadius.circular(5)),
+                      labelColor: Colors.white, // Selected tab text color
+                      unselectedLabelColor:
+                          Colors.black, // Unselected tab text color
+                      indicatorColor: CustomColors.limcadPrimary,
+                      labelStyle: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                          fontFamily: "Josefin Sans"),
+                      tabs: const [
+                        Tab(
+                          text: "Ongoing",
                         ),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          width: context.width(),
-                          child:  ListView.builder(
-                            itemCount: model.laundryOrderItems?.where((element) => element.status?.toLowerCase() == "completed").length,
-                            itemBuilder: (context, index) {
-                              var item = model.laundryOrderItems![index];
-                              return
-
-                                ListTile(
-                                  onTap: (){
-                                    NavigationService.pushScreen(context,
-                                        screen: OrdersDetailsPage(item.id), withNavBar: true);
-                                  },
-                                  contentPadding: EdgeInsets.zero,
-                                  title:  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Row(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(item.organization?.name ?? "", style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-                                          Text('Order ${item.id}', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  subtitle: Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-                                      Text(item.status ?? "", style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-
-                                    ],
-                                  ),
-
-                                );
-
-                              //   ListTile(
-                              //   onTap: () {
-                              //     NavigationService.pushScreen(context,
-                              //         screen: OrdersDetailsPage(), withNavBar: true);
-                              //   },
-                              //   contentPadding: EdgeInsets.zero,
-                              //   title: Column(
-                              //     crossAxisAlignment: CrossAxisAlignment.start,
-                              //     mainAxisAlignment: MainAxisAlignment.start,
-                              //     children: [
-                              //       Row(
-                              //         crossAxisAlignment: CrossAxisAlignment.start,
-                              //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              //         children: [
-                              //           Text(
-                              //             item.organization?.name ?? "",
-                              //             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily: "Josefin Sans", color: Colors.black),
-                              //           ).padding(bottom: 8),
-                              //           Text(
-                              //             'Order ${item.id}',
-                              //             style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily: "Josefin Sans", color: Colors.black),
-                              //           ).padding(bottom: 8),
-                              //         ],
-                              //       ),
-                              //     ],
-                              //   ),
-                              // );
-                            },
-                          )
-
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          //   mainAxisSize: MainAxisSize.min,
-                          //   children: [
-                          //     32.height,
-                          //     Expanded(child: OrdersListWidget(context))
-                          //
-                          //   ],
-                          // ),
+                        Tab(
+                          text: "Completed",
                         ),
                       ],
                     ),
                   ),
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     FocusScope.of(context).unfocus();
-                  //     model.proceed();
-                  //   },
-                  //   child: const Text("Order Now",
-                  //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                  //   ),
-                  // ).paddingSymmetric(vertical: 32).hideIf(selectedTab != 0),
-                ],
-              ),
-
-            ),
-          ).paddingSymmetric(horizontal: 16, vertical: 30),
-        ));
+                  body: Column(
+                    children: [
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              alignment: Alignment.center,
+                              width: context.width(),
+                              child: ListView.builder(
+                                itemCount: model.laundryOrderItems!.length,
+                                itemBuilder: (context, index) {
+                                  var item = model.laundryOrderItems![index];
+                                  return ListTile(
+                                    onTap: () {
+                                      NavigationService.pushScreen(context,
+                                          screen: OrdersDetailsPage(),
+                                          withNavBar: true);
+                                    },
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              item.organization?.name ?? "",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  fontFamily: "Josefin Sans",
+                                                  color: Colors.black),
+                                            ).padding(bottom: 8),
+                                            Text(
+                                              'Order ${item.id}',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  fontFamily: "Josefin Sans",
+                                                  color: Colors.black),
+                                            ).padding(bottom: 8),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              width: context.width(),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  32.height,
+                                  Expanded(child: OrdersListWidget(context))
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     FocusScope.of(context).unfocus();
+                      //     model.proceed();
+                      //   },
+                      //   child: const Text("Order Now",
+                      //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      //   ),
+                      // ).paddingSymmetric(vertical: 32).hideIf(selectedTab != 0),
+                    ],
+                  ),
+                ),
+              ).paddingSymmetric(horizontal: 16, vertical: 30),
+            ));
   }
 
-
-  // Widget OrdersListWidget(BuildContext context) {
-  //   return
-  //
-  //
-  //
-  //     ListView(
-  //     children: <Widget>[
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //       ListTile(
-  //         onTap: (){
-  //           NavigationService.pushScreen(context,
-  //               screen: OrdersDetailsPage(), withNavBar: true);
-  //         },
-  //         contentPadding: EdgeInsets.zero,
-  //         title:  Column(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.start,
-  //           children: [
-  //             Row(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 Text('Helen Laundry', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //                 Text('Order 2836143', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily:  "Josefin Sans", color: black),).padding(bottom: 8),
-  //
-  //               ],
-  //             ),
-  //           ],
-  //         ),
-  //         subtitle: Row(
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //           children: [
-  //             Text('8th Apr, 2024, 4:50', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: grey),).padding(bottom: 8),
-  //             Text('View timeline', style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12, fontFamily:  "Josefin Sans", color: CustomColors.limcadPrimary),).padding(bottom: 8),
-  //
-  //           ],
-  //         ),
-  //
-  //       ),
-  //     ],
-  //   );
-  // }
-
+  Widget OrdersListWidget(BuildContext context) {
+    return ListView(
+      children: <Widget>[
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+        ListTile(
+          onTap: () {
+            NavigationService.pushScreen(context,
+                screen: OrdersDetailsPage(), withNavBar: true);
+          },
+          contentPadding: EdgeInsets.zero,
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Helen Laundry',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                  Text(
+                    'Order 2836143',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 14,
+                        fontFamily: "Josefin Sans",
+                        color: black),
+                  ).padding(bottom: 8),
+                ],
+              ),
+            ],
+          ),
+          subtitle: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                '8th Apr, 2024, 4:50',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: grey),
+              ).padding(bottom: 8),
+              Text(
+                'View timeline',
+                style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 12,
+                    fontFamily: "Josefin Sans",
+                    color: CustomColors.limcadPrimary),
+              ).padding(bottom: 8),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
 }
