@@ -88,10 +88,12 @@ class LaundryVM extends BaseVM {
   LaundryServiceResponse? laundryServiceResponse;
   Map<LaundryServiceItem, double> selectedItems = {};
   BusinessOrderDetailResponse? businessOrderDetails;
-  int? id;
+
+  int? orderId;
   OrderStatus orderStatus = OrderStatus.PENDING;
   double totalPrice = 0;
-  void init(BuildContext context, LaundryOption laundryOpt, int id) {
+   void init(BuildContext context, LaundryOption laundryOpt, int id) {
+
     this.context = context;
     this.laundryOption = laundryOpt;
     if (laundryOpt == LaundryOption.about) {
@@ -99,6 +101,10 @@ class LaundryVM extends BaseVM {
     }
     if (laundryOpt == LaundryOption.selectClothe) {
       getLaundryItems();
+    }
+
+    if (laundryOpt == LaundryOption.order_details) {
+      getOrderDetail(orderId!);
     }
 
     if (laundryOpt == LaundryOption.orders) {

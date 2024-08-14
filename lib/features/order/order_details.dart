@@ -27,8 +27,8 @@ import 'package:timelines/timelines.dart' as timeLine;
 
 class OrdersDetailsPage extends StatefulWidget {
   static const String routeName = "/ordersDetails";
-
-  const OrdersDetailsPage({
+  final int? id;
+  const OrdersDetailsPage(this.id, {
     Key? key,
   }) : super(key: key);
 
@@ -71,7 +71,8 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.order_details, 0);
+          model.orderId = widget.id;
+           model.init(context, LaundryOption.order_details, 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,
