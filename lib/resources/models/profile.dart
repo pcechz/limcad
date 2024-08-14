@@ -74,4 +74,13 @@ class ProfileResponse implements FromJson<ProfileResponse> {
     data['updatedAt'] = updatedAt;
     return data;
   }
+
+  @override
+  String toString() {
+    return 'ProfileResponse{id: $id, name: $name, email: $email, phoneNumber: $phoneNumber, '
+        'verified: $verified, enabled: $enabled, identityVerified: $identityVerified, '
+        'idPath: $idPath, nin: $nin, gender: $gender, '
+        'address: ${address?.map((a) => a.toString()).toList()}, '
+        'createdAt: $createdAt, updatedAt: $updatedAt}';
+  }
 }

@@ -12,9 +12,13 @@ enum ApiType {
   passwordResetCodeRequest,
   passwordReset,
   laundyServiceItems,
-  updateProfile, submitOrder, laundyOrders,
+  updateProfile,
+  submitOrder,
+  laundyOrders,
   businessOnboarding,
   businessProfile,
+  businessOrders,
+  businessOrdersDetails,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -101,9 +105,7 @@ class ApiRoute implements APIRouteConfigurable {
 
       case ApiType.laundyOrders:
         return RequestOptions(
-            path: '/laundry-orders',
-            method: ApiMethod.get,
-            extra: authorize);
+            path: '/laundry-orders', method: ApiMethod.get, extra: authorize);
 
       case ApiType.updateProfile:
         return RequestOptions(
@@ -122,6 +124,18 @@ class ApiRoute implements APIRouteConfigurable {
             path: "/business/staff/profile",
             method: ApiMethod.get,
             extra: authorize);
+      case ApiType.businessOrders:
+        return RequestOptions(
+          path: "api/order-items",
+          method: ApiMethod.get,
+          extra: authorize,
+        );
+      case ApiType.businessOrdersDetails:
+        return RequestOptions(
+          path: "/laundry-orders/$routeParams",
+          method: ApiMethod.get,
+          extra: authorize,
+        );
       default:
         return null;
     }

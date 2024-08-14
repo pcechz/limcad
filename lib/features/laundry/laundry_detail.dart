@@ -26,224 +26,245 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return
-      ViewModelBuilder<LaundryVM>.reactive(
+    return ViewModelBuilder<LaundryVM>.reactive(
         viewModelBuilder: () => LaundryVM(),
-    onViewModelReady: (model) {
-    this.model = model;
-    model.context = context;
-    model.init(context, LaundryOption.about);
-    },
-    builder: (BuildContext context, model, child) =>
-      Scaffold(
-      body:
-      DefaultTabController(
-        length: 4,
-        child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                leading: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    height: 32,
-                    width: 32,
-                    decoration: BoxDecoration(
-                        color: Colors.white, shape: BoxShape.circle),
-                    child: Center(
-                      child: IconButton(
-                        icon: Icon(
-                          Icons.arrow_back,
-                          color: CustomColors.limcadPrimary,
-                          size: 17,
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-                actions: [
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Container(
-                      height: 32,
-                      width: 32,
-                      decoration: BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle),
-                      child: Center(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.share,
-                            color: CustomColors.limcadPrimary,
-                            size: 17,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Container(
-                      height: 32,
-                      width: 32,
-                      decoration: BoxDecoration(
-                          color: Colors.white, shape: BoxShape.circle),
-                      child: Center(
-                        child: IconButton(
-                          icon: Icon(
-                            Icons.favorite_outline,
-                            color: CustomColors.limcadPrimary,
-                            size: 17,
-                          ),
-                          onPressed: () {},
-                        ),
-                      ),
-                    ),
-                  )
-                ],
-                pinned: true,
-                elevation: 0.5,
-                expandedHeight: 430,
-                flexibleSpace: FlexibleSpaceBar(
-                  titlePadding:
-                      EdgeInsets.only(bottom: 66, left: 30, right: 50),
-                  collapseMode: CollapseMode.parallax,
-                  title: Text(
-                    '',
-                    style: boldTextStyle(),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ).hideIf(!innerBoxIsScrolled),
-                  background: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Stack(
-                        children: [
-                          commonCacheImageWidget(AssetUtil.laundryWall, 300,
-                              width: context.width(), fit: BoxFit.cover),
-                          Container(
-                            height: 300,
-                            width: context.width(),
-                            color: black.withOpacity(0.6),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 20,
-                            width: 64,
+        onViewModelReady: (model) {
+          this.model = model;
+          model.context = context;
+          model.init(context, LaundryOption.about);
+        },
+        builder: (BuildContext context, model, child) => Scaffold(
+              body: DefaultTabController(
+                length: 4,
+                child: NestedScrollView(
+                  headerSliverBuilder:
+                      (BuildContext context, bool innerBoxIsScrolled) {
+                    return [
+                      SliverAppBar(
+                        leading: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Container(
+                            height: 32,
+                            width: 32,
                             decoration: BoxDecoration(
-                                color: CustomColors.limcardSecondary2, shape: BoxShape.rectangle, borderRadius: BorderRadius.all(Radius.circular(5))),
-                            child: Text('Laundry',
-                                textAlign: TextAlign.center,
-                                style: secondaryTextStyle(color: CustomColors.limcadPrimary, size: 12,))
-                          ),
-
-                          Row(
-                            children: [
-                              RatingBarWidget(
-                                rating: 2.5,
-                                size: 10,
-                                disable: true,
-                                onRatingChanged: (aRating) {
-                                  // rating = aRating;
+                                color: Colors.white, shape: BoxShape.circle),
+                            child: Center(
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.arrow_back,
+                                  color: CustomColors.limcadPrimary,
+                                  size: 17,
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(context);
                                 },
                               ),
-                              4.width,
-                              Text('4.5 (33 Reviews)',
-                                  style: secondaryTextStyle(color: Colors.black, size: 9)),
-                            ],
+                            ),
+                          ),
+                        ),
+                        actions: [
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              height: 32,
+                              width: 32,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, shape: BoxShape.circle),
+                              child: Center(
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.share,
+                                    color: CustomColors.limcadPrimary,
+                                    size: 17,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Container(
+                              height: 32,
+                              width: 32,
+                              decoration: BoxDecoration(
+                                  color: Colors.white, shape: BoxShape.circle),
+                              child: Center(
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.favorite_outline,
+                                    color: CustomColors.limcadPrimary,
+                                    size: 17,
+                                  ),
+                                  onPressed: () {},
+                                ),
+                              ),
+                            ),
                           )
-
                         ],
-                      ).paddingSymmetric(horizontal: 16, vertical: 16),
-                      Row(
-                        children: [
-                          Column(
+                        pinned: true,
+                        elevation: 0.5,
+                        expandedHeight: 430,
+                        flexibleSpace: FlexibleSpaceBar(
+                          titlePadding:
+                              EdgeInsets.only(bottom: 66, left: 30, right: 50),
+                          collapseMode: CollapseMode.parallax,
+                          title: Text(
+                            '',
+                            style: boldTextStyle(),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ).hideIf(!innerBoxIsScrolled),
+                          background: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Helen Laundry',
-                                  style: boldTextStyle(size: 24, color: Colors.black,)),
-                              4.height,
-                              Text('48, Bank-Anthony Way, Yaba, Lagos.',
-                                  style: secondaryTextStyle(color: Colors.black38, size: 14)),
-                              4.height,
-
+                              Stack(
+                                children: [
+                                  commonCacheImageWidget(
+                                      AssetUtil.laundryWall, 300,
+                                      width: context.width(),
+                                      fit: BoxFit.cover),
+                                  Container(
+                                    height: 300,
+                                    width: context.width(),
+                                    color: black.withOpacity(0.6),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                      height: 20,
+                                      width: 64,
+                                      decoration: BoxDecoration(
+                                          color: CustomColors.limcardSecondary2,
+                                          shape: BoxShape.rectangle,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: Text('Laundry',
+                                          textAlign: TextAlign.center,
+                                          style: secondaryTextStyle(
+                                            color: CustomColors.limcadPrimary,
+                                            size: 12,
+                                          ))),
+                                  Row(
+                                    children: [
+                                      RatingBarWidget(
+                                        rating: 2.5,
+                                        size: 10,
+                                        disable: true,
+                                        onRatingChanged: (aRating) {
+                                          // rating = aRating;
+                                        },
+                                      ),
+                                      4.width,
+                                      Text('4.5 (33 Reviews)',
+                                          style: secondaryTextStyle(
+                                              color: Colors.black, size: 9)),
+                                    ],
+                                  )
+                                ],
+                              ).paddingSymmetric(horizontal: 16, vertical: 16),
+                              Row(
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text('Helen Laundry',
+                                          style: boldTextStyle(
+                                            size: 24,
+                                            color: Colors.black,
+                                          )),
+                                      4.height,
+                                      Text('48, Bank-Anthony Way, Yaba, Lagos.',
+                                          style: secondaryTextStyle(
+                                              color: Colors.black38, size: 14)),
+                                      4.height,
+                                    ],
+                                  ).expand(),
+                                ],
+                              ).padding(left: 16, right: 16, bottom: 32),
                             ],
-                          ).expand(),
-                        ],
-                      ).padding(left: 16, right: 16, bottom: 32),
+                          ),
+                        ),
+                        bottom: TabBar(
+                          labelStyle:
+                              boldTextStyle(color: CustomColors.limcadPrimary),
+                          labelColor: CustomColors.limcadPrimary,
+                          unselectedLabelColor: black,
+                          unselectedLabelStyle:
+                              boldTextStyle(color: CustomColors.blackPrimary),
+                          indicatorColor: CustomColors.limcadPrimary,
+                          indicatorPadding:
+                              EdgeInsets.only(left: 16, right: 16),
+                          indicatorWeight: 3,
+                          isScrollable: false,
+                          tabs: [
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('About',
+                                    style: primaryTextStyle(
+                                        size: 14, weight: FontWeight.w500)),
+                              ),
+                            ),
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Services',
+                                    style: primaryTextStyle(
+                                        size: 14, weight: FontWeight.w500)),
+                              ),
+                            ),
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Gallery',
+                                    style: primaryTextStyle(
+                                        size: 14, weight: FontWeight.w500)),
+                              ),
+                            ),
+                            Tab(
+                              child: Align(
+                                alignment: Alignment.center,
+                                child: Text('Reviews',
+                                    style: primaryTextStyle(
+                                        size: 14, weight: FontWeight.w500)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ];
+                  },
+                  body: TabBarView(
+                    children: [
+                      AboutComponent(model),
+                      ServicesComponent(),
+                      GalleryWidget(),
+                      AboutComponent(model)
                     ],
                   ),
                 ),
-                bottom: TabBar(
-                  labelStyle: boldTextStyle(color: CustomColors.limcadPrimary),
-                  labelColor: CustomColors.limcadPrimary,
-                  unselectedLabelColor: black,
-                  unselectedLabelStyle: boldTextStyle(color: CustomColors.blackPrimary),
-                  indicatorColor: CustomColors.limcadPrimary,
-                  indicatorPadding: EdgeInsets.only(left: 16, right: 16),
-                  indicatorWeight: 3,
-                  isScrollable: false,
-                  tabs: [
-                    Tab(
-
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text('About',
-                            style: primaryTextStyle(size: 14, weight: FontWeight.w500)),
-                      ),
-                    ),
-                    Tab(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text('Services',
-                            style: primaryTextStyle(size: 14, weight: FontWeight.w500)),
-                      ),
-                    ),
-                    Tab(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text('Gallery',
-                            style: primaryTextStyle(size: 14, weight: FontWeight.w500)),
-                      ),
-                    ),
-                    Tab(
-                      child: Align(
-                        alignment: Alignment.center,
-                        child: Text('Reviews',
-                            style: primaryTextStyle(size: 14, weight: FontWeight.w500)),
-                      ),
-                    ),
-                  ],
+              ),
+              bottomNavigationBar: Container(
+                decoration:
+                    boxDecorationWithShadow(backgroundColor: context.cardColor),
+                padding: EdgeInsets.only(left: 16, bottom: 40, right: 16),
+                child: ElevatedButton(
+                  onPressed: () {
+                    NavigationService.pushScreen(context,
+                        screen: SelectClothesPage(), withNavBar: true);
+                  },
+                  child: Text('Book service now',
+                      style: primaryTextStyle(
+                          size: 16, weight: FontWeight.w500, color: white)),
                 ),
-              )
-            ];
-          },
-          body: TabBarView(
-            children: [
-              AboutComponent(model),
-              ServicesComponent(),
-              GalleryWidget(),
-              AboutComponent(model)
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: boxDecorationWithShadow(backgroundColor: context.cardColor),
-        padding: EdgeInsets.only(left: 16, bottom: 40, right: 16),
-        child: ElevatedButton(onPressed: () {    NavigationService.pushScreen(context,
-            screen: SelectClothesPage(), withNavBar: true); }, child: Text('Book service now',
-            style: primaryTextStyle(size: 16, weight: FontWeight.w500, color: white)),
-        ),
-      ),
-    ));
+              ),
+            ));
   }
 }
