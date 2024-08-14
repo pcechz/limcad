@@ -65,19 +65,16 @@ class _BusinessOrdersPageState extends State<BusinessOrdersPage> {
               backgroundColor: white,
             ),
             child: ListTile(
-              onTap: (){
+              onTap: () {
                 NavigationService.pushScreen(context,
-                    screen:  BusinessOrdersDetailsPage(),
-                    withNavBar: true
-                );
+                    screen: BusinessOrdersDetailsPage(), withNavBar: true);
               },
               horizontalTitleGap: 8,
               leading: Container(
                   decoration: const BoxDecoration(shape: BoxShape.circle),
                   width: 50,
                   height: 50,
-                  child:
-                      placeHolderWidget(height: 50, width: 50, radius: 25)),
+                  child: placeHolderWidget(height: 50, width: 50, radius: 25)),
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -143,288 +140,20 @@ class _BusinessOrdersPageState extends State<BusinessOrdersPage> {
                                       color: Colors.black.withOpacity(0.6),
                                       weight: FontWeight.w400))
                               .paddingBottom(8),
-
                           Container(
                             decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: CustomColors.limcadPrimary),
+                                shape: BoxShape.circle,
+                                color: CustomColors.limcadPrimary),
                             width: 28,
-                            height: 28,  child: Center(child: Icon(Icons.arrow_forward, color: white, size: 13,),),),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ).paddingTop(13),
-            )).paddingBottom(32),
-        Container(
-            width: MediaQuery.of(context).size.width - 38,
-            decoration: boxDecorationRoundedWithShadow(
-              18,
-              backgroundColor: white,
-            ),
-            child: ListTile(
-              horizontalTitleGap: 8,
-              leading: Container(
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  width: 50,
-                  height: 50,
-                  child:
-                  placeHolderWidget(height: 50, width: 50, radius: 25)),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 160,
-                        child: Text('Alice Johnson',
-                            overflow: TextOverflow.ellipsis,
-                            style: primaryTextStyle(
-                                size: 24, weight: FontWeight.w500)),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 18.34,
+                            height: 28,
+                            child: Center(
+                              child: Icon(
+                                Icons.arrow_forward,
+                                color: white,
+                                size: 13,
+                              ),
+                            ),
                           ),
-                          Text('4.5',
-                              style: primaryTextStyle(
-                                  size: 13, weight: FontWeight.w400)),
-                        ],
-                      ),
-                    ],
-                  ).paddingBottom(16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Phone: +234809894857',
-                          style: primaryTextStyle(
-                              size: 14,
-                              color: Colors.black.withOpacity(0.6),
-                              weight: FontWeight.w400))
-                          .paddingBottom(8),
-                      SizedBox(
-                        width: 200,
-                        child: Text('Address: 0123 Aliu Olaiya Avenue, Ikeja',
-                            overflow: TextOverflow.ellipsis,
-                            style: primaryTextStyle(
-                                size: 14,
-                                color: Colors.black.withOpacity(0.6),
-                                weight: FontWeight.w400))
-                            .paddingBottom(8),
-                      ),
-                      Text('Delivery: Today, 03:30pm',
-                          style: primaryTextStyle(
-                              size: 14,
-                              color: Colors.black.withOpacity(0.6),
-                              weight: FontWeight.w400))
-                          .paddingBottom(8),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Payment: Paid',
-                              style: primaryTextStyle(
-                                  size: 14,
-                                  color: Colors.black.withOpacity(0.6),
-                                  weight: FontWeight.w400))
-                              .paddingBottom(8),
-
-                          Container(
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: CustomColors.limcadPrimary),
-                            width: 28,
-                            height: 28,  child: Center(child: Icon(Icons.arrow_forward, color: white, size: 13,),),),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ).paddingTop(13),
-            )).paddingBottom(32),
-        Container(
-            width: MediaQuery.of(context).size.width - 38,
-            decoration: boxDecorationRoundedWithShadow(
-              18,
-              backgroundColor: white,
-            ),
-            child: ListTile(
-              horizontalTitleGap: 8,
-              leading: Container(
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  width: 50,
-                  height: 50,
-                  child:
-                  placeHolderWidget(height: 50, width: 50, radius: 25)),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 160,
-                        child: Text('Alice Johnson',
-                            overflow: TextOverflow.ellipsis,
-                            style: primaryTextStyle(
-                                size: 24, weight: FontWeight.w500)),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 18.34,
-                          ),
-                          Text('4.5',
-                              style: primaryTextStyle(
-                                  size: 13, weight: FontWeight.w400)),
-                        ],
-                      ),
-                    ],
-                  ).paddingBottom(16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Phone: +234809894857',
-                          style: primaryTextStyle(
-                              size: 14,
-                              color: Colors.black.withOpacity(0.6),
-                              weight: FontWeight.w400))
-                          .paddingBottom(8),
-                      SizedBox(
-                        width: 200,
-                        child: Text('Address: 0123 Aliu Olaiya Avenue, Ikeja',
-                            overflow: TextOverflow.ellipsis,
-                            style: primaryTextStyle(
-                                size: 14,
-                                color: Colors.black.withOpacity(0.6),
-                                weight: FontWeight.w400))
-                            .paddingBottom(8),
-                      ),
-                      Text('Delivery: Today, 03:30pm',
-                          style: primaryTextStyle(
-                              size: 14,
-                              color: Colors.black.withOpacity(0.6),
-                              weight: FontWeight.w400))
-                          .paddingBottom(8),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Payment: Paid',
-                              style: primaryTextStyle(
-                                  size: 14,
-                                  color: Colors.black.withOpacity(0.6),
-                                  weight: FontWeight.w400))
-                              .paddingBottom(8),
-
-                          Container(
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: CustomColors.limcadPrimary),
-                            width: 28,
-                            height: 28,  child: Center(child: Icon(Icons.arrow_forward, color: white, size: 13,),),),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ).paddingTop(13),
-            )).paddingBottom(32),
-        Container(
-            width: MediaQuery.of(context).size.width - 38,
-            decoration: boxDecorationRoundedWithShadow(
-              18,
-              backgroundColor: white,
-            ),
-            child: ListTile(
-              horizontalTitleGap: 8,
-              leading: Container(
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  width: 50,
-                  height: 50,
-                  child:
-                  placeHolderWidget(height: 50, width: 50, radius: 25)),
-              title: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: 160,
-                        child: Text('Alice Johnson',
-                            overflow: TextOverflow.ellipsis,
-                            style: primaryTextStyle(
-                                size: 24, weight: FontWeight.w500)),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.star,
-                            color: Colors.yellow,
-                            size: 18.34,
-                          ),
-                          Text('4.5',
-                              style: primaryTextStyle(
-                                  size: 13, weight: FontWeight.w400)),
-                        ],
-                      ),
-                    ],
-                  ).paddingBottom(16),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text('Phone: +234809894857',
-                          style: primaryTextStyle(
-                              size: 14,
-                              color: Colors.black.withOpacity(0.6),
-                              weight: FontWeight.w400))
-                          .paddingBottom(8),
-                      SizedBox(
-                        width: 200,
-                        child: Text('Address: 0123 Aliu Olaiya Avenue, Ikeja',
-                            overflow: TextOverflow.ellipsis,
-                            style: primaryTextStyle(
-                                size: 14,
-                                color: Colors.black.withOpacity(0.6),
-                                weight: FontWeight.w400))
-                            .paddingBottom(8),
-                      ),
-                      Text('Delivery: Today, 03:30pm',
-                          style: primaryTextStyle(
-                              size: 14,
-                              color: Colors.black.withOpacity(0.6),
-                              weight: FontWeight.w400))
-                          .paddingBottom(8),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text('Payment: Paid',
-                              style: primaryTextStyle(
-                                  size: 14,
-                                  color: Colors.black.withOpacity(0.6),
-                                  weight: FontWeight.w400))
-                              .paddingBottom(8),
-
-                          Container(
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: CustomColors.limcadPrimary),
-                            width: 28,
-                            height: 28,  child: Center(child: Icon(Icons.arrow_forward, color: white, size: 13,),),),
                         ],
                       ),
                     ],

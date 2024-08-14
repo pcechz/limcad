@@ -1,8 +1,10 @@
-
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
+import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
+import 'package:limcad/features/laundry/model/laundry_order_response.dart';
 import 'package:limcad/features/laundry/model/laundry_orders_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
@@ -16,8 +18,15 @@ import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:logger/logger.dart';
 
-enum LaundryOption {about, selectClothe, review, orders, order_details, businessOrder, businessOrderDetails}
-
+enum LaundryOption {
+  about,
+  selectClothe,
+  review,
+  orders,
+  order_details,
+  businessOrder,
+  businessOrderDetails
+}
 
 class LaundryVM extends BaseVM {
   final apiService = locator<APIClient>();
@@ -33,6 +42,7 @@ class LaundryVM extends BaseVM {
   LaundryOrders? laundryOrders;
   LaundryServiceResponse? laundryServiceResponse;
   Map<LaundryServiceItem, double> selectedItems = {};
+  BusinessOrderDetailResponse? businessOrderDetails;
 
   void init(BuildContext context, LaundryOption laundryOpt) {
     this.context = context;
@@ -46,6 +56,10 @@ class LaundryVM extends BaseVM {
 
     if (laundryOpt == LaundryOption.orders) {
       getOrders();
+    }
+
+    if (laundryOpt == LaundryOption.businessOrderDetails) {
+      getOrderDetail(1);
     }
   }
 
@@ -71,10 +85,7 @@ class LaundryVM extends BaseVM {
     return total;
   }
 
-
   void reviewOrder() {
-
-
     ViewUtil.showDynamicDialogWithButton(
         barrierDismissible: false,
         context: context,
@@ -83,8 +94,11 @@ class LaundryVM extends BaseVM {
           mainAxisSize: MainAxisSize.min,
           children: [
             Center(
-              child: Image.asset(AssetUtil.successCheck, width: 64, height: 64, )
-                  .padding(bottom: 24, top: 22),
+              child: Image.asset(
+                AssetUtil.successCheck,
+                width: 64,
+                height: 64,
+              ).padding(bottom: 24, top: 22),
             ),
             const Text(
               "Review submitted",
@@ -94,7 +108,6 @@ class LaundryVM extends BaseVM {
                   fontWeight: FontWeight.w600,
                   fontSize: 32,
                   height: 1.2),
-
             ).padding(bottom: 16),
             const Text(
               "Your review has been successfully submitted.",
@@ -104,7 +117,6 @@ class LaundryVM extends BaseVM {
                   fontWeight: FontWeight.w500,
                   fontSize: 16,
                   height: 1.2),
-
             ).padding(bottom: 24)
           ],
         ),
@@ -120,7 +132,7 @@ class LaundryVM extends BaseVM {
       int itemId = items!.indexOf(entry.key) + 1; // 1-based index
       return {
         "itemId": itemId,
-        "quantity":  entry.value.toInt(),
+        "quantity": entry.value.toInt(),
       };
     }).toList();
 
@@ -129,20 +141,18 @@ class LaundryVM extends BaseVM {
     };
   }
 
-
-
   Future<void> proceedToPay() async {
     isLoading(true);
     Map<String, dynamic> orderJson = generateOrderJson();
     print('Order JSON: $orderJson');
     final response = await locator<LaundryService>().submitOrder(orderJson);
 
-    if (response.status == ResponseCode.success || response.status == ResponseCode.created) {
+    if (response.status == ResponseCode.success ||
+        response.status == ResponseCode.created) {
       Logger().i(response.data);
     }
     isLoading(false);
   }
-
 
   Future<void> getLaundryAbout() async {
     laundryAbout = await locator<LaundryService>().getAbout();
@@ -161,7 +171,6 @@ class LaundryVM extends BaseVM {
     notifyListeners();
   }
 
-
   Future<void> getOrders() async {
     isLoading(true);
     final response = await locator<LaundryService>().getLaundryOrders();
@@ -174,6 +183,24 @@ class LaundryVM extends BaseVM {
     notifyListeners();
   }
 
+  Future<void> getOrderDetail(int id) async {
+    isLoading(true);
+    final response = await locator<LaundryService>().getBusinessOrderDetail(id);
+    businessOrderDetails = response;
+
+    print("print: ${businessOrderDetails.toString()}");
+    Logger().i(response);
+    isLoading(false);
+    notifyListeners();
+  }
+
+  double getPriceDetails() {
+    return businessOrderDetails?.orderItems
+            ?.map((e) => e.item?.price ?? 0.0)
+            .fold(
+                0.0,
+                (previousValue, currentValue) =>
+                    previousValue ?? 0.0 + currentValue) ??
+        0.0;
+  }
 }
-
-

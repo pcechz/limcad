@@ -20,7 +20,8 @@ class BusinessOrdersDetailsPage extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<BusinessOrdersDetailsPage> createState() => _BusinessOrdersDetailsPageState();
+  State<BusinessOrdersDetailsPage> createState() =>
+      _BusinessOrdersDetailsPageState();
 }
 
 class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
@@ -45,97 +46,92 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
-            children: [32.height,
-
+            children: [
+              32.height,
               Container(
                   width: MediaQuery.of(context).size.width - 38,
                   decoration: boxDecorationRoundedWithShadow(
                     18,
                     backgroundColor: white,
                   ),
-                  child: Column(children: [
-
-                    ViewUtil.eachDetailOrders('Customer info', {
-                      'First Name': "Funsho",
-                      'Last Name': "Adeolu",
-                      'Address': "0123 Aliu Olaiya Avenue, Ikeja",
-                      'Phone': "+234 8012 3456 789",
-                      'Email': "kyleolaiya@gmail.com",
-                      'Rating':  "4.5",
-                      'Verified payment':  "₦107,5000",
-                    }).paddingSymmetric(vertical: 16, horizontal: 16)
-                  ],) ).paddingBottom(24),
-
-
-
+                  child: Column(
+                    children: [
+                      ViewUtil.eachDetailOrders('Customer info', {
+                        'First Name':
+                            "${model.businessOrderDetails?.customer?.name}",
+                        'Address':
+                            "${model.businessOrderDetails?.address?.name}",
+                        'Phone':
+                            "${model.businessOrderDetails?.customer?.phoneNumber}",
+                        'Email':
+                            "${model.businessOrderDetails?.customer?.email}",
+                        'Rating': "4.5",
+                        'Verified payment': "₦${model.getPriceDetails()}",
+                      }).paddingSymmetric(vertical: 16, horizontal: 16)
+                    ],
+                  )).paddingBottom(24),
               Container(
                   width: MediaQuery.of(context).size.width - 38,
                   decoration: boxDecorationRoundedWithShadow(
                     18,
                     backgroundColor: white,
                   ),
-                  child: Column(children: [
-
-                    ViewUtil.eachDetailOrders('Order info', {
-                      'Order number': "#329857",
-                      'No of items': "5",
-                      'Shirt x 3': "₦4,500",
-                      'Jean x 1': "₦2,500",
-                      'Towel x 1': "₦2,500",
-                      'Gown x 5':  "₦5000",
-                      'Total':  "₦14,5000",
-                    }).paddingSymmetric(vertical: 16, horizontal: 16),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Order status', style: TextStyle(
-                            fontWeight: FontWeight.w300,
-                            fontSize: 16,
-                            color: CustomColors.grey600)),
-                        Text('In progress', style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 16,
-                          color: Colors.black,
-                        )),
-                        SizedBox(
-                          width: 80,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              _showBottomSheet(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: CustomColors.limcadPrimary, backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0),
-                                side: BorderSide(color: CustomColors.limcadPrimary),
-                              ),
-                             // padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                            ),
-                            child: Text(
-                              'Update',
-                              overflow: TextOverflow.ellipsis,
+                  child: Column(
+                    children: [
+                      ViewUtil.orderInfo('Order info',
+                              model.businessOrderDetails?.orderItems)
+                          .paddingSymmetric(vertical: 16, horizontal: 16),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text('Order status',
                               style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 14,
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16,
+                                  color: CustomColors.grey600)),
+                          const Text('In progress',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 16,
+                                color: Colors.black,
+                              )),
+                          SizedBox(
+                            width: 80,
+                            child: ElevatedButton(
+                              onPressed: () {
+                                _showBottomSheet(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                foregroundColor: CustomColors.limcadPrimary,
+                                backgroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30.0),
+                                  side: BorderSide(
+                                      color: CustomColors.limcadPrimary),
+                                ),
+                                // padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                              ),
+                              child: Text(
+                                'Update',
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
-                    ).paddingSymmetric(vertical: 16, horizontal: 16)
-                  ],) ).paddingBottom(16),
-
-
-
-
+                        ],
+                      ).paddingSymmetric(vertical: 16, horizontal: 16)
+                    ],
+                  )).paddingBottom(16),
             ],
           ).paddingSymmetric(vertical: 16, horizontal: 16),
         ),
       ),
     );
   }
-
 
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
@@ -148,10 +144,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
       },
     );
   }
-
-
 }
-
 
 class OrderStatusBottomSheet extends StatefulWidget {
   @override

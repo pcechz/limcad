@@ -1,6 +1,6 @@
 import 'package:limcad/resources/api/from_json.dart';
 
-class RegistrationResponse implements FromJson<RegistrationResponse>  {
+class RegistrationResponse implements FromJson<RegistrationResponse> {
   int? id;
   String? name;
   String? email;
@@ -135,6 +135,11 @@ class Address {
     data['genericUserId'] = genericUserId;
     return data;
   }
+
+  @override
+  String toString() {
+    return '$name';
+  }
 }
 
 class LgaReference {
@@ -210,7 +215,6 @@ class Tokens {
   Tokens.fromJson(Map<String, dynamic> json) {
     token = json['token'];
     refreshToken = json['refreshToken'];
-
   }
 
   Map<String, dynamic> toJson() {
