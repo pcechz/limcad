@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
+import 'package:limcad/features/laundry/model/laundry_orders_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
@@ -28,6 +29,8 @@ class LaundryVM extends BaseVM {
   AboutResponse? laundryAbout;
   LaundryOption? laundryOption;
   List<LaundryServiceItem>? items = [];
+  List<LaundryOrderItem>? laundryOrderItems = [];
+  LaundryOrders? laundryOrders;
   LaundryServiceResponse? laundryServiceResponse;
   Map<LaundryServiceItem, double> selectedItems = {};
 
@@ -39,6 +42,10 @@ class LaundryVM extends BaseVM {
     }
     if (laundryOpt == LaundryOption.selectClothe) {
       getLaundryItems();
+    }
+
+    if (laundryOpt == LaundryOption.orders) {
+      getOrders();
     }
   }
 
@@ -153,6 +160,20 @@ class LaundryVM extends BaseVM {
     isLoading(false);
     notifyListeners();
   }
+
+
+  Future<void> getOrders() async {
+    isLoading(true);
+    final response = await locator<LaundryService>().getLaundryOrders();
+    laundryOrders = response?.data;
+    if (laundryOrders!.items!.isNotEmpty) {
+      laundryOrderItems?.addAll(laundryOrders!.items?.toList() ?? []);
+      Logger().i(response?.data);
+    }
+    isLoading(false);
+    notifyListeners();
+  }
+
 }
 
 

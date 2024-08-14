@@ -32,9 +32,7 @@ void doSetup({bool isPos = false}) async {
         theme: lightTheme(),
         home: Builder(
           builder: (BuildContext context) {
-            return MyApp(
-              loggedIn: loggedIn,
-            );
+            return MyApp(loggedIn: loggedIn,);
           },
         ),
         routes: routes,
@@ -45,7 +43,7 @@ void doSetup({bool isPos = false}) async {
 
   WidgetsFlutterBinding.ensureInitialized();
   await Permission.notification.isDenied.then(
-    (bool value) {
+        (bool value) {
       if (value) {
         Permission.notification.request();
       }
@@ -63,11 +61,11 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  // final connectivityStatus = InternetConnectivityService();
+ // final connectivityStatus = InternetConnectivityService();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       body: Stack(
         children: [widget.loggedIn! ? const LoginPage() : UserTypePage()],
       ),
@@ -78,10 +76,12 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     //initBackgroundTask();
     WidgetsBinding.instance.addObserver(this);
-    // connectivityStatus.init(context: context);
+   // connectivityStatus.init(context: context);
 
     super.initState();
   }
+
+
 
   @override
   void dispose() {

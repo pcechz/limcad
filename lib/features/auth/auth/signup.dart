@@ -38,7 +38,7 @@ class _SignupPageState extends State<SignupPage> {
             model.init(context, OnboardingPageType.signup, widget.theUsertype);
           });
         },
-        builder: (BuildContext context, model, child) => DefaultScaffold(
+        builder: (context, model, child) => DefaultScaffold(
               showAppBar: true,
               includeAppBarBackButton: false,
               overrideBackButton: () {

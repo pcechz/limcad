@@ -44,9 +44,9 @@ class ProfileResponse implements FromJson<ProfileResponse> {
     idPath = json['idPath'];
     nin = json['nin'];
     gender = json['gender'];
-    if (json['address'] != null) {
+    if (json['addresses'] != null) {
       address = <Address>[];
-      json['address'].forEach((v) {
+      json['addresses'].forEach((v) {
         address!.add(Address.fromJson(v));
       });
     }
@@ -68,7 +68,7 @@ class ProfileResponse implements FromJson<ProfileResponse> {
     data['nin'] = nin;
     data['gender'] = gender;
     if (address != null) {
-      data['address'] = address!.map((v) => v.toJson()).toList();
+      data['addresses'] = address!.map((v) => v.toJson()).toList();
     }
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;

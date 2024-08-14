@@ -84,25 +84,38 @@ class _OrdersPageState extends State<OrdersPage> {
                           padding: const EdgeInsets.all(16),
                           alignment: Alignment.center,
                           width: context.width(),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              commonCachedNetworkImage(
-                                AssetUtil.waitingIcon,
-                                height: 120,
-                                width: 120,
-                                fit: BoxFit.cover,
-                              ).padding(bottom: 32),
-                              Text(
-                                "It’s good to see you. We are waiting for your next order for our services!",
-                                style: Theme.of(context).textTheme.bodySmall!.merge(
-                                    const TextStyle(
-                                        fontSize: 16, fontWeight: FontWeight.w500, color: CustomColors.smallTextGrey)),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
+                          child:  ListView.builder(
+                            itemCount: model.laundryOrderItems!.length,
+                            itemBuilder: (context, index) {
+                              var item = model.laundryOrderItems![index];
+                              return ListTile(
+                                onTap: () {
+                                  NavigationService.pushScreen(context,
+                                      screen: OrdersDetailsPage(), withNavBar: true);
+                                },
+                                contentPadding: EdgeInsets.zero,
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          item.organization?.name ?? "",
+                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily: "Josefin Sans", color: Colors.black),
+                                        ).padding(bottom: 8),
+                                        Text(
+                                          'Order ${item.id}',
+                                          style: TextStyle(fontWeight: FontWeight.w500, fontSize: 14, fontFamily: "Josefin Sans", color: Colors.black),
+                                        ).padding(bottom: 8),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
                         Container(
@@ -122,15 +135,15 @@ class _OrdersPageState extends State<OrdersPage> {
                       ],
                     ),
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      model.proceed();
-                    },
-                    child: const Text("Order Now",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ),
-                  ).paddingSymmetric(vertical: 32).hideIf(selectedTab != 0),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     FocusScope.of(context).unfocus();
+                  //     model.proceed();
+                  //   },
+                  //   child: const Text("Order Now",
+                  //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                  //   ),
+                  // ).paddingSymmetric(vertical: 32).hideIf(selectedTab != 0),
                 ],
               ),
 
@@ -141,7 +154,8 @@ class _OrdersPageState extends State<OrdersPage> {
 
 
   Widget OrdersListWidget(BuildContext context) {
-    return ListView(
+    return
+      ListView(
       children: <Widget>[
         ListTile(
           onTap: (){

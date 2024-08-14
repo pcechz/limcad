@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-enum ApiType { registerUser, requestEmailOtp, validateEmailOtp, states, lgas, login, profile, laundyAbout, laundyServiceItems, submitOrder }
 enum ApiType {
   registerUser,
   requestEmailOtp,
@@ -13,24 +12,12 @@ enum ApiType {
   passwordResetCodeRequest,
   passwordReset,
   laundyServiceItems,
+  updateProfile, submitOrder, laundyOrders,
   updateProfile,
   submitOrder,
   businessOnboarding,
   businessProfile,
 }
-
-// enum ApiType {
-//   registerUser,
-//   requestEmailOtp,
-//   validateEmailOtp,
-//   states,
-//   lgas,
-//   login,
-//   profile,
-//   laundyAbout,
-//   laundyServiceItems,
-//   submitOrder
-// }
 
 class ApiRoute implements APIRouteConfigurable {
   final ApiType type;
@@ -111,6 +98,12 @@ class ApiRoute implements APIRouteConfigurable {
       case ApiType.laundyServiceItems:
         return RequestOptions(
             path: '/laundry-service-items?$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
+
+      case ApiType.laundyOrders:
+        return RequestOptions(
+            path: '/laundry-orders',
             method: ApiMethod.get,
             extra: authorize);
 

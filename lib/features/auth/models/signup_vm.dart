@@ -108,11 +108,11 @@ class AuthVM extends BaseVM {
       //otpId = response.data?.otpId;
     }
 
-    if (route == OnboardingPageType.signup) {
-      final response = await locator<AuthenticationService>().getStates();
-      states.addAll(response.data?.toList() ?? []);
-      notifyListeners();
-    }
+    // if (route == OnboardingPageType.signup) {
+    //   final response = await locator<AuthenticationService>().getStates();
+    //   states.addAll(response.data?.toList() ?? []);
+    //   notifyListeners();
+    // }
 
     _preference = await BasePreference.getInstance();
 
