@@ -13,8 +13,6 @@ enum ApiType {
   passwordReset,
   laundyServiceItems,
   updateProfile, submitOrder, laundyOrders,
-  updateProfile,
-  submitOrder,
   businessOnboarding,
   businessProfile,
 }

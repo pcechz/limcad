@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:limcad/features/auth/auth/business_signup.dart';
 import 'package:limcad/features/auth/auth/login.dart';
 import 'package:limcad/features/auth/auth/signup.dart';
 import 'package:limcad/features/onboarding/constants/constants.dart';
@@ -10,7 +11,7 @@ import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/default_scafold.dart';
 
-enum UserType {personal, businness}
+enum UserType {personal, business}
 class GetStartedPage extends StatefulWidget {
   static const String routeName = "/getStarted";
   final UserType theUsertype;
@@ -53,7 +54,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                 fit: BoxFit.cover,
                   image: AssetImage(userType == UserType.personal ? AssetUtil.individualAccountBanner : AssetUtil.businessAccountBanner,))),
         ),
-        personalBody().padding(bottom: 40, top: 40).hideIf(userType == UserType.businness),
+        personalBody().padding(bottom: 40, top: 40).hideIf(userType == UserType.business),
 
         businessBody().padding(top: 40).hideIf(userType == UserType.personal)
       ],
@@ -240,4 +241,3 @@ class _GetStartedPageState extends State<GetStartedPage> {
       );
 }
 
-}
