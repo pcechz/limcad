@@ -79,4 +79,16 @@ class LaundryService with ListenableServiceMixin {
             create: () => BusinessOrderDetailResponse()));
     return response.response.data;
   }
+
+  Future<BaseResponse<BusinessOrderDetailResponse>> updateStatus(
+      int id, String status) async {
+    var request = {"status": status};
+    var response = await apiService.request(
+        route:
+            ApiRoute(ApiType.updateBusinessOrdersDetails, routeParams: "$id"),
+        data: request,
+        create: () => BaseResponse<BusinessOrderDetailResponse>(
+            create: () => BusinessOrderDetailResponse()));
+    return response.response;
+  }
 }

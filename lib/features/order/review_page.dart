@@ -45,7 +45,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.review);
+          model.init(context, LaundryOption.review, 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
             showAppBar: true,
@@ -66,7 +66,8 @@ class _ReviewsPageState extends State<ReviewsPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text("How was our service?",
+                      Text(
+                        "How was our service?",
                         style: Theme.of(context).textTheme.bodySmall!.merge(
                             const TextStyle(
                                 fontSize: 24,
@@ -74,7 +75,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
                                 color: CustomColors.blackPrimary)),
                         textAlign: TextAlign.center,
                       ).padding(bottom: 16),
-
                       RatingBarWidget(
                         rating: ratingValue,
                         size: 64,
@@ -95,7 +95,6 @@ class _ReviewsPageState extends State<ReviewsPage> {
                                 color: CustomColors.smallTextGrey)),
                         textAlign: TextAlign.center,
                       ).padding(bottom: 40),
-
                       CustomTextArea(
                         controller: model.instructionController,
                         keyboardType: TextInputType.name,
@@ -107,16 +106,18 @@ class _ReviewsPageState extends State<ReviewsPage> {
                         autocorrect: false,
                         //validate: (value) => ValidationUtil.validateLastName(value),
                         onSave: (value) =>
-                        model.instructionController.text = value,
+                            model.instructionController.text = value,
                       ).padding(bottom: 30),
-
                       ElevatedButton(
-                        onPressed: ratingValue == 0 ? null :   () {
-                          FocusScope.of(context).unfocus();
+                        onPressed: ratingValue == 0
+                            ? null
+                            : () {
+                                FocusScope.of(context).unfocus();
 
-                          model.reviewOrder();
-                        },
-                        child:  const Text("Add review",
+                                model.reviewOrder();
+                              },
+                        child: const Text(
+                          "Add review",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w500),
                         ),

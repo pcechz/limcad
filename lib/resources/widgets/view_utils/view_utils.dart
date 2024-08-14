@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/size_util.dart';
@@ -7,7 +8,6 @@ import 'package:nb_utils/nb_utils.dart';
 
 class ViewUtil {
   late BuildContext context;
-
 
   static showDynamicDialogWithButton({
     required BuildContext context,
@@ -54,7 +54,7 @@ class ViewUtil {
                           ElevatedButton(
                             style: ButtonStyle(
                               backgroundColor:
-                              MaterialStateProperty.all(button1color),
+                                  MaterialStateProperty.all(button1color),
                               minimumSize: MaterialStateProperty.all(
                                 Size(double.infinity, 48),
                               ),
@@ -81,7 +81,7 @@ class ViewUtil {
                                 side: BorderSide(color: button2outlineColor),
                               ),
                               onPressed: dialogAction2 ??
-                                      () {
+                                  () {
                                     Navigator.pop(context); //close Dialog
                                   },
                               child: Text(
@@ -109,46 +109,160 @@ class ViewUtil {
             )).padding(bottom: 24, left: 16),
         ...List.generate(
             details.length,
-                (index) => Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              // Changed for even spacing
-              children: [
-                Expanded(
-                  child: Text(details.keys.elementAt(index),
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontSize: 16,
-                          color: CustomColors.grey600))
-                      .padding(left: 16),
-                ),
-                Expanded(
-                  child: Text(details.values.elementAt(index) ?? "",
-                      textAlign: TextAlign.right,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16,
-                        color: Colors.black,
-                      )).padding(right: 16),
-                )
-              ],
-            ).padding(bottom: 8))
+            (index) => Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  // Changed for even spacing
+                  children: [
+                    Expanded(
+                      child: Text(details.keys.elementAt(index),
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontWeight: FontWeight.w300,
+                                  fontSize: 16,
+                                  color: CustomColors.grey600))
+                          .padding(left: 16),
+                    ),
+                    Expanded(
+                      child: Text(details.values.elementAt(index) ?? "",
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16,
+                            color: Colors.black,
+                          )).padding(right: 16),
+                    )
+                  ],
+                ).padding(bottom: 8))
       ],
     );
   }
 
+  static Widget orderInfo(String title, List<OrderItems>? items, double total) {
+    final itemCount = items?.length ?? 0;
+    final itemList = items ?? [];
 
-  static showSnackBarDown(String? message,
-      {Color? bgColor, Color? textColor}) {
-    ScaffoldMessenger.of(NavigationService.navigatorKey.currentContext!).showSnackBar(SnackBar(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Title
+        Text(
+          title,
+          style: const TextStyle(
+            fontWeight: FontWeight.w400,
+            fontSize: 20,
+          ),
+        ).padding(bottom: 24, left: 16),
+
+        Row(
+          children: [
+            Expanded(
+              child: const Text(
+                "No of items",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                  color: CustomColors.grey600,
+                ),
+              ).padding(left: 16),
+            ),
+            Expanded(
+              child: Text(
+                "$itemCount",
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ).padding(right: 16),
+            ),
+          ],
+        ).paddingBottom(20),
+
+        ...List.generate(
+          itemList.length,
+          (index) {
+            final item = itemList[index].item;
+            final itemName = item?.itemName ?? 'Unknown Item';
+            final itemPrice = item?.price ?? 0.0;
+            final quantity = itemList[index].quantity ?? 0;
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    "$itemName x $quantity",
+                    textAlign: TextAlign.left,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w300,
+                      fontSize: 16,
+                      color: CustomColors.grey600,
+                    ),
+                  ).padding(left: 16),
+                ),
+                Expanded(
+                  child: Text(
+                    "₦${itemPrice * quantity}",
+                    textAlign: TextAlign.right,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  ).padding(right: 16),
+                ),
+              ],
+            ).padding(bottom: 8);
+          },
+        ),
+
+        Row(
+          children: [
+            Expanded(
+              child: const Text(
+                "Total",
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontWeight: FontWeight.w300,
+                  fontSize: 16,
+                  color: CustomColors.grey600,
+                ),
+              ).padding(left: 16),
+            ),
+            Expanded(
+              child: Text(
+                "₦$total",
+                textAlign: TextAlign.right,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                  color: Colors.black,
+                ),
+              ).padding(right: 16),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  static showSnackBarDown(String? message, {Color? bgColor, Color? textColor}) {
+    ScaffoldMessenger.of(NavigationService.navigatorKey.currentContext!)
+        .showSnackBar(SnackBar(
       backgroundColor: bgColor ?? CustomColors.neutral9,
-      content: Text(message ?? "", style: TextStyle(
-          fontSize: 14, color: textColor ?? CustomColors.kWhite, fontWeight: FontWeight.w500)),
+      content: Text(message ?? "",
+          style: TextStyle(
+              fontSize: 14,
+              color: textColor ?? CustomColors.kWhite,
+              fontWeight: FontWeight.w500)),
     ));
   }
 
-  static showSnackBar(String? message, bool error ) {
+  static showSnackBar(String? message, bool error) {
     Fluttertoast.showToast(
       backgroundColor: error ? Colors.red : CustomColors.greenPrimary,
       textColor: Colors.white,
@@ -157,5 +271,4 @@ class ViewUtil {
       toastLength: Toast.LENGTH_LONG,
     );
   }
-
 }

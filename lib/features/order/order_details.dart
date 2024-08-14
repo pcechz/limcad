@@ -71,7 +71,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.order_details);
+          model.init(context, LaundryOption.order_details, 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,
@@ -115,7 +115,10 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(height: 250, padding: EdgeInsets.zero, child: orderTimeline(context)),
+                    Container(
+                        height: 250,
+                        padding: EdgeInsets.zero,
+                        child: orderTimeline(context)),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +134,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                             ),
                             16.width,
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 _orderProgressSheet();
                               },
                               child: Text('View order timeline',
@@ -144,7 +147,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                           ],
                         ),
                         GestureDetector(
-                          onTap: (){
+                          onTap: () {
                             NavigationService.pushScreen(context,
                                 screen: ReviewsPage(), withNavBar: true);
                           },
@@ -170,7 +173,6 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                     Divider(
                       thickness: 3,
                     ).padding(bottom: 40),
-
                     ListView.builder(
                         itemCount: items.length,
                         physics: NeverScrollableScrollPhysics(),
@@ -179,7 +181,6 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                           return _buildItem(items[index])
                               .paddingSymmetric(vertical: 23);
                         }).paddingBottom(40),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -192,21 +193,18 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                         Text('N1,400'),
                       ],
                     ).paddingBottom(24),
-
                     Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Delivery',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 16,
-                          fontFamily: "Josefin Sans",
-                          color: black)),
-                  Text('N200'),
-                ],
-              ).paddingBottom(24),
-
-
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text('Delivery',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                fontFamily: "Josefin Sans",
+                                color: black)),
+                        Text('N200'),
+                      ],
+                    ).paddingBottom(24),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -219,8 +217,6 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                         Text('N200'),
                       ],
                     ).paddingBottom(24),
-
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -233,8 +229,6 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                         Text('N1,800'),
                       ],
                     ).paddingBottom(24),
-
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -244,24 +238,24 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                                 fontSize: 12,
                                 fontFamily: "Josefin Sans",
                                 color: black)),
-                        Text('Online payment', style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                            fontFamily: "Josefin Sans",
-                            color: black)),
+                        Text('Online payment',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 12,
+                                fontFamily: "Josefin Sans",
+                                color: black)),
                       ],
                     ).paddingBottom(24),
-
                   ],
                 ).paddingSymmetric(horizontal: 16, vertical: 46),
               ),
             ));
   }
 
-
   _orderProgressSheet() {
     showModalBottomSheet(
-      shape: RoundedRectangleBorder(borderRadius: radiusOnly(topLeft: 32, topRight: 32)),
+      shape: RoundedRectangleBorder(
+          borderRadius: radiusOnly(topLeft: 32, topRight: 32)),
       context: context,
       isScrollControlled: true,
       builder: (builder) {
@@ -410,8 +404,7 @@ class _OrderTitle extends StatelessWidget {
                           ],
                         ),
                       ).padding(bottom: 32)
-                    :
-                ListTile(
+                    : ListTile(
                         onTap: () {},
                         contentPadding: EdgeInsets.zero,
                         title: Column(

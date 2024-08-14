@@ -28,6 +28,51 @@ enum LaundryOption {
   businessOrderDetails
 }
 
+enum OrderStatus {
+  PENDING,
+  PAYMENT_CONFIRMED,
+  ORDER_ASSIGNED,
+  ORDER_DECLINED,
+  ORDER_PICKED_UP,
+  ORDER_DELIVERED,
+  IN_PROGRESS,
+  COMPLETED,
+  FAILED,
+  CANCELLED,
+  DECLINED,
+}
+
+extension OrderStatusExtension on OrderStatus {
+  String get displayValue {
+    switch (this) {
+      case OrderStatus.PENDING:
+        return 'Pending';
+      case OrderStatus.PAYMENT_CONFIRMED:
+        return 'Payment Confirmed';
+      case OrderStatus.ORDER_ASSIGNED:
+        return 'Order Assigned';
+      case OrderStatus.ORDER_DECLINED:
+        return 'Order Declined';
+      case OrderStatus.ORDER_PICKED_UP:
+        return 'Order Picked Up';
+      case OrderStatus.ORDER_DELIVERED:
+        return 'Order Delivered';
+      case OrderStatus.IN_PROGRESS:
+        return 'In Progress';
+      case OrderStatus.COMPLETED:
+        return 'Completed';
+      case OrderStatus.FAILED:
+        return 'Failed';
+      case OrderStatus.CANCELLED:
+        return 'Cancelled';
+      case OrderStatus.DECLINED:
+        return 'Declined';
+      default:
+        return '';
+    }
+  }
+}
+
 class LaundryVM extends BaseVM {
   final apiService = locator<APIClient>();
   late BuildContext context;
@@ -43,8 +88,10 @@ class LaundryVM extends BaseVM {
   LaundryServiceResponse? laundryServiceResponse;
   Map<LaundryServiceItem, double> selectedItems = {};
   BusinessOrderDetailResponse? businessOrderDetails;
-
-  void init(BuildContext context, LaundryOption laundryOpt) {
+  int? id;
+  OrderStatus orderStatus = OrderStatus.PENDING;
+  double totalPrice = 0;
+  void init(BuildContext context, LaundryOption laundryOpt, int id) {
     this.context = context;
     this.laundryOption = laundryOpt;
     if (laundryOpt == LaundryOption.about) {
@@ -59,8 +106,9 @@ class LaundryVM extends BaseVM {
     }
 
     if (laundryOpt == LaundryOption.businessOrderDetails) {
-      getOrderDetail(1);
+      getOrderDetail(id);
     }
+    this.id = id;
   }
 
   void updateSelectedItem(LaundryServiceItem item, double quantity) {
@@ -190,17 +238,40 @@ class LaundryVM extends BaseVM {
 
     print("print: ${businessOrderDetails.toString()}");
     Logger().i(response);
+    totalPrice = getTotalPrice();
     isLoading(false);
     notifyListeners();
   }
 
-  double getPriceDetails() {
-    return businessOrderDetails?.orderItems
-            ?.map((e) => e.item?.price ?? 0.0)
-            .fold(
-                0.0,
-                (previousValue, currentValue) =>
-                    previousValue ?? 0.0 + currentValue) ??
-        0.0;
+  double getTotalPrice() {
+    final prices = businessOrderDetails?.orderItems?.map((e) {
+          double price = e.item?.price ?? 0.0;
+          print('Item price: $price');
+          return price;
+        }).toList() ??
+        [];
+
+    double total = prices.fold(0.0, (previousValue, currentValue) {
+      double sum = previousValue + currentValue;
+      print('Running total: $sum');
+      return sum;
+    });
+
+    print('Final total price: $total');
+    return total;
+  }
+
+  Future<void> updateStatus(OrderStatus status) async {
+    final response = await locator<LaundryService>()
+        .updateStatus(id!, status.toString().split(".").last);
+    if (response.status == 200) {
+      ViewUtil.showSnackBar("Updated Successfully", false);
+      businessOrderDetails = response.data;
+      notifyListeners();
+    }
+  }
+
+  void setStatus(OrderStatus status) {
+    orderStatus = status;
   }
 }

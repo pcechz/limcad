@@ -34,7 +34,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.businessOrderDetails);
+        model.init(context, LaundryOption.businessOrderDetails, 5);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,
@@ -66,7 +66,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                         'Email':
                             "${model.businessOrderDetails?.customer?.email}",
                         'Rating': "4.5",
-                        'Verified payment': "₦${model.getPriceDetails()}",
+                        'Verified payment': "₦0.0",
                       }).paddingSymmetric(vertical: 16, horizontal: 16)
                     ],
                   )).paddingBottom(24),
@@ -78,54 +78,62 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                   ),
                   child: Column(
                     children: [
-                      ViewUtil.orderInfo('Order info',
-                              model.businessOrderDetails?.orderItems)
+                      ViewUtil.orderInfo(
+                              'Order info',
+                              model.businessOrderDetails?.orderItems,
+                              model.totalPrice)
                           .paddingSymmetric(vertical: 16, horizontal: 16),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Order status',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w300,
-                                  fontSize: 16,
-                                  color: CustomColors.grey600)),
-                          const Text('In progress',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: Colors.black,
-                              )),
-                          SizedBox(
-                            width: 80,
-                            child: ElevatedButton(
-                              onPressed: () {
-                                _showBottomSheet(context);
-                              },
-                              style: ElevatedButton.styleFrom(
-                                foregroundColor: CustomColors.limcadPrimary,
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30.0),
-                                  side: BorderSide(
-                                      color: CustomColors.limcadPrimary),
-                                ),
-                                // padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                              ),
-                              child: Text(
-                                'Update',
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ).paddingSymmetric(vertical: 16, horizontal: 16)
                     ],
                   )).paddingBottom(16),
+              Container(
+                width: MediaQuery.of(context).size.width - 38,
+                decoration: boxDecorationRoundedWithShadow(
+                  18,
+                  backgroundColor: white,
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text('Order status',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300,
+                            fontSize: 16,
+                            color: CustomColors.grey600)),
+                    Text("${model.businessOrderDetails?.status?.toLowerCase()}",
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w400,
+                          fontSize: 16,
+                          color: Colors.black,
+                        )),
+                    SizedBox(
+                      width: 80,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _showBottomSheet(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: CustomColors.limcadPrimary,
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(color: CustomColors.limcadPrimary),
+                          ),
+                          // padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                        ),
+                        child: const Text(
+                          'Update',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ).paddingSymmetric(vertical: 16, horizontal: 16),
+              )
             ],
           ).paddingSymmetric(vertical: 16, horizontal: 16),
         ),
@@ -136,83 +144,77 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
   void _showBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(25.0)),
       ),
       builder: (BuildContext context) {
-        return OrderStatusBottomSheet();
-      },
-    );
-  }
-}
-
-class OrderStatusBottomSheet extends StatefulWidget {
-  @override
-  _OrderStatusBottomSheetState createState() => _OrderStatusBottomSheetState();
-}
-
-class _OrderStatusBottomSheetState extends State<OrderStatusBottomSheet> {
-  String _orderStatus = 'In progress';
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          RadioListTile<String>(
-            title: const Text('Pending'),
-            value: 'Pending',
-            groupValue: _orderStatus,
-            onChanged: (String? value) {
-              setState(() {
-                _orderStatus = value!;
-              });
-            },
-            activeColor: CustomColors.limcadPrimary,
-          ),
-          RadioListTile<String>(
-            title: const Text('In progress'),
-            value: 'In progress',
-            groupValue: _orderStatus,
-            onChanged: (String? value) {
-              setState(() {
-                _orderStatus = value!;
-              });
-            },
-            activeColor: CustomColors.limcadPrimary,
-          ),
-          RadioListTile<String>(
-            title: const Text('Completed'),
-            value: 'Completed',
-            groupValue: _orderStatus,
-            onChanged: (String? value) {
-              setState(() {
-                _orderStatus = value!;
-              });
-            },
-            activeColor: CustomColors.limcadPrimary,
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: CustomColors.limcadPrimary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  RadioListTile<String>(
+                    title: const Text('Pending'),
+                    value: OrderStatus.PENDING.displayValue,
+                    groupValue: model.orderStatus.displayValue,
+                    onChanged: (String? value) {
+                      setState(() {
+                        model.setStatus(OrderStatus.PENDING);
+                      });
+                    },
+                    activeColor: CustomColors.limcadPrimary,
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('In progress'),
+                    value: OrderStatus.IN_PROGRESS.displayValue,
+                    groupValue: model.orderStatus.displayValue,
+                    onChanged: (String? value) {
+                      setState(() {
+                        model.setStatus(OrderStatus.IN_PROGRESS);
+                      });
+                    },
+                    activeColor: CustomColors.limcadPrimary,
+                  ),
+                  RadioListTile<String>(
+                    title: const Text('Completed'),
+                    value: OrderStatus.COMPLETED.displayValue,
+                    groupValue: model.orderStatus.displayValue,
+                    onChanged: (String? value) {
+                      setState(() {
+                        model.setStatus(OrderStatus.COMPLETED);
+                      });
+                    },
+                    activeColor: CustomColors.limcadPrimary,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20.0),
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        model.updateStatus(model.orderStatus);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomColors.limcadPrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30.0),
+                        ),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 32.0, vertical: 16.0),
+                      ),
+                      child: const Text(
+                        'Update status',
+                        style: TextStyle(fontSize: 16, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              padding: EdgeInsets.symmetric(horizontal: 32.0, vertical: 16.0),
-            ),
-            child: Text(
-              'Update status',
-              style: TextStyle(fontSize: 16, color: Colors.white),
-            ),
-          ),
-        ],
-      ),
+            );
+          },
+        );
+      },
     );
   }
 }
