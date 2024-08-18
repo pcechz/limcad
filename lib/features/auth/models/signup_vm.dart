@@ -97,7 +97,7 @@ class AuthVM extends BaseVM {
   LGAResponse? selectedLGA;
   Prediction? prediction;
 
-  Future<void> init(BuildContext context,
+  void init(BuildContext context,
       [OnboardingPageType? route, UserType? userT]) async {
     userType = userT;
 
@@ -108,17 +108,16 @@ class AuthVM extends BaseVM {
       //otpId = response.data?.otpId;
     }
 
-    // if (route == OnboardingPageType.signup) {
-    //   final response = await locator<AuthenticationService>().getStates();
-    //   states.addAll(response.data?.toList() ?? []);
-    //   notifyListeners();
-    // }
+    if (route == OnboardingPageType.signup) {
+      final response = await locator<AuthenticationService>().getStates();
+      Logger().i(response); // Log the response
+      states.clear(); // Clear the list before adding new data
+      states.addAll(response.data?.toList() ?? []);
+      selectedState = states[0];
+      notifyListeners();
+    }
 
     _preference = await BasePreference.getInstance();
-
-    print("Email: ${onboardingRequest?.staffRequest?.email}");
-    print("Name: ${onboardingRequest?.staffRequest?.name}");
-    print("Password: ${onboardingRequest?.staffRequest?.password}");
   }
 
   void _initializeController() async {
@@ -145,10 +144,10 @@ class AuthVM extends BaseVM {
     onboardingRequest ??= BusinessOnboardingRequest(
         staffRequest: StaffRequest(addressRequest: []),
         organizationRequest: OrganizationRequest());
-    onboardingRequest!.staffRequest ??= StaffRequest(addressRequest: []);
-    onboardingRequest!.staffRequest!.addressRequest ??= [];
-    onboardingRequest!.organizationRequest ??= OrganizationRequest();
-    onboardingRequest!.staffRequest!.addressRequest!.add(AddressRequest(
+    onboardingRequest?.staffRequest ??= StaffRequest(addressRequest: []);
+    onboardingRequest?.staffRequest!.addressRequest ??= [];
+    onboardingRequest?.organizationRequest ??= OrganizationRequest();
+    onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
         lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
@@ -175,8 +174,11 @@ class AuthVM extends BaseVM {
 
     if (response.status == 200) {
       if (context.mounted) {
-        NavigationService.pushScreen(context,
-            screen: const HomePage("business"), withNavBar: false);
+        // NavigationService.pushScreen(context,
+        //     screen: const HomePage("business"), withNavBar: false);
+        signupRequest?.password = onboardingRequest?.staffRequest?.password;
+        signupRequest?.email = onboardingRequest?.staffRequest?.email;
+        proceedLogin(userType);
       }
     }
   }
@@ -202,11 +204,6 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest?.email = emailController.text;
     onboardingRequest?.staffRequest?.name = fullNameController.text;
     onboardingRequest?.staffRequest?.password = password.text;
-
-    print("Email: ${onboardingRequest?.staffRequest?.email}");
-    print("Name: ${onboardingRequest?.staffRequest?.name}");
-    print("Password: ${onboardingRequest?.staffRequest?.password}");
-
     try {
       final response = await locator<AuthenticationService>()
           .requestOtp(onboardingRequest?.staffRequest?.email, userType);
@@ -304,7 +301,7 @@ class AuthVM extends BaseVM {
                 profileResponse.data != null) {
               if (context.mounted) {
                 NavigationService.pushScreen(context,
-                    screen: const HomePage("PERSONAL"), withNavBar: false);
+                    screen: HomePage(userType!.name), withNavBar: false);
               }
             }
             // Navigator.pushReplacement(
@@ -425,8 +422,7 @@ class AuthVM extends BaseVM {
         if (context.mounted) {
           NavigationService.pushScreen(
             context,
-            screen: HomePage(
-                userType == UserType.personal ? "personal" : "business"),
+            screen: HomePage(userType.name),
             withNavBar: false,
           );
         }
@@ -468,22 +464,22 @@ class AuthVM extends BaseVM {
 
   void goToHome() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return HomePage(userType?.name);
+      return HomePage(userType!.name);
     }));
   }
 
   Future<void> setStateValue(StateResponse value) async {
+    print("here");
     selectedState = value;
-    // if (selectedState != null) {
-    //   final response = await locator<AuthenticationService>()
-    //       .getLGAs(selectedState?.stateId);
-    //   Logger().i(response.data);
-    //   if(response.data!.isNotEmpty){
-    //     lgas.addAll(response.data?.toList() ?? []);
-    //     Logger().i(response.data);
-    //   }
-    //
-    // }
+    if (selectedState != null) {
+      final response = await locator<AuthenticationService>()
+          .getLGAs(selectedState?.stateId);
+      Logger().i(response.data);
+      if (response.data!.isNotEmpty) {
+        lgas.addAll(response.data?.toList() ?? []);
+        Logger().i(response.data);
+      }
+    }
     notifyListeners();
   }
 

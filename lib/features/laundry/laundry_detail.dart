@@ -3,6 +3,7 @@ import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
+import 'package:limcad/features/order/review_page.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -246,23 +247,9 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                       AboutComponent(model),
                       ServicesComponent(),
                       GalleryWidget(),
-                      AboutComponent(model)
+                      ReviewsPage()
                     ],
                   ),
-                ),
-              ),
-              bottomNavigationBar: Container(
-                decoration:
-                    boxDecorationWithShadow(backgroundColor: context.cardColor),
-                padding: EdgeInsets.only(left: 16, bottom: 40, right: 16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    NavigationService.pushScreen(context,
-                        screen: SelectClothesPage(), withNavBar: true);
-                  },
-                  child: Text('Book service now',
-                      style: primaryTextStyle(
-                          size: 16, weight: FontWeight.w500, color: white)),
                 ),
               ),
             ));

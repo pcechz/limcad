@@ -22,6 +22,8 @@ enum ApiType {
   updateBusinessOrdersDetails,
   uploadFile,
   getFile,
+  submitReview,
+  getReview
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -158,6 +160,13 @@ class ApiRoute implements APIRouteConfigurable {
           path: "/organization-images/organization/$routeParams",
           method: ApiMethod.get,
           extra: authorize,
+        );
+      case ApiType.submitReview:
+        return RequestOptions(
+          path: "/organization-reviews",
+          method: ApiMethod.post,
+          extra: authorize,
+          data: data,
         );
       default:
         return null;

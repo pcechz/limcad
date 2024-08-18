@@ -108,6 +108,7 @@ class LaundryVM extends BaseVM {
   XFile? _selectedFile;
   XFile? get selectedFile => _selectedFile;
   final ImagePicker picker = ImagePicker();
+  double ratingValue = 0;
 
   void init(BuildContext context, LaundryOption laundryOpt, int? id) {
     this.context = context;
@@ -192,6 +193,14 @@ class LaundryVM extends BaseVM {
       print('File selected: ${uploadedFile.fileName}');
     } else {
       print('No file selected');
+    }
+  }
+
+  Future<void> submitReview() async {
+    final response = await locator<LaundryService>()
+        .submitReview(ratingValue.toInt(), 6, instructionController.text);
+    if (response.status == 200) {
+      reviewOrder();
     }
   }
 

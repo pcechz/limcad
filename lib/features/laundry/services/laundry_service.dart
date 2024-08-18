@@ -32,7 +32,7 @@ class LaundryService with ListenableServiceMixin {
   Future<BaseResponse<LaundryServiceResponse>?> getLaundryServiceItems() async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.laundyServiceItems,
-            routeParams: "organizationId=8&page=0&size=10"),
+            routeParams: "organizationId=6&page=0&size=10"),
         create: () => BaseResponse<LaundryServiceResponse>(
             create: () => LaundryServiceResponse()));
     return response.response;
@@ -52,10 +52,10 @@ class LaundryService with ListenableServiceMixin {
 
     // var profileResponse = await locator<AuthenticationService>().getProfile();
     final orderRequest = {
-      "organizationId": 8,
+      "organizationId": 6,
       "orderDetails": // Use a list instead of a set
           orderItemJson,
-      "deliveryDetails": {"addressId": 9, "pickupDate": "2024-08-20"}
+      "deliveryDetails": {"addressId": 11, "pickupDate": "2024-08-20"}
     };
 // 4,9,11
     // print("Order Request: ${profileResponse.toString()}");
@@ -114,6 +114,17 @@ class LaundryService with ListenableServiceMixin {
     var loginResponse = await apiService.request(
         route: ApiRoute(ApiType.getFile, routeParams: "$id"),
         create: () => BaseResponse<FileResponse>(create: () => FileResponse()));
+    return loginResponse.response;
+  }
+
+  Future<BaseResponse<NoObjectResponse>> submitReview(
+      int star, int id, String text) async {
+    final request = {"organizationId": id, "rating": star, "reviewText": text};
+    var loginResponse = await apiService.request(
+        route: ApiRoute(ApiType.submitReview),
+        data: request,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
     return loginResponse.response;
   }
 

@@ -53,79 +53,82 @@ class _ReviewsPageState extends State<ReviewsPage> {
             title: "Drop a review",
             backgroundColor: CustomColors.backgroundColor,
             busy: model.loading,
-            body: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  alignment: Alignment.center,
-                  width: context.width(),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "How was our service?",
-                        style: Theme.of(context).textTheme.bodySmall!.merge(
-                            const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.w500,
-                                color: CustomColors.blackPrimary)),
-                        textAlign: TextAlign.center,
-                      ).padding(bottom: 16),
-                      RatingBarWidget(
-                        rating: ratingValue,
-                        size: 64,
-                        defaultIconData: Icons.star_outline,
-                        activeColor: CustomColors.limcadYellow,
-                        onRatingChanged: (aRating) {
-                          setState(() {
-                            ratingValue = aRating;
-                          });
-                        },
-                      ).padding(bottom: 16),
-                      Text(
-                        "Your feedback helps us improve our services and serve you even better.",
-                        style: Theme.of(context).textTheme.bodySmall!.merge(
-                            const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: CustomColors.smallTextGrey)),
-                        textAlign: TextAlign.center,
-                      ).padding(bottom: 40),
-                      CustomTextArea(
-                        controller: model.instructionController,
-                        keyboardType: TextInputType.name,
-                        label: "Drop a comment",
-                        showLabel: true,
-                        //labelText: "Please type instruction here, if there is any...",
-                        formatter: InputFormatter.stringOnly,
-                        maxLines: 5,
-                        autocorrect: false,
-                        //validate: (value) => ValidationUtil.validateLastName(value),
-                        onSave: (value) =>
-                            model.instructionController.text = value,
-                      ).padding(bottom: 30),
-                      ElevatedButton(
-                        onPressed: ratingValue == 0
-                            ? null
-                            : () {
-                                FocusScope.of(context).unfocus();
+            body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    alignment: Alignment.center,
+                    width: context.width(),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          "How was our service?",
+                          style: Theme.of(context).textTheme.bodySmall!.merge(
+                              const TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w500,
+                                  color: CustomColors.blackPrimary)),
+                          textAlign: TextAlign.center,
+                        ).padding(bottom: 16),
+                        RatingBarWidget(
+                          rating: ratingValue,
+                          size: 64,
+                          defaultIconData: Icons.star_outline,
+                          activeColor: CustomColors.limcadYellow,
+                          onRatingChanged: (aRating) {
+                            setState(() {
+                              ratingValue = aRating;
+                              model.ratingValue = ratingValue;
+                            });
+                          },
+                        ).padding(bottom: 16),
+                        Text(
+                          "Your feedback helps us improve our services and serve you even better.",
+                          style: Theme.of(context).textTheme.bodySmall!.merge(
+                              const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: CustomColors.smallTextGrey)),
+                          textAlign: TextAlign.center,
+                        ).padding(bottom: 40),
+                        CustomTextArea(
+                          controller: model.instructionController,
+                          keyboardType: TextInputType.name,
+                          label: "Drop a comment",
+                          showLabel: true,
+                          //labelText: "Please type instruction here, if there is any...",
+                          formatter: InputFormatter.stringOnly,
+                          maxLines: 5,
+                          autocorrect: false,
+                          //validate: (value) => ValidationUtil.validateLastName(value),
+                          onSave: (value) =>
+                              model.instructionController.text = value,
+                        ).padding(bottom: 30),
+                        ElevatedButton(
+                          onPressed: ratingValue == 0
+                              ? null
+                              : () {
+                                  FocusScope.of(context).unfocus();
 
-                                model.reviewOrder();
-                              },
-                        child: const Text(
-                          "Add review",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                                  model.submitReview();
+                                },
+                          child: const Text(
+                            "Add review",
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             )));
   }
 }
