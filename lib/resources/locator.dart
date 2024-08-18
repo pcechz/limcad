@@ -13,7 +13,7 @@ void setupLocator({FlavorConfig? instance}) {
   GetIt.I.registerLazySingleton(
         () => APIClient(
       BaseOptions(
-        baseUrl: "http://10.0.2.2:8080/api",
+        baseUrl: "http://172.187.176.43/api",
         // baseUrl: instance?.envConfig().baseUrl ??
         //     FlavorConfig.instance!.envConfig().baseUrl,
         receiveTimeout: const Duration(milliseconds: 180000),

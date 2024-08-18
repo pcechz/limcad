@@ -11,6 +11,7 @@ import 'package:limcad/resources/utils/validation_util.dart';
 import 'package:limcad/resources/widgets/default_scafold.dart';
 import 'package:limcad/resources/widgets/view_utils/custom_text_field.dart';
 import 'package:limcad/resources/widgets/view_utils/phone_textfield.dart';
+import 'package:logger/logger.dart';
 import 'package:stacked/stacked.dart';
 
 class SignupPage extends StatefulWidget {
@@ -34,9 +35,7 @@ class _SignupPageState extends State<SignupPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          WidgetsBinding.instance.addPostFrameCallback((_) {
             model.init(context, OnboardingPageType.signup, widget.theUsertype);
-          });
         },
         builder: (context, model, child) => DefaultScaffold(
               showAppBar: true,
@@ -252,6 +251,8 @@ class _SignupPageState extends State<SignupPage> {
                                     model.selectedState = value,
                                 value: model.selectedState,
                                 onChanged: (value) {
+                                  Logger().i("Selected State: ${value?.stateName}");
+
                                   if (value != null) {
                                     model.setStateValue(value);
                                   }
@@ -260,68 +261,68 @@ class _SignupPageState extends State<SignupPage> {
                             ],
                           ),
 
-                          // Column(
-                          //   crossAxisAlignment: CrossAxisAlignment.start,
-                          //   mainAxisAlignment: MainAxisAlignment.start,
-                          //   children: [
-                          //     Text(
-                          //       "LGA",
-                          //       style: Theme.of(context).textTheme.bodyMedium!,
-                          //     ).padding(bottom: 6),
-                          //     DropdownButtonFormField<LGAResponse>(
-                          //       decoration: InputDecoration(
-                          //         fillColor: Colors.white,
-                          //         contentPadding: const EdgeInsets.only(left: 27),
-                          //         focusedBorder: OutlineInputBorder(
-                          //             borderRadius: BorderRadius.circular(30),
-                          //             borderSide: const BorderSide(
-                          //                 width: 1.0,
-                          //                 color: CustomColors.limcardFaded)),
-                          //         enabledBorder: OutlineInputBorder(
-                          //             borderRadius: BorderRadius.circular(30),
-                          //             borderSide: const BorderSide(
-                          //                 width: 1.0,
-                          //                 color: CustomColors.limcardFaded)),
-                          //         border: OutlineInputBorder(
-                          //             borderRadius: BorderRadius.circular(30),
-                          //             borderSide: const BorderSide(
-                          //                 width: 1.0,
-                          //                 color: CustomColors.limcardFaded)),
-                          //       ),
-                          //       style: const TextStyle(color: CustomColors.blackPrimary),
-                          //       icon: const Icon(CupertinoIcons.chevron_down, size: 18)
-                          //           .padding(right: 16),
-                          //       hint:  Text( model.selectedLGA?.lgaName ?? "LGA",
-                          //           style: TextStyle(
-                          //               color: CustomColors.smallTextGrey,
-                          //               fontSize: 14)),
-                          //       borderRadius: BorderRadius.circular(30),
-                          //       items: model.lgas
-                          //           .map((e) => DropdownMenuItem<LGAResponse>(
-                          //         value: e,
-                          //         child: Padding(
-                          //           padding: const EdgeInsets.all(16.0),
-                          //           child: Text(e.lgaName ?? "",
-                          //               style: const TextStyle(
-                          //                   fontSize: 14,
-                          //                   fontWeight: FontWeight.w400,
-                          //                   color: CustomColors.blackPrimary)),
-                          //         ),
-                          //       ))
-                          //           .toList(),
-                          //       validator: (value) =>
-                          //           ValidationUtil.validateInput(
-                          //               value?.lgaName, "LGA"),
-                          //       onSaved: (LGAResponse? value) =>
-                          //       model.selectedLGA = value,
-                          //       value: model.selectedLGA,
-                          //       onChanged: (value) {
-                          //         if (value != null) {
-                          //           model.setLGAValue(value);
-                          //         }
-                          //       },
-                          //     ).padding(bottom: 20),                    ],
-                          // ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                "LGA",
+                                style: Theme.of(context).textTheme.bodyMedium!,
+                              ).padding(bottom: 6),
+                              DropdownButtonFormField<LGAResponse>(
+                                decoration: InputDecoration(
+                                  fillColor: Colors.white,
+                                  contentPadding: const EdgeInsets.only(left: 27),
+                                  focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(
+                                          width: 1.0,
+                                          color: CustomColors.limcardFaded)),
+                                  enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(
+                                          width: 1.0,
+                                          color: CustomColors.limcardFaded)),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(
+                                          width: 1.0,
+                                          color: CustomColors.limcardFaded)),
+                                ),
+                                style: const TextStyle(color: CustomColors.blackPrimary),
+                                icon: const Icon(CupertinoIcons.chevron_down, size: 18)
+                                    .padding(right: 16),
+                                hint:  Text( model.selectedLGA?.lgaName ?? "LGA",
+                                    style: TextStyle(
+                                        color: CustomColors.smallTextGrey,
+                                        fontSize: 14)),
+                                borderRadius: BorderRadius.circular(30),
+                                items: model.lgas
+                                    .map((e) => DropdownMenuItem<LGAResponse>(
+                                  value: e,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Text(e.lgaName ?? "",
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: CustomColors.blackPrimary)),
+                                  ),
+                                ))
+                                    .toList(),
+                                validator: (value) =>
+                                    ValidationUtil.validateInput(
+                                        value?.lgaName, "LGA"),
+                                onSaved: (LGAResponse? value) =>
+                                model.selectedLGA = value,
+                                value: model.selectedLGA,
+                                onChanged: (value) {
+                                  if (value != null) {
+                                    model.setLGAValue(value);
+                                  }
+                                },
+                              ).padding(bottom: 20),                    ],
+                          ),
 
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -412,7 +413,9 @@ class _SignupPageState extends State<SignupPage> {
                       children: [
                         Text("Already have an account? "),
                         TextButton(
-                            onPressed: model.goToLogin(),
+                            onPressed: () {
+                              model.goToLogin();
+                            },
                             child: Text(
                               'Sign in',
                               style: TextStyle(

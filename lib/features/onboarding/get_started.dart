@@ -23,17 +23,7 @@ class GetStartedPage extends StatefulWidget {
 }
 
 class _GetStartedPageState extends State<GetStartedPage> {
-  UserType? userType;
 
-
-  @override
-  void initState() {
-    setState(() {
-      userType = widget.theUsertype;
-    });
-    super.initState();
-
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -52,11 +42,11 @@ class _GetStartedPageState extends State<GetStartedPage> {
           decoration: BoxDecoration(
               image: DecorationImage(
                 fit: BoxFit.cover,
-                  image: AssetImage(userType == UserType.personal ? AssetUtil.individualAccountBanner : AssetUtil.businessAccountBanner,))),
+                  image: AssetImage(widget.theUsertype == UserType.personal ? AssetUtil.individualAccountBanner : AssetUtil.businessAccountBanner,))),
         ),
-        personalBody().padding(bottom: 40, top: 40).hideIf(userType == UserType.business),
+        personalBody().padding(bottom: 40, top: 40).hideIf(widget.theUsertype == UserType.business),
 
-        businessBody().padding(top: 40).hideIf(userType == UserType.personal)
+        businessBody().padding(top: 40).hideIf(widget.theUsertype == UserType.personal)
       ],
     ),
   );
@@ -124,6 +114,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
 
         ElevatedButton(
           onPressed: (){
+
             NavigationService.pushScreen(context,
                 screen:  const SignupPage(theUsertype: UserType.personal),
                 withNavBar: false

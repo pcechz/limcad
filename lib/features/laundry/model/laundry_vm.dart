@@ -92,10 +92,11 @@ class LaundryVM extends BaseVM {
   int? orderId;
   OrderStatus orderStatus = OrderStatus.PENDING;
   double totalPrice = 0;
-   void init(BuildContext context, LaundryOption laundryOpt, int id) {
+   void init(BuildContext context, LaundryOption laundryOpt, [ int? id]) {
 
     this.context = context;
     this.laundryOption = laundryOpt;
+    this.orderId = id;
     if (laundryOpt == LaundryOption.about) {
       getLaundryAbout();
     }
@@ -104,7 +105,7 @@ class LaundryVM extends BaseVM {
     }
 
     if (laundryOpt == LaundryOption.order_details) {
-      getOrderDetail(orderId!);
+      getOrderDetail(id!);
     }
 
     if (laundryOpt == LaundryOption.orders) {
@@ -112,9 +113,8 @@ class LaundryVM extends BaseVM {
     }
 
     if (laundryOpt == LaundryOption.businessOrderDetails) {
-      getOrderDetail(id);
+      getOrderDetail(10);
     }
-    this.id = id;
   }
 
   void updateSelectedItem(LaundryServiceItem item, double quantity) {
@@ -199,7 +199,7 @@ class LaundryVM extends BaseVM {
     isLoading(true);
     Map<String, dynamic> orderJson = generateOrderJson();
     print('Order JSON: $orderJson');
-    final response = await locator<LaundryService>().submitOrder(orderJson);
+    final response = await locator<LaundryService>().submitOrder(orderJson, 6);
 
     if (response.status == ResponseCode.success ||
         response.status == ResponseCode.created) {
@@ -269,7 +269,7 @@ class LaundryVM extends BaseVM {
 
   Future<void> updateStatus(OrderStatus status) async {
     final response = await locator<LaundryService>()
-        .updateStatus(id!, status.toString().split(".").last);
+        .updateStatus(10, status.toString().split(".").last);
     if (response.status == 200) {
       ViewUtil.showSnackBar("Updated Successfully", false);
       businessOrderDetails = response.data;

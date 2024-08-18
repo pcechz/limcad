@@ -8,6 +8,7 @@ import 'package:limcad/features/analytics/analytics.dart';
 import 'package:limcad/features/dashboard/business_dashboard.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
 import 'package:limcad/features/explore/explore.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/order/business_orders.dart';
 import 'package:limcad/features/order/orders.dart';
 import 'package:limcad/features/profile/profile.dart';
@@ -20,9 +21,9 @@ import 'package:stacked/stacked.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = "/home";
-  final String? role;
+  final UserType? userType;
 
-  const HomePage(this.role, {Key? key}) : super(key: key);
+  const HomePage(this.userType, {Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           controller: tabController,
           dragStartBehavior: DragStartBehavior.down,
           physics: const BouncingScrollPhysics(),
-          children: widget.role == "business" ?  [ BusinessDashboard(), AnalyticsPage(), BusinessOrdersPage(), ExploreScreen(), ProfilePage()] :  [ Dashboard(), ExploreScreen(), OrdersPage(), ExploreScreen(), ProfilePage()],
+          children: widget.userType == UserType.business ?  [ BusinessDashboard(), AnalyticsPage(), BusinessOrdersPage(), ExploreScreen(), ProfilePage()] :  [ Dashboard(), ExploreScreen(), OrdersPage(), ExploreScreen(), ProfilePage()],
         ),
         child: TabBar(
           padding: EdgeInsets.zero,
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                             color: currentPage == 1 ? CustomColors.limcadPrimary : CustomColors.blackPrimary,
                             fit: BoxFit.scaleDown,
                           ))).padding(bottom: 8, top: 16),
-                  Text(widget.role == "business" ? "Analytics" :"Explore",  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(color: currentPage == 1 ? CustomColors.limcadPrimary : CustomColors.blackPrimary, fontFamily: "inter",)),)
+                  Text(widget.userType == UserType.business ? "Analytics" :"Explore",  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(color: currentPage == 1 ? CustomColors.limcadPrimary : CustomColors.blackPrimary, fontFamily: "inter",)),)
                 ],
               ),
             ),
