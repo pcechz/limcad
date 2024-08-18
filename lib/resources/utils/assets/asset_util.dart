@@ -3,10 +3,13 @@ class AssetUtil {
   static const String back = "assets/images/back.png";
   static const String otpEmail = "assets/images/otp_email.png";
   static const String otpEmailVerified = "assets/images/otp_verified.png";
-  static const String individualAccount = "assets/images/individual_account.png";
+  static const String individualAccount =
+      "assets/images/individual_account.png";
   static const String businessAccount = "assets/images/business_account.png";
-  static const String individualAccountBanner = "assets/images/individual_banner.png";
-  static const String businessAccountBanner = "assets/images/business_banner.png";
+  static const String individualAccountBanner =
+      "assets/images/individual_banner.png";
+  static const String businessAccountBanner =
+      "assets/images/business_banner.png";
   static const String successCheck = "assets/images/check_success.png";
   static const String editAvatar = "assets/images/edit_avatar.png";
   static const String laundryWall = "assets/images/laundry_wall.png";
@@ -26,12 +29,6 @@ class AssetUtil {
   static const String user = "assets/images/user.png";
   static const String masterCardIcon = "assets/images/master_card.png";
   static const String referralGift = "assets/images/referral_gift.png";
-
-
-
-
-
-
-
-
+  static const String vectorUpload = "assets/images/Vector.png";
+  static const String upload = "assets/images/upload_2716054 1.png";
 }

@@ -1,6 +1,10 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:limcad/features/auth/services/signup_service.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
 import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
+import 'package:limcad/features/laundry/model/file_response.dart';
 import 'package:limcad/features/laundry/model/laundry_order_response.dart';
 import 'package:limcad/features/laundry/model/laundry_orders_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
@@ -9,8 +13,9 @@ import 'package:limcad/resources/api/route.dart';
 import 'package:limcad/resources/locator.dart';
 import 'package:limcad/resources/models/no_object_response.dart';
 import 'package:limcad/resources/storage/base_preference.dart';
+import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:stacked/stacked.dart';
-
+import 'package:path/path.dart' as p;
 import '../../../resources/api/base_response.dart';
 
 class LaundryService with ListenableServiceMixin {
@@ -90,5 +95,47 @@ class LaundryService with ListenableServiceMixin {
         create: () => BaseResponse<BusinessOrderDetailResponse>(
             create: () => BusinessOrderDetailResponse()));
     return response.response;
+  }
+
+  Future<BaseResponse<NoObjectResponse>> uploadFile(File file) async {
+    final request = {
+      "file": p.basename(file.path),
+      "type": determineFileType(file)
+    };
+    var loginResponse = await apiService.request(
+        route: ApiRoute(ApiType.uploadFile),
+        data: request,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
+    return loginResponse.response;
+  }
+
+  Future<BaseResponse<FileResponse>> getFile(int id) async {
+    var loginResponse = await apiService.request(
+        route: ApiRoute(ApiType.getFile, routeParams: "$id"),
+        create: () => BaseResponse<FileResponse>(create: () => FileResponse()));
+    return loginResponse.response;
+  }
+
+  static String determineFileType(File file) {
+    String extension = p.extension(file.path);
+
+    switch (extension) {
+      case '.jpg':
+      case '.jpeg':
+        return 'image/jpeg';
+      case '.png':
+        return 'image/png';
+      case '.pdf':
+        return 'application/pdf';
+      case '.txt':
+        return 'text/plain';
+      case '.docx':
+        return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+      case '.xlsx':
+        return 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+      default:
+        return 'application/octet-stream'; // Generic fallback
+    }
   }
 }

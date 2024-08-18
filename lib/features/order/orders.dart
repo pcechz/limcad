@@ -91,7 +91,7 @@ class _OrdersPageState extends State<OrdersPage> {
                                   return ListTile(
                                     onTap: () {
                                       NavigationService.pushScreen(context,
-                                          screen: OrdersDetailsPage(),
+                                          screen: OrdersDetailsPage(1),
                                           withNavBar: true);
                                     },
                                     contentPadding: EdgeInsets.zero,
@@ -169,7 +169,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(1), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -226,7 +226,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(1), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -283,7 +283,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(1), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -340,7 +340,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(1), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -397,7 +397,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(1), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -454,7 +454,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(5), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -511,7 +511,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(), withNavBar: true);
+                screen: OrdersDetailsPage(1), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
