@@ -8,10 +8,12 @@ import 'package:limcad/features/laundry/model/file_response.dart';
 import 'package:limcad/features/laundry/model/laundry_order_response.dart';
 import 'package:limcad/features/laundry/model/laundry_orders_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
+import 'package:limcad/features/laundry/model/review_response.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/api/route.dart';
 import 'package:limcad/resources/locator.dart';
 import 'package:limcad/resources/models/no_object_response.dart';
+import 'package:limcad/resources/models/profile.dart';
 import 'package:limcad/resources/storage/base_preference.dart';
 import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:stacked/stacked.dart';
@@ -47,7 +49,9 @@ class LaundryService with ListenableServiceMixin {
   }
 
   Future<BaseResponse<NoObjectResponse>> submitOrder(
-      Map<String, dynamic> orderItemJson, int organizationId) async {
+      Map<String, dynamic> orderItemJson,
+      int organizationId,
+      ProfileResponse? profile) async {
     // BasePreference basePreference = await BasePreference.getInstance();
 
     // var profileResponse = await locator<AuthenticationService>().getProfile();
@@ -55,7 +59,10 @@ class LaundryService with ListenableServiceMixin {
       "organizationId": organizationId,
       "orderDetails": // Use a list instead of a set
           orderItemJson,
-      "deliveryDetails": {"addressId": 11, "pickupDate": "2024-08-20"}
+      "deliveryDetails": {
+        "addressId": profile?.address?[0].id,
+        "pickupDate": "2024-08-20"
+      }
     };
 // 4,9,11
     // print("Order Request: ${profileResponse.toString()}");
@@ -126,6 +133,14 @@ class LaundryService with ListenableServiceMixin {
         create: () =>
             BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
     return loginResponse.response;
+  }
+
+  Future<BaseResponse<ReviewServiceResponse>> getReview(int id) async {
+    var response = await apiService.request(
+        route: ApiRoute(ApiType.getReview, routeParams: "$id?page=0&size=10"),
+        create: () => BaseResponse<ReviewServiceResponse>(
+            create: () => ReviewServiceResponse()));
+    return response.response;
   }
 
   static String determineFileType(File file) {

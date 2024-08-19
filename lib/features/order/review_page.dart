@@ -22,8 +22,9 @@ import 'package:stacked/stacked.dart';
 
 class ReviewsPage extends StatefulWidget {
   static const String routeName = "/ReviewsPage";
-
-  const ReviewsPage({
+  final int? id;
+  const ReviewsPage(
+    this.id, {
     Key? key,
   }) : super(key: key);
 
@@ -45,7 +46,8 @@ class _ReviewsPageState extends State<ReviewsPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.review, 0);
+          model.orderId = widget.id;
+          model.init(context, LaundryOption.sendReview, widget.id ?? 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
             showAppBar: true,

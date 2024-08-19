@@ -35,7 +35,7 @@ class _SignupPageState extends State<SignupPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-            model.init(context, OnboardingPageType.signup, widget.theUsertype);
+          model.init(context, OnboardingPageType.signup, widget.theUsertype);
         },
         builder: (context, model, child) => DefaultScaffold(
               showAppBar: true,
@@ -251,7 +251,8 @@ class _SignupPageState extends State<SignupPage> {
                                     model.selectedState = value,
                                 value: model.selectedState,
                                 onChanged: (value) {
-                                  Logger().i("Selected State: ${value?.stateName}");
+                                  Logger()
+                                      .i("Selected State: ${value?.stateName}");
 
                                   if (value != null) {
                                     model.setStateValue(value);
@@ -272,7 +273,8 @@ class _SignupPageState extends State<SignupPage> {
                               DropdownButtonFormField<LGAResponse>(
                                 decoration: InputDecoration(
                                   fillColor: Colors.white,
-                                  contentPadding: const EdgeInsets.only(left: 27),
+                                  contentPadding:
+                                      const EdgeInsets.only(left: 27),
                                   focusedBorder: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(30),
                                       borderSide: const BorderSide(
@@ -289,39 +291,43 @@ class _SignupPageState extends State<SignupPage> {
                                           width: 1.0,
                                           color: CustomColors.limcardFaded)),
                                 ),
-                                style: const TextStyle(color: CustomColors.blackPrimary),
-                                icon: const Icon(CupertinoIcons.chevron_down, size: 18)
+                                style: const TextStyle(
+                                    color: CustomColors.blackPrimary),
+                                icon: const Icon(CupertinoIcons.chevron_down,
+                                        size: 18)
                                     .padding(right: 16),
-                                hint:  Text( model.selectedLGA?.lgaName ?? "LGA",
+                                hint: Text(model.selectedLGA?.lgaName ?? "LGA",
                                     style: TextStyle(
                                         color: CustomColors.smallTextGrey,
                                         fontSize: 14)),
                                 borderRadius: BorderRadius.circular(30),
                                 items: model.lgas
                                     .map((e) => DropdownMenuItem<LGAResponse>(
-                                  value: e,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16.0),
-                                    child: Text(e.lgaName ?? "",
-                                        style: const TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.w400,
-                                            color: CustomColors.blackPrimary)),
-                                  ),
-                                ))
+                                          value: e,
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(16.0),
+                                            child: Text(e.lgaName ?? "",
+                                                style: const TextStyle(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: CustomColors
+                                                        .blackPrimary)),
+                                          ),
+                                        ))
                                     .toList(),
                                 validator: (value) =>
                                     ValidationUtil.validateInput(
                                         value?.lgaName, "LGA"),
                                 onSaved: (LGAResponse? value) =>
-                                model.selectedLGA = value,
+                                    model.selectedLGA = value,
                                 value: model.selectedLGA,
                                 onChanged: (value) {
                                   if (value != null) {
                                     model.setLGAValue(value);
                                   }
                                 },
-                              ).padding(bottom: 20),                    ],
+                              ).padding(bottom: 20),
+                            ],
                           ),
 
                           Column(
@@ -359,7 +365,7 @@ class _SignupPageState extends State<SignupPage> {
                                 style: const TextStyle(
                                     color: CustomColors.blackPrimary),
                                 icon: const Icon(CupertinoIcons.chevron_down,
-                                        s ize: 18)
+                                        size: 18)
                                     .padding(right: 16),
                                 hint: const Text("Gender",
                                     style: TextStyle(

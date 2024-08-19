@@ -30,7 +30,8 @@ import 'package:timelines/timelines.dart' as timeLine;
 class OrdersDetailsPage extends StatefulWidget {
   static const String routeName = "/ordersDetails";
   final int? id;
-  const OrdersDetailsPage(this.id, {
+  const OrdersDetailsPage(
+    this.id, {
     Key? key,
   }) : super(key: key);
 
@@ -74,7 +75,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
           this.model = model;
           model.context = context;
           model.orderId = widget.id;
-           model.init(context, LaundryOption.order_details, widget.id ?? 0);
+          model.init(context, LaundryOption.order_details, widget.id ?? 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,
@@ -152,7 +153,8 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                         GestureDetector(
                           onTap: () {
                             NavigationService.pushScreen(context,
-                                screen: ReviewsPage(), withNavBar: true);
+                                screen: ReviewsPage(widget.id),
+                                withNavBar: true);
                           },
                           child: Container(
                               height: 30,
@@ -367,15 +369,16 @@ class _OrderTitle extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                 Text(
-                                   orderInfo?.organization?.name ?? "",
+                                Text(
+                                  orderInfo?.organization?.name ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14,
                                       fontFamily: "Josefin Sans",
                                       color: black),
                                 ).padding(bottom: 8),
-                                 Text(orderInfo?.createdAt ?? "",
+                                Text(
+                                  orderInfo?.createdAt ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -420,14 +423,16 @@ class _OrderTitle extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                 Text(orderInfo?.customer?.name ?? "",
+                                Text(
+                                  orderInfo?.customer?.name ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14,
                                       fontFamily: "Josefin Sans",
                                       color: black),
                                 ).padding(bottom: 8),
-                                 Text(orderInfo?.updatedAt ?? "",
+                                Text(
+                                  orderInfo?.updatedAt ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -450,7 +455,8 @@ class _OrderTitle extends StatelessWidget {
                                   fontFamily: "Josefin Sans",
                                   color: grey),
                             ).padding(bottom: 8),
-                            Text(orderInfo?.status ?? "",
+                            Text(
+                              orderInfo?.status ?? "",
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 12,

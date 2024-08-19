@@ -3,6 +3,7 @@ import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
+import 'package:limcad/features/order/review.dart';
 import 'package:limcad/features/order/review_page.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -32,7 +33,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.about);
+          model.init(context, LaundryOption.about, 6);
         },
         builder: (BuildContext context, model, child) => Scaffold(
               body: DefaultTabController(
@@ -247,7 +248,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                       AboutComponent(model),
                       ServicesComponent(),
                       GalleryWidget(),
-                      ReviewsPage()
+                      const ReviewScreen()
                     ],
                   ),
                 ),

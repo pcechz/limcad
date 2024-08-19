@@ -15,6 +15,7 @@ import 'package:limcad/features/laundry/model/file_response.dart';
 import 'package:limcad/features/laundry/model/laundry_order_response.dart';
 import 'package:limcad/features/laundry/model/laundry_orders_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
+import 'package:limcad/features/laundry/model/review_response.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/api/response_code.dart';
@@ -32,6 +33,7 @@ enum LaundryOption {
   about,
   selectClothe,
   review,
+  sendReview,
   orders,
   order_details,
   businessOrder,
@@ -95,6 +97,7 @@ class LaundryVM extends BaseVM {
   LaundryOption? laundryOption;
   List<LaundryServiceItem>? items = [];
   List<LaundryOrderItem>? laundryOrderItems = [];
+  List<ReviewResponse>? reviews = [];
   LaundryOrders? laundryOrders;
   LaundryServiceResponse? laundryServiceResponse;
   Map<LaundryServiceItem, double> selectedItems = {};
@@ -109,7 +112,7 @@ class LaundryVM extends BaseVM {
   XFile? get selectedFile => _selectedFile;
   final ImagePicker picker = ImagePicker();
   double ratingValue = 0;
-
+  final profile = locator<AuthenticationService>().profile;
   void init(BuildContext context, LaundryOption laundryOpt, int? id) {
     this.context = context;
     this.laundryOption = laundryOpt;
@@ -133,6 +136,10 @@ class LaundryVM extends BaseVM {
       if (id != null) {
         getOrderDetail(id);
       }
+    }
+
+    if (laundryOpt == LaundryOption.review) {
+      getReview();
     }
 
     if (laundryOpt == LaundryOption.image) {
@@ -198,8 +205,8 @@ class LaundryVM extends BaseVM {
   }
 
   Future<void> submitReview() async {
-    final response = await locator<LaundryService>()
-        .submitReview(ratingValue.toInt(), 6, instructionController.text);
+    final response = await locator<LaundryService>().submitReview(
+        ratingValue.toInt(), orderId ?? 0, instructionController.text);
     if (response.status == 200) {
       reviewOrder();
     }
@@ -265,7 +272,9 @@ class LaundryVM extends BaseVM {
     isLoading(true);
     Map<String, dynamic> orderJson = generateOrderJson();
     print('Order JSON: $orderJson');
-    final response = await locator<LaundryService>().submitOrder(orderJson, 6);
+
+    final response =
+        await locator<LaundryService>().submitOrder(orderJson, 6, profile);
 
     if (response.status == ResponseCode.success ||
         response.status == ResponseCode.created) {
@@ -311,6 +320,21 @@ class LaundryVM extends BaseVM {
     print("print: ${businessOrderDetails.toString()}");
     Logger().i(response);
     totalPrice = getTotalPrice();
+    isLoading(false);
+    notifyListeners();
+  }
+
+  Future<void> getReview() async {
+    print("Getting Review");
+    isLoading(true);
+    final response = await locator<LaundryService>().getReview(6);
+    if (response.status == 200) {
+      print("response is: ${response.data.toString()}");
+      if (response.data!.items!.isNotEmpty) {
+        reviews?.addAll(response.data!.items ?? []);
+      }
+      Logger().i(response.data);
+    }
     isLoading(false);
     notifyListeners();
   }

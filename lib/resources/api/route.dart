@@ -168,6 +168,12 @@ class ApiRoute implements APIRouteConfigurable {
           extra: authorize,
           data: data,
         );
+      case ApiType.getReview:
+        return RequestOptions(
+          path: "/organization-reviews/organization/$routeParams",
+          method: ApiMethod.get,
+          extra: authorize,
+        );
       default:
         return null;
     }
