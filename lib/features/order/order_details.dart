@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
+import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/order/review_page.dart';
 import 'package:limcad/features/order/timeline_status.dart';
@@ -21,6 +22,7 @@ import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
 import 'package:limcad/resources/widgets/view_utils/block_input_field.dart';
 import 'package:limcad/resources/widgets/view_utils/custom_text_field.dart';
 import 'package:limcad/resources/widgets/view_utils/phone_textfield.dart';
+import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 import 'package:timelines/timelines.dart' as timeLine;
@@ -57,12 +59,12 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
     }
   }
 
-  List<Item> items = [
-    Item('Shirts', 3, 300),
-    Item('Gown', 1, 200),
-    Item('Jeans', 1, 300),
-    Item('Towel', 2, 600),
-  ];
+  // List<Item> items = [
+  //   Item('Shirts', 3, 300),
+  //   Item('Gown', 1, 200),
+  //   Item('Jeans', 1, 300),
+  //   Item('Towel', 2, 600),
+  // ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,12 +74,12 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
           this.model = model;
           model.context = context;
           model.orderId = widget.id;
-           model.init(context, LaundryOption.order_details, 0);
+           model.init(context, LaundryOption.order_details, widget.id ?? 0);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,
               includeAppBarBackButton: true,
-              title: "Order #28361",
+              title: "Order #${model.businessOrderDetails?.id}",
               actions: [
                 Row(
                   children: [
@@ -174,79 +176,83 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                     Divider(
                       thickness: 3,
                     ).padding(bottom: 40),
-                    ListView.builder(
-                        itemCount: items.length,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return _buildItem(items[index])
-                              .paddingSymmetric(vertical: 23);
-                        }).paddingBottom(40),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Sub-total',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                fontFamily: "Josefin Sans",
-                                color: black)),
-                        Text('N1,400'),
-                      ],
-                    ).paddingBottom(24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Delivery',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                fontFamily: "Josefin Sans",
-                                color: black)),
-                        Text('N200'),
-                      ],
-                    ).paddingBottom(24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Service',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                fontFamily: "Josefin Sans",
-                                color: black)),
-                        Text('N200'),
-                      ],
-                    ).paddingBottom(24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Total',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 16,
-                                fontFamily: "Josefin Sans",
-                                color: black)),
-                        Text('N1,800'),
-                      ],
-                    ).paddingBottom(24),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('Payment method',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                                fontFamily: "Josefin Sans",
-                                color: black)),
-                        Text('Online payment',
-                            style: TextStyle(
-                                fontWeight: FontWeight.w500,
-                                fontSize: 12,
-                                fontFamily: "Josefin Sans",
-                                color: black)),
-                      ],
-                    ).paddingBottom(24),
+                    ViewUtil.orderInfo(
+                        'Order info',
+                        model.businessOrderDetails?.orderItems,
+                        model.totalPrice),
+                    // ListView.builder(
+                    //     itemCount: items.length,
+                    //     physics: NeverScrollableScrollPhysics(),
+                    //     shrinkWrap: true,
+                    //     itemBuilder: (context, index) {
+                    //       return _buildItem(items[index])
+                    //           .paddingSymmetric(vertical: 23);
+                    //     }).paddingBottom(40),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('Sub-total',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.w500,
+                    //             fontSize: 16,
+                    //             fontFamily: "Josefin Sans",
+                    //             color: black)),
+                    //     Text('N1,400'),
+                    //   ],
+                    // ).paddingBottom(24),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('Delivery',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.w500,
+                    //             fontSize: 16,
+                    //             fontFamily: "Josefin Sans",
+                    //             color: black)),
+                    //     Text('N200'),
+                    //   ],
+                    // ).paddingBottom(24),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('Service',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.w500,
+                    //             fontSize: 16,
+                    //             fontFamily: "Josefin Sans",
+                    //             color: black)),
+                    //     Text('N200'),
+                    //   ],
+                    // ).paddingBottom(24),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('Total',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.w500,
+                    //             fontSize: 16,
+                    //             fontFamily: "Josefin Sans",
+                    //             color: black)),
+                    //     Text('N1,800'),
+                    //   ],
+                    // ).paddingBottom(24),
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Text('Payment method',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.w500,
+                    //             fontSize: 12,
+                    //             fontFamily: "Josefin Sans",
+                    //             color: black)),
+                    //     Text('Online payment',
+                    //         style: TextStyle(
+                    //             fontWeight: FontWeight.w500,
+                    //             fontSize: 12,
+                    //             fontFamily: "Josefin Sans",
+                    //             color: black)),
+                    //   ],
+                    // ).paddingBottom(24),
                   ],
                 ).paddingSymmetric(horizontal: 16, vertical: 46),
               ),
@@ -301,7 +307,6 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
       physics: NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemBuilder: (context, index) {
-        final data = _data(index + 1);
         return Container(
           width: 360.0,
           padding: EdgeInsets.zero,
@@ -309,7 +314,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
             mainAxisSize: MainAxisSize.min,
             children: [
               _OrderTitle(
-                orderInfo: data,
+                orderInfo: model.businessOrderDetails,
               ),
             ],
           ),
@@ -325,7 +330,7 @@ class _OrderTitle extends StatelessWidget {
     required this.orderInfo,
   }) : super(key: key);
 
-  final _OrderInfo orderInfo;
+  final BusinessOrderDetailResponse? orderInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -362,16 +367,15 @@ class _OrderTitle extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Helen Laundry',
+                                 Text(
+                                   orderInfo?.organization?.name ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14,
                                       fontFamily: "Josefin Sans",
                                       color: black),
                                 ).padding(bottom: 8),
-                                const Text(
-                                  'Mon, 7th Apr, 2024',
+                                 Text(orderInfo?.createdAt ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -416,16 +420,14 @@ class _OrderTitle extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text(
-                                  'Ben Murray Street, Adekunle.',
+                                 Text(orderInfo?.customer?.name ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w500,
                                       fontSize: 14,
                                       fontFamily: "Josefin Sans",
                                       color: black),
                                 ).padding(bottom: 8),
-                                const Text(
-                                  'Wed, 9th Apr, 2024',
+                                 Text(orderInfo?.updatedAt ?? "",
                                   style: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 12,
@@ -448,8 +450,7 @@ class _OrderTitle extends StatelessWidget {
                                   fontFamily: "Josefin Sans",
                                   color: grey),
                             ).padding(bottom: 8),
-                            Text(
-                              'Completed',
+                            Text(orderInfo?.status ?? "",
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 12,

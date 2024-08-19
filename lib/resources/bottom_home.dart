@@ -6,6 +6,7 @@ import 'package:limcad/features/analytics/analytics.dart';
 import 'package:limcad/features/dashboard/business_dashboard.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
 import 'package:limcad/features/explore/explore.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/order/business_orders.dart';
 import 'package:limcad/features/order/orders.dart';
 import 'package:limcad/features/profile/profile.dart';
@@ -18,9 +19,9 @@ import 'package:stacked/stacked.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = "/home";
-  final String? role;
+  final UserType? userType;
 
-  const HomePage(this.role, {Key? key}) : super(key: key);
+  const HomePage(this.userType, {Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -78,7 +79,7 @@ class _HomePageState extends State<HomePage>
         controller: tabController,
         dragStartBehavior: DragStartBehavior.down,
         physics: const BouncingScrollPhysics(),
-        children: widget.role == "business"
+        children: widget.userType == "business"
             ? [
                 BusinessDashboard(),
                 AnalyticsPage(),
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage>
                           fit: BoxFit.scaleDown,
                         ))).padding(bottom: 8, top: 16),
                 Text(
-                  widget.role == "business" ? "Analytics" : "Explore",
+                  widget.userType == "business" ? "Analytics" : "Explore",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
                         color: currentPage == 1
                             ? CustomColors.limcadPrimary

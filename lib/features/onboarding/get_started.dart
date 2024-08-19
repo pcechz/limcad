@@ -22,16 +22,6 @@ class GetStartedPage extends StatefulWidget {
 }
 
 class _GetStartedPageState extends State<GetStartedPage> {
-  UserType? userType;
-
-  @override
-  void initState() {
-    setState(() {
-      userType = widget.theUsertype;
-    });
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,17 +40,17 @@ class _GetStartedPageState extends State<GetStartedPage> {
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage(
-                        userType == UserType.personal
+                        widget.theUsertype == UserType.personal
                             ? AssetUtil.individualAccountBanner
                             : AssetUtil.businessAccountBanner,
                       ))),
             ),
             personalBody()
                 .padding(bottom: 40, top: 40)
-                .hideIf(userType == UserType.business),
+                .hideIf(widget.theUsertype == UserType.business),
             businessBody()
                 .padding(top: 40)
-                .hideIf(userType == UserType.personal)
+                .hideIf(widget.theUsertype == UserType.personal)
           ],
         ),
       );

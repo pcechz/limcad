@@ -85,13 +85,20 @@ class _OrdersPageState extends State<OrdersPage> {
                               alignment: Alignment.center,
                               width: context.width(),
                               child: ListView.builder(
-                                itemCount: model.laundryOrderItems!.length,
+                                itemCount: model.laundryOrderItems
+                                    ?.where((element) =>
+                                        element.status != "COMPLETED")
+                                    .length,
                                 itemBuilder: (context, index) {
-                                  var item = model.laundryOrderItems![index];
+                                  final pendingOrders = model.laundryOrderItems
+                                      ?.where((element) =>
+                                          element.status != "COMPLETED")
+                                      .toList();
+                                  var item = pendingOrders![index];
                                   return ListTile(
                                     onTap: () {
                                       NavigationService.pushScreen(context,
-                                          screen: OrdersDetailsPage(1),
+                                          screen: OrdersDetailsPage(item.id),
                                           withNavBar: true);
                                     },
                                     contentPadding: EdgeInsets.zero,
@@ -127,6 +134,31 @@ class _OrdersPageState extends State<OrdersPage> {
                                         ),
                                       ],
                                     ),
+                                    subtitle: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '8th Apr, 2024, 4:50',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                              fontFamily: "Josefin Sans",
+                                              color: grey),
+                                        ).padding(bottom: 8),
+                                        Text(
+                                          item.status ?? "",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                              fontFamily: "Josefin Sans",
+                                              color:
+                                                  CustomColors.limcadPrimary),
+                                        ).padding(bottom: 8),
+                                      ],
+                                    ),
                                   );
                                 },
                               ),
@@ -134,14 +166,84 @@ class _OrdersPageState extends State<OrdersPage> {
                             Container(
                               padding: const EdgeInsets.all(16),
                               width: context.width(),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  32.height,
-                                  Expanded(child: OrdersListWidget(context))
-                                ],
+                              child: ListView.builder(
+                                itemCount: model.laundryOrderItems
+                                    ?.where((element) =>
+                                        element.status == "COMPLETED")
+                                    .length,
+                                itemBuilder: (context, index) {
+                                  final completedOrders = model
+                                      .laundryOrderItems
+                                      ?.where((element) =>
+                                          element.status == "COMPLETED")
+                                      .toList();
+                                  var item = completedOrders![index];
+                                  return ListTile(
+                                    onTap: () {
+                                      NavigationService.pushScreen(context,
+                                          screen: OrdersDetailsPage(item.id),
+                                          withNavBar: true);
+                                    },
+                                    contentPadding: EdgeInsets.zero,
+                                    title: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              item.organization?.name ?? "",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  fontFamily: "Josefin Sans",
+                                                  color: black),
+                                            ).padding(bottom: 8),
+                                            Text(
+                                              'Order ${item.id}',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 14,
+                                                  fontFamily: "Josefin Sans",
+                                                  color: black),
+                                            ).padding(bottom: 8),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    subtitle: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '8th Apr, 2024, 4:50',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                              fontFamily: "Josefin Sans",
+                                              color: grey),
+                                        ).padding(bottom: 8),
+                                        Text(
+                                          item.status ?? "",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w400,
+                                              fontSize: 12,
+                                              fontFamily: "Josefin Sans",
+                                              color:
+                                                  CustomColors.limcadPrimary),
+                                        ).padding(bottom: 8),
+                                      ],
+                                    ),
+                                  );
+                                },
                               ),
                             ),
                           ],
@@ -169,7 +271,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(1), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -226,7 +328,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(1), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -283,7 +385,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(1), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -340,7 +442,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(1), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -397,7 +499,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(1), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -454,7 +556,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(5), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(
@@ -511,7 +613,7 @@ class _OrdersPageState extends State<OrdersPage> {
         ListTile(
           onTap: () {
             NavigationService.pushScreen(context,
-                screen: OrdersDetailsPage(1), withNavBar: true);
+                screen: OrdersDetailsPage(model.orderId), withNavBar: true);
           },
           contentPadding: EdgeInsets.zero,
           title: Column(

@@ -301,7 +301,7 @@ class AuthVM extends BaseVM {
                 profileResponse.data != null) {
               if (context.mounted) {
                 NavigationService.pushScreen(context,
-                    screen: HomePage(userType!.name), withNavBar: false);
+                    screen: HomePage(userType), withNavBar: false);
               }
             }
             // Navigator.pushReplacement(
@@ -422,7 +422,7 @@ class AuthVM extends BaseVM {
         if (context.mounted) {
           NavigationService.pushScreen(
             context,
-            screen: HomePage(userType.name),
+            screen: HomePage(userType),
             withNavBar: false,
           );
         }
@@ -464,7 +464,7 @@ class AuthVM extends BaseVM {
 
   void goToHome() {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return HomePage(userType!.name);
+      return HomePage(userType);
     }));
   }
 

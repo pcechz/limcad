@@ -47,12 +47,12 @@ class LaundryService with ListenableServiceMixin {
   }
 
   Future<BaseResponse<NoObjectResponse>> submitOrder(
-      Map<String, dynamic> orderItemJson) async {
+      Map<String, dynamic> orderItemJson, int organizationId) async {
     // BasePreference basePreference = await BasePreference.getInstance();
 
     // var profileResponse = await locator<AuthenticationService>().getProfile();
     final orderRequest = {
-      "organizationId": 6,
+      "organizationId": organizationId,
       "orderDetails": // Use a list instead of a set
           orderItemJson,
       "deliveryDetails": {"addressId": 11, "pickupDate": "2024-08-20"}

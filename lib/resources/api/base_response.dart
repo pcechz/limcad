@@ -114,14 +114,15 @@ class BaseAPIListPaginationResponse<T> extends BaseAPIListResponse<T> {
     if (directList) {
       data = json['items'].cast<T>();
     } else if (json['items'] != null) {
-      json['items'].forEach((item) {
+      for (dynamic item in json['items']) {
         data?.add(genericObject(item));
-      });
+      }
     }
 
     currentPage = json['currentPage'];
     totalItems = json['totalItems'];
     totalPages = json['totalPages'];
+
 
     return this;
   }
