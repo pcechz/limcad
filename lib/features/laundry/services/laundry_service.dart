@@ -18,7 +18,7 @@ class LaundryService with ListenableServiceMixin {
 
   Future<AboutResponse?> getAbout() async {
     var response = await apiService.request(
-        route: ApiRoute(ApiType.laundyAbout, routeParams: "8"),
+        route: ApiRoute(ApiType.laundyAbout, routeParams: "6"),
         create: () =>
             BaseResponse<AboutResponse>(create: () => AboutResponse()));
     return response.response.data;
@@ -27,7 +27,7 @@ class LaundryService with ListenableServiceMixin {
   Future<BaseResponse<LaundryServiceResponse>?> getLaundryServiceItems() async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.laundyServiceItems,
-            routeParams: "organizationId=8&page=0&size=10"),
+            routeParams: "organizationId=6&page=0&size=10"),
         create: () => BaseResponse<LaundryServiceResponse>(
             create: () => LaundryServiceResponse()));
     return response.response;
@@ -50,13 +50,13 @@ class LaundryService with ListenableServiceMixin {
       "organizationId": organizationId,
       "orderDetails": // Use a list instead of a set
           orderItemJson,
-      "deliveryDetails": {"addressId": 9, "pickupDate": "2024-08-20"}
+      "deliveryDetails": {"addressId": 11, "pickupDate": "2024-08-20"}
     };
 // 4,9,11
     // print("Order Request: ${profileResponse.toString()}");
 
     var loginResponse = await apiService.request(
-        route: ApiRoute(ApiType.submitOrder, routeParams: "paymentMode=CASH"),
+        route: ApiRoute(ApiType.submitOrder, routeParams: "paymentMode=ONLINE"),
         data: orderRequest,
         create: () =>
             BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));

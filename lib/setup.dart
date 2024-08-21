@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
@@ -8,6 +9,7 @@ import 'package:limcad/features/laundry/select_clothe.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/onboarding/landing_page.dart';
 import 'package:limcad/features/onboarding/user_type.dart';
+import 'package:limcad/firebase_options.dart';
 import 'package:limcad/resources/bottom_home.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:limcad/features/auth/auth/login.dart';
@@ -42,6 +44,9 @@ void doSetup({bool isPos = false}) async {
   });
 
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Permission.notification.isDenied.then(
         (bool value) {
       if (value) {

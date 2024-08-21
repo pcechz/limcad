@@ -30,7 +30,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 enum ProfileOption { about, addAddress, fetchProfile }
 
-enum BottomSheetOption { accountName, phoneNumber, emailAddress, dob }
+enum BottomSheetOption { accountName, phoneNumber, emailAddress, dob, address }
 
 class ProfileVM extends BaseVM {
   final apiService = locator<APIClient>();
@@ -127,7 +127,30 @@ class ProfileVM extends BaseVM {
     notifyListeners();
   }
 
-  void updateUserAddress() {}
+  Future<void> updateUserAddress() async {
+    try {
+
+
+      final response = await locator<AuthenticationService>().changeAddress();
+
+      Logger().i('Profile update status: ${response.status}');
+      if (response.status == 200) {
+        showUpdatedDialog(context, BottomSheetOption.address);
+        reset();
+        await locator<AuthenticationService>().getProfile();
+    getProfile();
+    } else {
+    Logger().e('Profile update failed with status: ${response.status}');
+    reset();
+    showErrorDialog(context, 'Profile update failed. Please try again.');
+    }
+    } catch (e) {
+    reset();
+
+    showErrorDialog(
+    context, 'An unexpected error occurred. Please try again.');
+    }
+  }
 
   void showUpdateNameModal(
       BuildContext context, BottomSheetOption bottomSheetOption) {
@@ -394,6 +417,8 @@ class ProfileVM extends BaseVM {
         return "email address";
       case BottomSheetOption.dob:
         return "date of birth";
+      case BottomSheetOption.address:
+        return "Address Added";
     }
   }
 }

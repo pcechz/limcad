@@ -5,6 +5,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:limcad/features/analytics/analytics.dart';
+import 'package:limcad/features/chat/room.dart';
 import 'package:limcad/features/dashboard/business_dashboard.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
 import 'package:limcad/features/explore/explore.dart';
@@ -79,7 +80,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           controller: tabController,
           dragStartBehavior: DragStartBehavior.down,
           physics: const BouncingScrollPhysics(),
-          children: widget.userType == UserType.business ?  [ BusinessDashboard(), AnalyticsPage(), BusinessOrdersPage(), ExploreScreen(), ProfilePage()] :  [ Dashboard(), ExploreScreen(), OrdersPage(), ExploreScreen(), ProfilePage()],
+          children: widget.userType == UserType.business ?  [ BusinessDashboard(), AnalyticsPage(), BusinessOrdersPage(), RoomsPage(), ProfilePage()] :  [ Dashboard(), ExploreScreen(), OrdersPage(), RoomsPage(), ProfilePage()],
         ),
         child: TabBar(
           padding: EdgeInsets.zero,
