@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/laundry/select_clothe.dart';
+import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
@@ -70,7 +72,7 @@ class ServicesComponentState extends State<ServicesComponent> {
                 crossAxisSpacing: 16, // Spacing between columns
                 mainAxisSpacing: 16, // Spacing between rows
                 childAspectRatio:
-                3, // Aspect ratio of each grid item (square in this case)
+                    3, // Aspect ratio of each grid item (square in this case)
               ),
               padding: EdgeInsets.all(8),
               physics: NeverScrollableScrollPhysics(),
@@ -101,19 +103,39 @@ class ServicesComponentState extends State<ServicesComponent> {
                           child: Container(
                               width: 56,
                               height: 56,
-                              decoration: BoxDecoration(shape: BoxShape.circle, color: data.iconBack.withOpacity(0.5)),
-                              child: Center(child: Image.asset(data.img, height: 30, width: 25,))),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: data.iconBack.withOpacity(0.5)),
+                              child: Center(
+                                  child: Image.asset(
+                                data.img,
+                                height: 30,
+                                width: 25,
+                              ))),
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(data.title,
-                              style: TextStyle( fontWeight: FontWeight.w500, fontSize: 16)),
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500, fontSize: 16)),
                         ),
                       ],
                     ),
                   ),
                 );
               },
+            ),
+            SizedBox(
+              height: 100,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.pushScreen(context,
+                    screen: SelectClothesPage(), withNavBar: true);
+              },
+              child: Text('Book service now',
+                  style: primaryTextStyle(
+                      size: 16, weight: FontWeight.w500, color: white)),
             ),
           ],
         ).paddingSymmetric(horizontal: 16, vertical: 32));
@@ -126,5 +148,9 @@ class ServiceModel {
   final Function onTap;
   final Color iconBack;
 
-  ServiceModel({required this.img, required this.title, required this.onTap, required this.iconBack});
+  ServiceModel(
+      {required this.img,
+      required this.title,
+      required this.onTap,
+      required this.iconBack});
 }

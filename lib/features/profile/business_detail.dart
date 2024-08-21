@@ -3,8 +3,6 @@ import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
-import 'package:limcad/features/order/review.dart';
-import 'package:limcad/features/order/review_page.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -16,14 +14,14 @@ import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 
-class LaundryDetailScreen extends StatefulWidget {
-  static String tag = '/LSServiceDetailScreen';
+class BusinessDetailScreen extends StatefulWidget {
+  static String tag = '/businessDetail';
 
   @override
-  LaundryDetailScreenState createState() => LaundryDetailScreenState();
+  BusinessDetailScreenState createState() => BusinessDetailScreenState();
 }
 
-class LaundryDetailScreenState extends State<LaundryDetailScreen> {
+class BusinessDetailScreenState extends State<BusinessDetailScreen> {
   late LaundryVM model;
 
   @override
@@ -33,7 +31,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.about, 6);
+          model.init(context, LaundryOption.about, 0);
         },
         builder: (BuildContext context, model, child) => Scaffold(
               body: DefaultTabController(
@@ -64,49 +62,9 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                             ),
                           ),
                         ),
-                        actions: [
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
-                              height: 32,
-                              width: 32,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
-                              child: Center(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.share,
-                                    color: CustomColors.limcadPrimary,
-                                    size: 17,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.all(8),
-                            child: Container(
-                              height: 32,
-                              width: 32,
-                              decoration: BoxDecoration(
-                                  color: Colors.white, shape: BoxShape.circle),
-                              child: Center(
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.favorite_outline,
-                                    color: CustomColors.limcadPrimary,
-                                    size: 17,
-                                  ),
-                                  onPressed: () {},
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
                         pinned: true,
                         elevation: 0.5,
-                        expandedHeight: 430,
+                        expandedHeight: 370,
                         flexibleSpace: FlexibleSpaceBar(
                           titlePadding:
                               EdgeInsets.only(bottom: 66, left: 30, right: 50),
@@ -133,63 +91,14 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                                   ),
                                 ],
                               ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Container(
-                                      height: 20,
-                                      width: 64,
-                                      decoration: BoxDecoration(
-                                          color: CustomColors.limcardSecondary2,
-                                          shape: BoxShape.rectangle,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(5))),
-                                      child: Text('Laundry',
-                                          textAlign: TextAlign.center,
-                                          style: secondaryTextStyle(
-                                            color: CustomColors.limcadPrimary,
-                                            size: 12,
-                                          ))),
-                                  Row(
-                                    children: [
-                                      RatingBarWidget(
-                                        rating: 2.5,
-                                        size: 10,
-                                        disable: true,
-                                        onRatingChanged: (aRating) {
-                                          // rating = aRating;
-                                        },
-                                      ),
-                                      4.width,
-                                      Text('4.5 (33 Reviews)',
-                                          style: secondaryTextStyle(
-                                              color: Colors.black, size: 9)),
-                                    ],
-                                  )
-                                ],
-                              ).paddingSymmetric(horizontal: 16, vertical: 16),
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('Helen Laundry',
-                                          style: boldTextStyle(
-                                            size: 24,
-                                            color: Colors.black,
-                                          )),
-                                      4.height,
-                                      Text('48, Bank-Anthony Way, Yaba, Lagos.',
-                                          style: secondaryTextStyle(
-                                              color: Colors.black38, size: 14)),
-                                      4.height,
-                                    ],
-                                  ).expand(),
-                                ],
-                              ).padding(left: 16, right: 16, bottom: 32),
+                              Text('Withdraw money into your saved card',
+                                      textAlign: TextAlign.center,
+                                      style: secondaryTextStyle(
+                                        color: CustomColors.black900,
+                                        size: 16,
+                                      ))
+                                  .paddingSymmetric(
+                                      horizontal: 16, vertical: 16),
                             ],
                           ),
                         ),
@@ -225,7 +134,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                             Tab(
                               child: Align(
                                 alignment: Alignment.center,
-                                child: Text('Gallery',
+                                child: Text('Media',
                                     style: primaryTextStyle(
                                         size: 14, weight: FontWeight.w500)),
                               ),
@@ -248,7 +157,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                       AboutComponent(model),
                       ServicesComponent(),
                       GalleryWidget(),
-                      const ReviewScreen()
+                      AboutComponent(model)
                     ],
                   ),
                 ),

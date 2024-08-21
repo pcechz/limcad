@@ -114,15 +114,14 @@ class AuthVM extends BaseVM {
 
     if (route == OnboardingPageType.signup) {
       final response = await locator<AuthenticationService>().getStates();
-      Logger().i(response);  // Log the response
-      states.clear();  // Clear the list before adding new data
+      Logger().i(response); // Log the response
+      states.clear(); // Clear the list before adding new data
       states.addAll(response.data?.toList() ?? []);
       selectedState = states[0];
       notifyListeners();
     }
 
     _preference = await BasePreference.getInstance();
-
   }
 
   void _initializeController() async {
@@ -306,7 +305,7 @@ class AuthVM extends BaseVM {
                 profileResponse.data != null) {
               if (context.mounted) {
                 NavigationService.pushScreen(context,
-                    screen:  HomePage(userType), withNavBar: false);
+                    screen: HomePage(userType), withNavBar: false);
               }
             }
             // Navigator.pushReplacement(
@@ -445,8 +444,7 @@ class AuthVM extends BaseVM {
         if (context.mounted) {
           NavigationService.pushScreen(
             context,
-            screen: HomePage(
-                userType ),
+            screen: HomePage(userType),
             withNavBar: false,
           );
         }
@@ -499,11 +497,10 @@ class AuthVM extends BaseVM {
       final response = await locator<AuthenticationService>()
           .getLGAs(selectedState?.stateId);
       Logger().i(response.data);
-      if(response.data!.isNotEmpty){
+      if (response.data!.isNotEmpty) {
         lgas.addAll(response.data?.toList() ?? []);
         Logger().i(response.data);
       }
-
     }
     notifyListeners();
   }

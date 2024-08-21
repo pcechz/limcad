@@ -227,7 +227,10 @@ class Organization {
   String? email;
   bool? enabled;
   int? id;
+  num? latitude;
   String? location;
+  String? logoPath;
+  num? longitude;
   String? name;
   bool? paymentSetup;
   String? phoneNumber;
@@ -239,7 +242,10 @@ class Organization {
       this.email,
       this.enabled,
       this.id,
+      this.latitude,
       this.location,
+      this.logoPath,
+      this.longitude,
       this.name,
       this.paymentSetup,
       this.phoneNumber,
@@ -251,7 +257,10 @@ class Organization {
     email = json['email'];
     enabled = json['enabled'];
     id = json['id'];
+    latitude = json['latitude'];
     location = json['location'];
+    logoPath = json['logoPath'];
+    longitude = json['longitude'];
     name = json['name'];
     paymentSetup = json['paymentSetup'];
     phoneNumber = json['phoneNumber'];
@@ -265,7 +274,10 @@ class Organization {
     data['email'] = this.email;
     data['enabled'] = this.enabled;
     data['id'] = this.id;
+    data['latitude'] = this.latitude;
     data['location'] = this.location;
+    data['logoPath'] = this.logoPath;
+    data['longitude'] = this.longitude;
     data['name'] = this.name;
     data['paymentSetup'] = this.paymentSetup;
     data['phoneNumber'] = this.phoneNumber;

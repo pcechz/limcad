@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/giftcards/selected_card_screen.dart';
+import 'package:limcad/features/profile/business_detail.dart';
 import 'package:limcad/features/profile/faq.dart';
 import 'package:limcad/features/profile/model/profile_view_model.dart';
 import 'package:limcad/features/profile/profile_address.dart';
@@ -44,7 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
               Center(
                 child: Column(
                   children: [
-                    CircleAvatar(
+                    const CircleAvatar(
                       backgroundImage: AssetImage(
                         AssetUtil.user,
                       ),
@@ -105,16 +106,31 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,
-                        screen: ReferralsScreen(), withNavBar: true);
+                        screen: BusinessDetailScreen(), withNavBar: true);
                   },
-                  title: Text("Referrals"),
-                  leading: Icon(Icons.card_giftcard_outlined),
-                  trailing: Icon(
+                  title: const Text("Description"),
+                  leading: const Icon(Icons.wallet_giftcard),
+                  trailing: const Icon(
                     Icons.arrow_forward_ios_sharp,
                     size: 12,
                   ),
                 ),
-                Divider(
+                const Divider(
+                  thickness: 0.5,
+                ).paddingSymmetric(horizontal: 16),
+                ListTile(
+                  onTap: () {
+                    NavigationService.pushScreen(context,
+                        screen: ReferralsScreen(), withNavBar: true);
+                  },
+                  title: const Text("Referrals"),
+                  leading: const Icon(Icons.card_giftcard_outlined),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 12,
+                  ),
+                ),
+                const Divider(
                   thickness: 0.5,
                 ).paddingSymmetric(horizontal: 16),
                 ListTile(
