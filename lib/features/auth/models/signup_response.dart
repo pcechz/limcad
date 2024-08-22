@@ -14,22 +14,23 @@ class RegistrationResponse implements FromJson<RegistrationResponse> {
   List<Address>? address;
   String? createdAt;
   String? updatedAt;
+  String? userType;
 
-  RegistrationResponse({
-    this.id,
-    this.name,
-    this.email,
-    this.phoneNumber,
-    this.verified,
-    this.enabled,
-    this.identityVerified,
-    this.idPath,
-    this.nin,
-    this.gender,
-    this.address,
-    this.createdAt,
-    this.updatedAt,
-  });
+  RegistrationResponse(
+      {this.id,
+      this.name,
+      this.email,
+      this.phoneNumber,
+      this.verified,
+      this.enabled,
+      this.identityVerified,
+      this.idPath,
+      this.nin,
+      this.gender,
+      this.address,
+      this.createdAt,
+      this.updatedAt,
+      this.userType});
 
   @override
   RegistrationResponse fromJson(Map<String, dynamic> json) {
@@ -43,6 +44,7 @@ class RegistrationResponse implements FromJson<RegistrationResponse> {
     idPath = json['idPath'];
     nin = json['nin'];
     gender = json['gender'];
+    userType = json['userType'];
     if (json['address'] != null) {
       address = <Address>[];
       json['address'].forEach((v) {

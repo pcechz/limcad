@@ -27,7 +27,8 @@ class SignupPage extends StatefulWidget {
 
 class _SignupPageState extends State<SignupPage> {
   late AuthVM model;
-
+  String? state = "";
+  String? lga = "";
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -36,6 +37,9 @@ class _SignupPageState extends State<SignupPage> {
           this.model = model;
           model.context = context;
           model.init(context, OnboardingPageType.signup, widget.theUsertype);
+          model.fetchState();
+          state = model.selectedState;
+          lga = model.selectedLGA;
         },
         builder: (context, model, child) => DefaultScaffold(
               showAppBar: true,
@@ -51,7 +55,7 @@ class _SignupPageState extends State<SignupPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Center(
-                      child: Text(
+                      child: const Text(
                         "Create Account",
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
@@ -198,7 +202,7 @@ class _SignupPageState extends State<SignupPage> {
                                 "State",
                                 style: Theme.of(context).textTheme.bodyMedium!,
                               ).padding(bottom: 6),
-                              DropdownButtonFormField<StateResponse>(
+                              DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   fillColor: Colors.white,
                                   contentPadding:
@@ -224,15 +228,14 @@ class _SignupPageState extends State<SignupPage> {
                                 icon: const Icon(CupertinoIcons.chevron_down,
                                         size: 18)
                                     .padding(right: 16),
-                                hint: Text(
-                                    model.selectedState?.stateName ?? "State",
-                                    style: TextStyle(
+                                hint: Text(state ?? "State",
+                                    style: const TextStyle(
                                         color: CustomColors.smallTextGrey,
                                         fontSize: 14)),
                                 borderRadius: BorderRadius.circular(30),
                                 items: model.states
-                                    .map((e) => DropdownMenuItem<StateResponse>(
-                                          value: e,
+                                    .map((e) => DropdownMenuItem<String>(
+                                          value: e.stateName,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Text(e.stateName ?? "",
@@ -246,22 +249,21 @@ class _SignupPageState extends State<SignupPage> {
                                     .toList(),
                                 validator: (value) =>
                                     ValidationUtil.validateInput(
-                                        value?.stateName, "State"),
-                                onSaved: (StateResponse? value) =>
-                                    model.selectedState = value,
-                                value: model.selectedState,
+                                        value, "State"),
+                                value: state,
                                 onChanged: (value) {
-                                  Logger()
-                                      .i("Selected State: ${value?.stateName}");
-
                                   if (value != null) {
-                                    model.setStateValue(value);
+                                    setState(() {
+                                      state = value;
+                                      Logger().i("Selected State: ${state}");
+                                      model.setStateValue(value);
+                                    });
                                   }
                                 },
                               ).padding(bottom: 20),
                             ],
                           ),
-
+                          Text("${state}"),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -270,7 +272,7 @@ class _SignupPageState extends State<SignupPage> {
                                 "LGA",
                                 style: Theme.of(context).textTheme.bodyMedium!,
                               ).padding(bottom: 6),
-                              DropdownButtonFormField<LGAResponse>(
+                              DropdownButtonFormField<String>(
                                 decoration: InputDecoration(
                                   fillColor: Colors.white,
                                   contentPadding:
@@ -296,14 +298,14 @@ class _SignupPageState extends State<SignupPage> {
                                 icon: const Icon(CupertinoIcons.chevron_down,
                                         size: 18)
                                     .padding(right: 16),
-                                hint: Text(model.selectedLGA?.lgaName ?? "LGA",
+                                hint: Text(lga ?? "LGA",
                                     style: TextStyle(
                                         color: CustomColors.smallTextGrey,
                                         fontSize: 14)),
                                 borderRadius: BorderRadius.circular(30),
                                 items: model.lgas
-                                    .map((e) => DropdownMenuItem<LGAResponse>(
-                                          value: e,
+                                    .map((e) => DropdownMenuItem<String>(
+                                          value: e.lgaName,
                                           child: Padding(
                                             padding: const EdgeInsets.all(16.0),
                                             child: Text(e.lgaName ?? "",
@@ -316,20 +318,23 @@ class _SignupPageState extends State<SignupPage> {
                                         ))
                                     .toList(),
                                 validator: (value) =>
-                                    ValidationUtil.validateInput(
-                                        value?.lgaName, "LGA"),
-                                onSaved: (LGAResponse? value) =>
+                                    ValidationUtil.validateInput(value, "LGA"),
+                                onSaved: (String? value) =>
                                     model.selectedLGA = value,
-                                value: model.selectedLGA,
+                                value: lga,
                                 onChanged: (value) {
                                   if (value != null) {
+                                    setState(() {
+                                      lga = value;
+                                    });
                                     model.setLGAValue(value);
                                   }
                                 },
                               ).padding(bottom: 20),
                             ],
                           ),
-
+                          Text("${model.selectedLGA}"),
+                          Text("${model.gender}"),
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,

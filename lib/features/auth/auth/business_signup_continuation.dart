@@ -142,71 +142,72 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                               prediction.description ?? "";
                           model.setAddress(prediction);
                         }).padding(bottom: 20),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          "State",
-                          style: Theme.of(context).textTheme.bodyMedium!,
-                        ).padding(bottom: 6),
-                        DropdownButtonFormField<StateResponse>(
-                          decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.only(left: 27),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(
-                                    width: 1.0,
-                                    color: CustomColors.limcardFaded)),
-                            enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(
-                                    width: 1.0,
-                                    color: CustomColors.limcardFaded)),
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(
-                                    width: 1.0,
-                                    color: CustomColors.limcardFaded)),
-                          ),
-                          style:
-                              const TextStyle(color: CustomColors.blackPrimary),
-                          icon:
-                              const Icon(CupertinoIcons.chevron_down, size: 18)
-                                  .padding(right: 16),
-                          hint: Text(model.selectedState?.stateName ?? "State",
-                              style: TextStyle(
-                                  color: CustomColors.smallTextGrey,
-                                  fontSize: 14)),
-                          borderRadius: BorderRadius.circular(30),
-                          items: model.states
-                              .map((e) => DropdownMenuItem<StateResponse>(
-                                    value: e,
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(16.0),
-                                      child: Text(e.stateName ?? "",
-                                          style: const TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.w400,
-                                              color:
-                                                  CustomColors.blackPrimary)),
-                                    ),
-                                  ))
-                              .toList(),
-                          validator: (value) => ValidationUtil.validateInput(
-                              value?.stateName, "State"),
-                          onSaved: (StateResponse? value) =>
-                              model.selectedState = value,
-                          value: model.selectedState,
-                          onChanged: (value) {
-                            if (value != null) {
-                              model.setStateValue(value);
-                            }
-                          },
-                        ).padding(bottom: 20),
-                      ],
-                    ),
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   mainAxisAlignment: MainAxisAlignment.start,
+                    //   children: [
+                    //     Text(
+                    //       "State",
+                    //       style: Theme.of(context).textTheme.bodyMedium!,
+                    //     ).padding(bottom: 6),
+                    //     DropdownButtonFormField<StateItems>(
+                    //       decoration: InputDecoration(
+                    //         fillColor: Colors.white,
+                    //         contentPadding: const EdgeInsets.only(left: 27),
+                    //         focusedBorder: OutlineInputBorder(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             borderSide: const BorderSide(
+                    //                 width: 1.0,
+                    //                 color: CustomColors.limcardFaded)),
+                    //         enabledBorder: OutlineInputBorder(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             borderSide: const BorderSide(
+                    //                 width: 1.0,
+                    //                 color: CustomColors.limcardFaded)),
+                    //         border: OutlineInputBorder(
+                    //             borderRadius: BorderRadius.circular(30),
+                    //             borderSide: const BorderSide(
+                    //                 width: 1.0,
+                    //                 color: CustomColors.limcardFaded)),
+                    //       ),
+                    //       style:
+                    //           const TextStyle(color: CustomColors.blackPrimary),
+                    //       icon:
+                    //           const Icon(CupertinoIcons.chevron_down, size: 18)
+                    //               .padding(right: 16),
+                    //       hint: Text(model.selectedState?.stateName ?? "State",
+                    //           style: TextStyle(
+                    //               color: CustomColors.smallTextGrey,
+                    //               fontSize: 14)),
+                    //       borderRadius: BorderRadius.circular(30),
+                    //       items: model.states
+                    //           .map((e) => DropdownMenuItem<StateItems>(
+                    //                 value: e,
+                    //                 child: Padding(
+                    //                   padding: const EdgeInsets.all(16.0),
+                    //                   child: Text(e.stateName ?? "",
+                    //                       style: const TextStyle(
+                    //                           fontSize: 14,
+                    //                           fontWeight: FontWeight.w400,
+                    //                           color:
+                    //                               CustomColors.blackPrimary)),
+                    //                 ),
+                    //               ))
+                    //           .toList(),
+                    //       validator: (value) => ValidationUtil.validateInput(
+                    //           value?.stateName, "State"),
+                    //       onSaved: (StateItems? value) =>
+                    //           model.selectedState = value,
+                    //       value: model.selectedState,
+                    //       onChanged: (value) {
+                    //         if (value != null) {
+                    //           model.setStateValue(value);
+                    //         }
+                    //       },
+                    //     ).padding(bottom: 20),
+                    //   ],
+                    // ),
+
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,

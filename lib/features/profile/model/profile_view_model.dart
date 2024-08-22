@@ -83,7 +83,7 @@ class ProfileVM extends BaseVM {
 
   fetchState() async {
     final response = await locator<AuthenticationService>().getStates();
-    states.addAll(response.data?.toList() ?? []);
+    // states.addAll(response.data?.toList() ?? []);
     notifyListeners();
   }
 
