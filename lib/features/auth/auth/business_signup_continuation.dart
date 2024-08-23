@@ -13,6 +13,7 @@ import 'package:limcad/resources/widgets/default_scafold.dart';
 import 'package:limcad/resources/widgets/view_utils/custom_text_field.dart';
 import 'package:limcad/resources/widgets/view_utils/password_input_field.dart';
 import 'package:limcad/resources/widgets/view_utils/phone_textfield.dart';
+import 'package:logger/logger.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 
@@ -32,7 +33,8 @@ class BusinessSignUpSecondPage extends StatefulWidget {
 
 class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
   late AuthVM model;
-
+  String? state = "";
+  String? lga = "";
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder.reactive(
@@ -41,8 +43,10 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
         this.model = model;
         model.context = context;
         model.onboardingRequest = widget.businessRequest;
-
         model.init(context, OnboardingPageType.signup, widget.theUsertype);
+        model.fetchState();
+        state = model.selectedState;
+        lga = model.selectedLGA;
       },
       builder: (context, viewModel, child) => DefaultScaffold(
         showAppBar: true,
@@ -142,72 +146,143 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                               prediction.description ?? "";
                           model.setAddress(prediction);
                         }).padding(bottom: 20),
-                    // Column(
-                    //   crossAxisAlignment: CrossAxisAlignment.start,
-                    //   mainAxisAlignment: MainAxisAlignment.start,
-                    //   children: [
-                    //     Text(
-                    //       "State",
-                    //       style: Theme.of(context).textTheme.bodyMedium!,
-                    //     ).padding(bottom: 6),
-                    //     DropdownButtonFormField<StateItems>(
-                    //       decoration: InputDecoration(
-                    //         fillColor: Colors.white,
-                    //         contentPadding: const EdgeInsets.only(left: 27),
-                    //         focusedBorder: OutlineInputBorder(
-                    //             borderRadius: BorderRadius.circular(30),
-                    //             borderSide: const BorderSide(
-                    //                 width: 1.0,
-                    //                 color: CustomColors.limcardFaded)),
-                    //         enabledBorder: OutlineInputBorder(
-                    //             borderRadius: BorderRadius.circular(30),
-                    //             borderSide: const BorderSide(
-                    //                 width: 1.0,
-                    //                 color: CustomColors.limcardFaded)),
-                    //         border: OutlineInputBorder(
-                    //             borderRadius: BorderRadius.circular(30),
-                    //             borderSide: const BorderSide(
-                    //                 width: 1.0,
-                    //                 color: CustomColors.limcardFaded)),
-                    //       ),
-                    //       style:
-                    //           const TextStyle(color: CustomColors.blackPrimary),
-                    //       icon:
-                    //           const Icon(CupertinoIcons.chevron_down, size: 18)
-                    //               .padding(right: 16),
-                    //       hint: Text(model.selectedState?.stateName ?? "State",
-                    //           style: TextStyle(
-                    //               color: CustomColors.smallTextGrey,
-                    //               fontSize: 14)),
-                    //       borderRadius: BorderRadius.circular(30),
-                    //       items: model.states
-                    //           .map((e) => DropdownMenuItem<StateItems>(
-                    //                 value: e,
-                    //                 child: Padding(
-                    //                   padding: const EdgeInsets.all(16.0),
-                    //                   child: Text(e.stateName ?? "",
-                    //                       style: const TextStyle(
-                    //                           fontSize: 14,
-                    //                           fontWeight: FontWeight.w400,
-                    //                           color:
-                    //                               CustomColors.blackPrimary)),
-                    //                 ),
-                    //               ))
-                    //           .toList(),
-                    //       validator: (value) => ValidationUtil.validateInput(
-                    //           value?.stateName, "State"),
-                    //       onSaved: (StateItems? value) =>
-                    //           model.selectedState = value,
-                    //       value: model.selectedState,
-                    //       onChanged: (value) {
-                    //         if (value != null) {
-                    //           model.setStateValue(value);
-                    //         }
-                    //       },
-                    //     ).padding(bottom: 20),
-                    //   ],
-                    // ),
-
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "State",
+                          style: Theme.of(context).textTheme.bodyMedium!,
+                        ).padding(bottom: 6),
+                        DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.only(left: 27),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
+                          ),
+                          style:
+                              const TextStyle(color: CustomColors.blackPrimary),
+                          icon:
+                              const Icon(CupertinoIcons.chevron_down, size: 18)
+                                  .padding(right: 16),
+                          hint: Text(state ?? "State",
+                              style: const TextStyle(
+                                  color: CustomColors.smallTextGrey,
+                                  fontSize: 14)),
+                          borderRadius: BorderRadius.circular(30),
+                          items: model.states
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e.stateName,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(e.stateName ?? "",
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  CustomColors.blackPrimary)),
+                                    ),
+                                  ))
+                              .toList(),
+                          validator: (value) =>
+                              ValidationUtil.validateInput(value, "State"),
+                          value: state,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                state = value;
+                                Logger().i("Selected State: ${state}");
+                                model.setStateValue(value);
+                              });
+                            }
+                          },
+                        ).padding(bottom: 20),
+                      ],
+                    ),
+                    Center(child: Text("${state}")),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(
+                          "LGA",
+                          style: Theme.of(context).textTheme.bodyMedium!,
+                        ).padding(bottom: 6),
+                        DropdownButtonFormField<String>(
+                          decoration: InputDecoration(
+                            fillColor: Colors.white,
+                            contentPadding: const EdgeInsets.only(left: 27),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
+                          ),
+                          style:
+                              const TextStyle(color: CustomColors.blackPrimary),
+                          icon:
+                              const Icon(CupertinoIcons.chevron_down, size: 18)
+                                  .padding(right: 16),
+                          hint: Text(lga ?? "LGA",
+                              style: TextStyle(
+                                  color: CustomColors.smallTextGrey,
+                                  fontSize: 14)),
+                          borderRadius: BorderRadius.circular(30),
+                          items: model.lgas
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e.lgaName,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(e.lgaName ?? "",
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  CustomColors.blackPrimary)),
+                                    ),
+                                  ))
+                              .toList(),
+                          validator: (value) =>
+                              ValidationUtil.validateInput(value, "LGA"),
+                          onSaved: (String? value) => model.selectedLGA = value,
+                          value: lga,
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() {
+                                lga = value;
+                              });
+                              model.setLGAValue(value);
+                            }
+                          },
+                        ).padding(bottom: 20),
+                      ],
+                    ),
+                    Center(child: Text("${model.selectedLGA}")),
+                    Center(child: Text("${model.gender}").padding(bottom: 20)),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -216,70 +291,6 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                           "Gender",
                           style: Theme.of(context).textTheme.bodyMedium!,
                         ).padding(bottom: 6),
-                        // DropdownButtonFormField<String>(
-                        //   value: model.gender,
-                        //   decoration: InputDecoration(
-                        //     prefixIcon:
-                        //         const Icon(CupertinoIcons.person, size: 18)
-                        //             .padding(left: 4),
-                        //     fillColor: Colors.white,
-                        //     contentPadding: const EdgeInsets.only(left: 27),
-                        //     focusedBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(30),
-                        //       borderSide: const BorderSide(
-                        //           width: 1.0, color: CustomColors.limcardFaded),
-                        //     ),
-                        //     enabledBorder: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(30),
-                        //       borderSide: const BorderSide(
-                        //           width: 1.0, color: CustomColors.limcardFaded),
-                        //     ),
-                        //     border: OutlineInputBorder(
-                        //       borderRadius: BorderRadius.circular(30),
-                        //       borderSide: const BorderSide(
-                        //           width: 1.0, color: CustomColors.limcardFaded),
-                        //     ),
-                        //   ),
-                        //   style: const TextStyle(color: CustomColors.red400),
-                        //   icon:
-                        //       const Icon(CupertinoIcons.chevron_down, size: 18)
-                        //           .padding(right: 16),
-                        //   hint: const Text(
-                        //     "Gender",
-                        //     style: TextStyle(
-                        //         color: CustomColors.smallTextGrey,
-                        //         fontSize: 14),
-                        //   ),
-                        //   borderRadius: BorderRadius.circular(30),
-                        //   items: model.genderList
-                        //       .map((e) => DropdownMenuItem<String>(
-                        //             value: e,
-                        //             child: Padding(
-                        //               padding: const EdgeInsets.all(16.0),
-                        //               child: Text(
-                        //                 e,
-                        //                 style: const TextStyle(
-                        //                   fontSize: 14,
-                        //                   fontWeight: FontWeight.w400,
-                        //                   color: CustomColors
-                        //                       .blackPrimary, // Ensure color is visible
-                        //                 ),
-                        //               ),
-                        //             ),
-                        //           ))
-                        //       .toList(),
-                        //   validator: (value) =>
-                        //       ValidationUtil.validateInput(value, "Gender"),
-                        //   onSaved: (String? value) =>
-                        //       model.gender = value?.toUpperCase(),
-                        //   onChanged: (value) {
-                        //     if (value != null) {
-                        //       print(value);
-                        //       model.setGender(value);
-                        //     }
-                        //   },
-                        // ).padding(bottom: 20),
-
                         DropdownButtonFormField<String>(
                           decoration: InputDecoration(
                             prefixIcon:
@@ -288,50 +299,57 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                             fillColor: Colors.white,
                             contentPadding: const EdgeInsets.only(left: 27),
                             focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  width: 1.0, color: CustomColors.limcardFaded),
-                            ),
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
                             enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  width: 1.0, color: CustomColors.limcardFaded),
-                            ),
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(
-                                  width: 1.0, color: CustomColors.limcardFaded),
-                            ),
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(
+                                    width: 1.0,
+                                    color: CustomColors.limcardFaded)),
                           ),
-                          style: const TextStyle(color: CustomColors.black900),
+                          style:
+                              const TextStyle(color: CustomColors.blackPrimary),
                           icon:
                               const Icon(CupertinoIcons.chevron_down, size: 18)
                                   .padding(right: 16),
-                          hint: const Text(
-                            "Gender",
-                            style: TextStyle(
-                                color: CustomColors.smallTextGrey,
-                                fontSize: 14),
-                          ),
+                          hint: const Text("Gender",
+                              style: TextStyle(
+                                  color: CustomColors.smallTextGrey,
+                                  fontSize: 14)),
                           borderRadius: BorderRadius.circular(30),
-                          value: model.gender,
-                          isExpanded: true,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              model.gender = newValue;
-                            });
-                            model.setGender(newValue!);
+                          items: model.genderList
+                              .map((e) => DropdownMenuItem<String>(
+                                    value: e,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16.0),
+                                      child: Text(e,
+                                          style: const TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color:
+                                                  CustomColors.blackPrimary)),
+                                    ),
+                                  ))
+                              .toList(),
+                          validator: (value) =>
+                              ValidationUtil.validateInput(value, "Gender"),
+                          onSaved: (String? value) =>
+                              model.gender = value?.toUpperCase(),
+                          onChanged: (value) {
+                            if (value != null) {
+                              model.setGender(value);
+                            }
                           },
-                          items: <String>['MALE', 'FEMALE']
-                              .map<DropdownMenuItem<String>>((String value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        )
+                        ).padding(bottom: 20),
                       ],
-                    ).padding(bottom: 40),
+                    ),
                     ElevatedButton(
                       onPressed: () {
                         FocusScope.of(context).unfocus();

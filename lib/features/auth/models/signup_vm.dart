@@ -186,11 +186,11 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
+        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
     onboardingRequest?.staffRequest?.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
+        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
     onboardingRequest?.staffRequest?.gender = gender;
     onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
     onboardingRequest?.staffRequest?.userType = userType?.name.toString();
@@ -214,7 +214,9 @@ class AuthVM extends BaseVM {
         //     screen: const HomePage("business"), withNavBar: false);
         signupRequest?.password = onboardingRequest?.staffRequest?.password;
         signupRequest?.email = onboardingRequest?.staffRequest?.email;
-        proceedLogin(userType);
+        print("Sign up request: ${signupRequest?.password}");
+        print("Sign up request: ${signupRequest?.email}");
+        proceedLogin(userType, signupRequest);
       }
     }
   }
@@ -278,7 +280,7 @@ class AuthVM extends BaseVM {
   Future<void> proceedVerifyOTP() async {
     isLoading(true);
     final response = await locator<AuthenticationService>()
-        .validateOtp(signupRequest?.email, otpController.text, userType!.name!);
+        .validateOtp(signupRequest?.email, otpController.text, userType!.name);
     isLoading(false);
     if (response.status == ResponseCode.created ||
         response.status == ResponseCode.success) {
@@ -290,6 +292,7 @@ class AuthVM extends BaseVM {
       if (response.data?.user != null) {
         _preference.saveLoginDetails(response.data!.user!);
       }
+      // ignore: use_build_context_synchronously
       ViewUtil.showDynamicDialogWithButton(
           barrierDismissible: false,
           context: context,
@@ -329,8 +332,9 @@ class AuthVM extends BaseVM {
             Navigator.pop(context);
             _preference.saveLoginDetails(response.data!.user!);
             isLoading(true);
-            final profileResponse =
-                await locator<AuthenticationService>().getProfile();
+            final profileResponse = userType == UserType.personal
+                ? await locator<AuthenticationService>().getProfile()
+                : await locator<AuthenticationService>().getBusinessProfile();
             isLoading(false);
 
             if (profileResponse.status == ResponseCode.success &&
@@ -377,6 +381,7 @@ class AuthVM extends BaseVM {
                 ? UserType.personal
                 : UserType.business;
         print("userType: ${userTypeToString(UserType.personal)}");
+        // ignore: use_build_context_synchronously
         NavigationService.pushScreen(context,
             screen: SignupOtpPage(
               request: signupRequest,
@@ -404,17 +409,15 @@ class AuthVM extends BaseVM {
     }
   }
 
-  Future<void> proceedLogin(UserType? userType) async {
+  Future<void> proceedLogin(UserType? userType, SignupRequest? request) async {
     try {
-      if (signupRequest == null || userType == null) {
+      if (request == null || userType == null) {
         throw Exception('Invalid signup request or user type');
       }
 
-      signupRequest!.password = password.text;
-      signupRequest!.email = emailController.text;
       isLoading(true);
-      final response = await locator<AuthenticationService>()
-          .login(signupRequest!, userType);
+      final response =
+          await locator<AuthenticationService>().login(request, userType);
 
       if (response.status == ResponseCode.success) {
         await _handleSuccessfulLogin(response.data, userType);
