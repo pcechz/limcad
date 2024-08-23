@@ -475,6 +475,7 @@ class AuthVM extends BaseVM {
 
       if (profileResponse.status == ResponseCode.success &&
           profileResponse.data != null) {
+        print("the user userType: ${userType}");
         if (context.mounted) {
           NavigationService.pushScreen(
             context,

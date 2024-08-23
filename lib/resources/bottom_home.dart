@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>
         controller: tabController,
         dragStartBehavior: DragStartBehavior.down,
         physics: const BouncingScrollPhysics(),
-        children: widget.userType == "business"
+        children: userTypeToString(widget.userType!) == "BUSINESS"
             ? [
                 BusinessDashboard(),
                 AnalyticsPage(),
@@ -149,7 +149,9 @@ class _HomePageState extends State<HomePage>
                           fit: BoxFit.scaleDown,
                         ))).padding(bottom: 8, top: 16),
                 Text(
-                  widget.userType == "business" ? "Analytics" : "Explore",
+                  userTypeToString(widget.userType!) == "BUSINESS"
+                      ? "Analytics"
+                      : "Explore",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
                         color: currentPage == 1
                             ? CustomColors.limcadPrimary
@@ -249,5 +251,15 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  String userTypeToString(UserType type) {
+    switch (type) {
+      case UserType.personal:
+        return 'PERSONAL';
+      case UserType.business:
+        return 'BUSINESS';
+      default:
+        return '';
+    }
+  }
 // ... (Add dispose method to clean up controllers)
 }
