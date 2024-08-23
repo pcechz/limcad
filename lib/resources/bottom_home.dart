@@ -85,14 +85,14 @@ class _HomePageState extends State<HomePage>
                 AnalyticsPage(),
                 BusinessOrdersPage(),
                 ExploreScreen(),
-                ProfilePage()
+                ProfilePage(userType: widget.userType!)
               ]
             : [
                 Dashboard(),
                 ExploreScreen(),
                 OrdersPage(),
                 ExploreScreen(),
-                ProfilePage()
+                ProfilePage(userType: widget.userType!)
               ],
       ),
       child: TabBar(

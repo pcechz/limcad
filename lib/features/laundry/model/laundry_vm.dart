@@ -178,6 +178,14 @@ class LaundryVM extends BaseVM {
     notifyListeners();
   }
 
+  Future<void> createServiceItem(String name, String desc, int price) async {
+    final response =
+        await locator<LaundryService>().createServiceItems(name, desc, price);
+    if (response.status == 200) {
+      Logger().i(response.data);
+    }
+  }
+
   double calculateTotalPrice() {
     double total = 0.0;
     selectedItems.forEach((item, quantity) {

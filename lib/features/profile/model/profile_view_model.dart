@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
+import 'package:limcad/features/auth/models/login_response.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_response.dart' as signupRes;
 import 'package:limcad/features/auth/services/signup_service.dart';
@@ -58,6 +59,7 @@ class ProfileVM extends BaseVM {
   StateResponse? selectedState;
   LGAResponse? selectedLGA;
   ProfileResponse? profileResponse = ProfileResponse();
+  User? user = User();
   String? role;
 
   init(BuildContext context, ProfileOption profileOption) {
@@ -77,6 +79,7 @@ class ProfileVM extends BaseVM {
     BasePreference basePreference = await BasePreference.getInstance();
 
     profileResponse = basePreference.getProfileDetails();
+    user = basePreference.getLoginDetails();
 
     notifyListeners();
   }
