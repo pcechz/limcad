@@ -91,6 +91,7 @@ class LaundryVM extends BaseVM {
   late BuildContext context;
   String title = "";
   final instructionController = TextEditingController();
+  final aboutUsController = TextEditingController();
   bool isPreview = false;
   bool isButtonEnabled = false;
   AboutResponse? laundryAbout;
@@ -113,12 +114,20 @@ class LaundryVM extends BaseVM {
   final ImagePicker picker = ImagePicker();
   double ratingValue = 0;
   final profile = locator<AuthenticationService>().profile;
-  void init(BuildContext context, LaundryOption laundryOpt, int? id) {
+  bool hasUsedAboutUs = false;
+
+  void init(BuildContext context, LaundryOption laundryOpt, int? id) async {
     this.context = context;
     this.laundryOption = laundryOpt;
     this.orderId = id;
+
     if (laundryOpt == LaundryOption.about) {
-      getLaundryAbout();
+      final preferences = await BasePreference.getInstance();
+      final value = preferences.getBusinessLoginDetails();
+
+      if (value!.id != null) {
+        getLaundryAbout(value.id!);
+      }
     }
     if (laundryOpt == LaundryOption.selectClothe) {
       getLaundryItems();
@@ -133,8 +142,10 @@ class LaundryVM extends BaseVM {
     }
 
     if (laundryOpt == LaundryOption.businessOrderDetails) {
-      if (id != null) {
-        getOrderDetail(id);
+      final preferences = await BasePreference.getInstance();
+      final value = preferences.getBusinessLoginDetails();
+      if (value!.id != null) {
+        getOrderDetail(value.id!);
       }
     }
 
@@ -146,6 +157,11 @@ class LaundryVM extends BaseVM {
       fetchImage();
     }
     this.orderId = id;
+  }
+
+  Future<bool> hasAddedAnAboutUs() async {
+    final preferences = await BasePreference.getInstance();
+    return preferences.getHasAddedAnAboutUs();
   }
 
   void updateSelectedItem(LaundryServiceItem item, double quantity) {
@@ -283,9 +299,32 @@ class LaundryVM extends BaseVM {
     isLoading(false);
   }
 
-  Future<void> getLaundryAbout() async {
-    laundryAbout = await locator<LaundryService>().getAbout();
+  Future<void> getLaundryAbout(int id) async {
+    laundryAbout = await locator<LaundryService>().getAbout(id);
+
+    if (laundryAbout?.aboutText != null) {
+      aboutUsController.text = laundryAbout!.aboutText!;
+      hasUsedAboutUs = true;
+    } else {
+      aboutUsController.text = '';
+      hasUsedAboutUs = false;
+    }
+
     notifyListeners();
+  }
+
+  Future<void> addLaundryAbout(String aboutUs) async {
+    final response = await locator<LaundryService>().addAboutUs(aboutUs);
+    if (response.status == 200) {
+      Logger().i(response.data);
+    }
+  }
+
+  Future<void> editLaundryAbout(String aboutUs) async {
+    final response = await locator<LaundryService>().editAboutUs(aboutUs);
+    if (response.status == 200) {
+      Logger().i(response.data);
+    }
   }
 
   Future<void> getLaundryItems() async {

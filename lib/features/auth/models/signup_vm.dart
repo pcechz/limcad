@@ -330,7 +330,9 @@ class AuthVM extends BaseVM {
           buttonText: "Continue",
           dialogAction1: () async {
             Navigator.pop(context);
-            _preference.saveLoginDetails(response.data!.user!);
+            userType == UserType.personal
+                ? _preference.saveLoginDetails(response.data!.user!)
+                : _preference.saveBusinessLoginDetails(response.data!.user!);
             isLoading(true);
             final profileResponse = userType == UserType.personal
                 ? await locator<AuthenticationService>().getProfile()

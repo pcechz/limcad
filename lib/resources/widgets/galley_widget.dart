@@ -11,14 +11,14 @@ import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 
-class GalleryWidget extends StatefulWidget {
+class BusinessGalleryWidget extends StatefulWidget {
   static String tag = '/GalleryWidget';
 
   @override
-  _GalleryWidgetState createState() => _GalleryWidgetState();
+  _BusinessGalleryWidgetState createState() => _BusinessGalleryWidgetState();
 }
 
-class _GalleryWidgetState extends State<GalleryWidget> {
+class _BusinessGalleryWidgetState extends State<BusinessGalleryWidget> {
   late LaundryVM model;
 
   @override

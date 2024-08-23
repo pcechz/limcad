@@ -154,10 +154,10 @@ class BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   },
                   body: TabBarView(
                     children: [
-                      AboutComponent(model),
-                      ServicesComponent(),
-                      GalleryWidget(),
-                      AboutComponent(model)
+                      BusinessAboutComponent(model),
+                      BusinessServicesComponent(),
+                      BusinessGalleryWidget(),
+                      BusinessAboutComponent(model)
                     ],
                   ),
                 ),

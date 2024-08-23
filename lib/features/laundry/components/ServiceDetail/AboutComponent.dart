@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
+import 'package:limcad/resources/storage/base_preference.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:textfields/textfields.dart';
 
 import '../../../../main.dart';
 
-class AboutComponent extends StatefulWidget {
-  const AboutComponent(this.model, {Key? key}) : super(key: key);
-final LaundryVM model;
+class BusinessAboutComponent extends StatefulWidget {
+  const BusinessAboutComponent(this.model, {Key? key}) : super(key: key);
+  final LaundryVM model;
   @override
-  State<AboutComponent> createState() => _AboutComponentState();
+  State<BusinessAboutComponent> createState() => _BusinessAboutComponentState();
 }
 
-class _AboutComponentState extends State<AboutComponent> {
+class _BusinessAboutComponentState extends State<BusinessAboutComponent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:  context.scaffoldBackgroundColor,
+      backgroundColor: context.scaffoldBackgroundColor,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -28,9 +30,8 @@ class _AboutComponentState extends State<AboutComponent> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('About Us', style: boldTextStyle()),
-                  8.height,
-                  Text(widget.model.laundryAbout?.aboutText ?? "", style: secondaryTextStyle(), textAlign: TextAlign.start),
+                  // Text(widget.model.laundryAbout?.aboutText ?? "",
+                  //     style: secondaryTextStyle(), textAlign: TextAlign.start),
                   16.height,
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,86 +39,78 @@ class _AboutComponentState extends State<AboutComponent> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text('Service Provider', style: primaryTextStyle()),
-
-                          ListTile(
-                            contentPadding: const EdgeInsets.only(left: 16),
-                            leading:  ClipOval(
-
-                              child: Image.asset(AssetUtil.individualAccount, height: 50, width: 50),
-                            ), title: Text("Godwin Peters", style: boldTextStyle()),
-                            subtitle: Text("Service Provider", style: secondaryTextStyle()),
-                            trailing: SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Container(
-                                    height: 36,
-                                    width: 36,
-                                    decoration: BoxDecoration(
-                                        color: lightGray, shape: BoxShape.circle),
-                                    child: Center(
-                                      child: IconButton(
-                                        onPressed: () {
-
-                                        },
-                                        icon: const Icon(Icons.mail, size: 20, color: CustomColors.limcadPrimary,),
-                                      ),
+                          SizedBox(
+                              height: 220,
+                              child: TextField(
+                                style: const TextStyle(
+                                    fontSize: 18.0, color: Colors.black),
+                                controller: widget.model.aboutUsController,
+                                maxLines: null,
+                                expands: true,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  hintText: 'About us',
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(left: 8.0),
+                                ),
+                              ).paddingBottom(20)),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              if (widget.model.hasUsedAboutUs)
+                                SizedBox(
+                                  width: 86,
+                                  height: 30,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      widget.model.editLaundryAbout(
+                                          widget.model.aboutUsController.text);
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          size: 16,
+                                        ),
+                                        Text("Edit")
+                                      ],
                                     ),
                                   ),
-                                  SizedBox(width: 8,),
-                                  Container(
-                                    height: 36,
-                                    width: 36,
-                                    decoration: BoxDecoration(
-                                        color: lightGray, shape: BoxShape.circle),
-                                    child: Center(
-                                      child: IconButton(
-                                        onPressed: () {
-
-                                        },
-                                        icon: const Icon(Icons.call, size: 20, color: CustomColors.limcadPrimary,),
-                                      ),
+                                ),
+                              if (!widget.model.hasUsedAboutUs)
+                                SizedBox(
+                                  width: 86,
+                                  height: 30,
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      widget.model.addLaundryAbout(
+                                          widget.model.aboutUsController.text);
+                                    },
+                                    child: const Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.edit,
+                                          size: 16,
+                                        ),
+                                        Text("Add")
+                                      ],
                                     ),
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
-
+                                ),
+                            ],
+                          )
                         ],
-                      ).paddingTop(32).expand(),
-                      // 16.width,
-                      // Stack(
-                      //   children: [
-                      //     Container(
-                      //       height: 100,
-                      //       width: 150,
-                      //       color: black.withOpacity(0.5),
-                      //     ),
-                      //     Container(
-                      //       height: 100,
-                      //       width: 150,
-                      //       decoration: boxDecorationWithShadow(),
-                      //       child: Text('Show Map', style: boldTextStyle()).center(),
-                      //     ),
-                      //   ],
-                      // )
+                      ).paddingTop(1).expand(),
                     ],
                   ),
-                  // 12.height,
-                  // Text('Opening Hours', style: boldTextStyle()),
-                  // 16.height,
-                  // UL(
-                  //   symbolType: SymbolType.Bullet,
-                  //   children: [
-                  //     Text('Monday : 08:00 AM - 08:00 PM', style: primaryTextStyle()),
-                  //     Text('Tuesday : 08:00 AM - 08:00 PM', style: primaryTextStyle()),
-                  //     Text('Friday : 08:00 AM - 08:00 PM', style: primaryTextStyle()),
-                  //   ],
-                  // ),
                 ],
               ),
             ),
