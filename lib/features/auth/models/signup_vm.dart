@@ -423,24 +423,24 @@ class AuthVM extends BaseVM {
 
       if (profileResponse.status == ResponseCode.success &&
           profileResponse.data != null) {
-        final credential =
-        await fireAuth.FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: signupRequest?.email ?? "",
-          password: signupRequest?.password ?? "",
-        );
-        await FirebaseChatCore.instance.createUserInFirestore(
-          types.User(
-            firstName: "Limcad",
-            id: credential.user!.uid,
-            imageUrl: 'https://i.pravatar.cc/300?u=${signupRequest?.email}',
-            lastName: "Laundry",
-          ),
-        );
-
-        await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: signupRequest?.email ?? "",
-          password: signupRequest?.password ?? "",
-        );
+        // final credential =
+        // await fireAuth.FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //   email: signupRequest?.email ?? "",
+        //   password: signupRequest?.password ?? "",
+        // );
+        // await FirebaseChatCore.instance.createUserInFirestore(
+        //   types.User(
+        //     firstName: "Limcad",
+        //     id: credential.user!.uid,
+        //     imageUrl: 'https://i.pravatar.cc/300?u=${signupRequest?.email}',
+        //     lastName: "Laundry",
+        //   ),
+        // );
+        //
+        // await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
+        //   email: signupRequest?.email ?? "",
+        //   password: signupRequest?.password ?? "",
+        // );
         if (context.mounted) {
           NavigationService.pushScreen(
             context,
