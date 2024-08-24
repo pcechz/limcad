@@ -26,6 +26,7 @@ import 'package:limcad/resources/api/response_code.dart';
 import 'package:limcad/resources/base_vm.dart';
 import 'package:limcad/resources/bottom_home.dart';
 import 'package:limcad/resources/locator.dart';
+import 'package:limcad/resources/models/change_profile_response.dart';
 import 'package:limcad/resources/models/general_response.dart';
 import 'package:limcad/resources/models/profile.dart';
 import 'package:limcad/resources/models/state_model.dart';
@@ -38,6 +39,7 @@ import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
+import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked_annotations.dart';
 
 enum OnboardingPageType {
@@ -95,10 +97,12 @@ class AuthVM extends BaseVM {
   final addressController = TextEditingController();
   String? gender;
   UserType? userType;
-  List<StateResponse> states = [];
+  int? lgaId;
+  String? stateId;
+  List<StateItems> states = [];
   List<LGAResponse> lgas = [];
-  StateResponse? selectedState;
-  LGAResponse? selectedLGA;
+  String? selectedState;
+  String? selectedLGA;
   Prediction? prediction;
 
   void init(BuildContext context,
@@ -112,16 +116,31 @@ class AuthVM extends BaseVM {
       //otpId = response.data?.otpId;
     }
 
-    if (route == OnboardingPageType.signup) {
-      final response = await locator<AuthenticationService>().getStates();
-      Logger().i(response); // Log the response
-      states.clear(); // Clear the list before adding new data
-      states.addAll(response.data?.toList() ?? []);
-      selectedState = states[0];
-      notifyListeners();
-    }
-
     _preference = await BasePreference.getInstance();
+  }
+
+  void fetchState() async {
+    try {
+      final response = await locator<AuthenticationService>().getStates();
+      Logger().i("Response received: $response");
+      if (response.data?.items != null && response.data!.items!.isNotEmpty) {
+        states = [];
+        if (response.data?.items != null) {
+          states.addAll(response.data!.items!.toList());
+        }
+        if (states.isNotEmpty) {
+          selectedState = states[0].stateName;
+          Logger().i("Selected state: $selectedState");
+        }
+      } else {
+        Logger().w("No states returned from API");
+        states = [];
+        selectedState = null;
+      }
+      notifyListeners();
+    } catch (e) {
+      Logger().e("Error fetching states: $e");
+    }
   }
 
   void _initializeController() async {
@@ -131,17 +150,34 @@ class AuthVM extends BaseVM {
   void exitApp(BuildContext context) {}
 
   void proceed() {
+    print('Email: ${emailController.text}');
+    print('Full Name: ${fullNameController.text}');
+    print('Phone Number: ${phoneNumberController.text}');
+    print('Gender: ${gender?.toUpperCase()}');
+    print('Latitude: ${prediction?.lat}');
+    print('Longitude: ${prediction?.lng}');
+    print('Address: ${addressController.text}');
+    print('LGA ID: $lgaId');
+    print('State ID: $stateId');
+
     signupRequest?.email = emailController.text;
     signupRequest?.name = fullNameController.text;
     signupRequest?.phoneNumber = phoneNumberController.text;
     signupRequest?.gender = gender?.toUpperCase();
+
+    signupRequest?.addressRequest ??= [];
     signupRequest?.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
-    NavigationService.pushScreen(context,
-        screen: CreatePassword(request: signupRequest, userType: userType),
-        withNavBar: false);
+        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
+
+    print('Signup Request: ${signupRequest?.toJson()}');
+
+    NavigationService.pushScreen(
+      context,
+      screen: CreatePassword(request: signupRequest, userType: userType),
+      withNavBar: false,
+    );
   }
 
   void createAccount() async {
@@ -154,11 +190,11 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
+        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
     onboardingRequest?.staffRequest?.addressRequest?.add(AddressRequest(
         additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
         name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: 9, stateId: "LA")));
+        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
     onboardingRequest?.staffRequest?.gender = gender;
     onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
     onboardingRequest?.staffRequest?.userType = userType?.name.toString();
@@ -182,7 +218,9 @@ class AuthVM extends BaseVM {
         //     screen: const HomePage("business"), withNavBar: false);
         signupRequest?.password = onboardingRequest?.staffRequest?.password;
         signupRequest?.email = onboardingRequest?.staffRequest?.email;
-        proceedLogin(userType);
+        print("Sign up request: ${signupRequest?.password}");
+        print("Sign up request: ${signupRequest?.email}");
+        proceedLogin(userType, signupRequest);
       }
     }
   }
@@ -246,7 +284,7 @@ class AuthVM extends BaseVM {
   Future<void> proceedVerifyOTP() async {
     isLoading(true);
     final response = await locator<AuthenticationService>()
-        .validateOtp(signupRequest?.email, otpController.text, userType!.name!);
+        .validateOtp(signupRequest?.email, otpController.text, userType!.name);
     isLoading(false);
     if (response.status == ResponseCode.created ||
         response.status == ResponseCode.success) {
@@ -258,6 +296,7 @@ class AuthVM extends BaseVM {
       if (response.data?.user != null) {
         _preference.saveLoginDetails(response.data!.user!);
       }
+      // ignore: use_build_context_synchronously
       ViewUtil.showDynamicDialogWithButton(
           barrierDismissible: false,
           context: context,
@@ -295,10 +334,13 @@ class AuthVM extends BaseVM {
           buttonText: "Continue",
           dialogAction1: () async {
             Navigator.pop(context);
-            _preference.saveLoginDetails(response.data!.user!);
+            userType == UserType.personal
+                ? _preference.saveLoginDetails(response.data!.user!)
+                : _preference.saveBusinessLoginDetails(response.data!.user!);
             isLoading(true);
-            final profileResponse =
-                await locator<AuthenticationService>().getProfile();
+            final profileResponse = userType == UserType.personal
+                ? await locator<AuthenticationService>().getProfile()
+                : await locator<AuthenticationService>().getBusinessProfile();
             isLoading(false);
 
             if (profileResponse.status == ResponseCode.success &&
@@ -339,6 +381,13 @@ class AuthVM extends BaseVM {
     if (response.status == 200 || response.status == 201) {
       if (response.data != null) {
         // _preference.saveProfile(response.data!.);
+        Logger().i("response :${response.data}");
+        final UserType userType =
+            response.data!.userType == userTypeToString(UserType.personal)
+                ? UserType.personal
+                : UserType.business;
+        print("userType: ${userTypeToString(UserType.personal)}");
+        // ignore: use_build_context_synchronously
         NavigationService.pushScreen(context,
             screen: SignupOtpPage(
               request: signupRequest,
@@ -355,17 +404,26 @@ class AuthVM extends BaseVM {
     //  }
   }
 
-  Future<void> proceedLogin(UserType? userType) async {
+  String userTypeToString(UserType type) {
+    switch (type) {
+      case UserType.personal:
+        return 'PERSONAL';
+      case UserType.business:
+        return 'BUSINESS';
+      default:
+        return '';
+    }
+  }
+
+  Future<void> proceedLogin(UserType? userType, SignupRequest? request) async {
     try {
-      if (signupRequest == null || userType == null) {
+      if (request == null || userType == null) {
         throw Exception('Invalid signup request or user type');
       }
 
-      signupRequest!.password = password.text;
-      signupRequest!.email = emailController.text;
       isLoading(true);
-      final response = await locator<AuthenticationService>()
-          .login(signupRequest!, userType);
+      final response =
+          await locator<AuthenticationService>().login(request, userType);
 
       if (response.status == ResponseCode.success) {
         await _handleSuccessfulLogin(response.data, userType);
@@ -441,6 +499,7 @@ class AuthVM extends BaseVM {
         //   email: signupRequest?.email ?? "",
         //   password: signupRequest?.password ?? "",
         // );
+        print("the user userType: ${userType}");
         if (context.mounted) {
           NavigationService.pushScreen(
             context,
@@ -490,24 +549,60 @@ class AuthVM extends BaseVM {
     }));
   }
 
-  Future<void> setStateValue(StateResponse value) async {
-    print("here");
+  Future<void> setStateValue(String value) async {
     selectedState = value;
+
     if (selectedState != null) {
-      final response = await locator<AuthenticationService>()
-          .getLGAs(selectedState?.stateId);
-      Logger().i(response.data);
-      if (response.data!.isNotEmpty) {
-        lgas.addAll(response.data?.toList() ?? []);
-        Logger().i(response.data);
+      stateId = getStateID(selectedState!);
+      isLoading(true);
+      Logger().i("State ID: $stateId");
+      Logger().i("State: $selectedState");
+      try {
+        final response =
+            await locator<AuthenticationService>().getLGAs(stateId);
+        if (response.data != null && response.data!.isNotEmpty) {
+          lgas.addAll(response.data!.toList());
+        } else {
+          lgas = [];
+        }
+      } catch (e) {
+        Logger().e("Error fetching LGAs: $e");
+        lgas = [];
+      }
+
+      isLoading(false);
+      notifyListeners();
+    } else {
+      lgas = [];
+      isLoading(false);
+      notifyListeners();
+    }
+  }
+
+  String? getStateID(String name) {
+    for (StateItems stateItem in states) {
+      if (stateItem.stateName == name) {
+        return stateItem.stateId;
       }
     }
+    return null;
+  }
+
+  Future<void> setLGAValue(String value) async {
+    selectedLGA = value;
+    lgaId = getLGAID(value);
+    Logger().i("LGA ID :${lgaId}");
+    Logger().i("Selected value :${selectedLGA}");
     notifyListeners();
   }
 
-  Future<void> setLGAValue(LGAResponse value) async {
-    selectedLGA = value;
-    notifyListeners();
+  int? getLGAID(String name) {
+    for (LGAResponse item in lgas) {
+      if (item.lgaName == name) {
+        return item.id?.lgaId;
+      }
+    }
+    return null;
   }
 
   void setAddress(Prediction predict) {

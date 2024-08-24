@@ -1,5 +1,3 @@
-
-
 import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +28,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
+class _HomePageState extends State<HomePage>
+    with SingleTickerProviderStateMixin {
   late int currentPage;
   late TabController tabController;
   @override
@@ -38,7 +37,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     currentPage = 0;
     tabController = TabController(length: 5, vsync: this);
     tabController.animation!.addListener(
-          () {
+      () {
         final value = tabController.animation!.value.round();
         if (value != currentPage && mounted) {
           changePage(value);
@@ -189,5 +188,15 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       );
   }
 
+  String userTypeToString(UserType type) {
+    switch (type) {
+      case UserType.personal:
+        return 'PERSONAL';
+      case UserType.business:
+        return 'BUSINESS';
+      default:
+        return '';
+    }
+  }
 // ... (Add dispose method to clean up controllers)
 }

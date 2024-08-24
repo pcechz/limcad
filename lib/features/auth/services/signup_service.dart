@@ -33,6 +33,7 @@ class AuthenticationService with ListenableServiceMixin {
 
   Future<BaseResponse<RegistrationResponse>> signUp(
       SignupRequest? signupRequest) async {
+    print("Testing ${signupRequest?.toJson()}");
     var signupResponse = await apiService.request(
         route: ApiRoute(ApiType.registerUser),
         data: signupRequest?.toJson(),
@@ -190,11 +191,11 @@ class AuthenticationService with ListenableServiceMixin {
     return loginResponse.response;
   }
 
-  Future<BaseAPIListPaginationResponse<StateResponse>> getStates() async {
+  Future<BaseResponse<NewStateResponse>> getStates() async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.states, routeParams: "offset=0&size=40"),
-        create: () => BaseAPIListPaginationResponse<StateResponse>(
-            create: () => StateResponse()));
+        create: () =>
+            BaseResponse<NewStateResponse>(create: () => NewStateResponse()));
     return response.response;
   }
 

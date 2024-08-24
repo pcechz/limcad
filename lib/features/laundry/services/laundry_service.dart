@@ -23,9 +23,9 @@ import '../../../resources/api/base_response.dart';
 class LaundryService with ListenableServiceMixin {
   final apiService = locator<APIClient>();
 
-  Future<AboutResponse?> getAbout() async {
+  Future<AboutResponse?> getAbout(int id) async {
     var response = await apiService.request(
-        route: ApiRoute(ApiType.laundyAbout, routeParams: "8"),
+        route: ApiRoute(ApiType.laundyAbout, routeParams: "${id}"),
         create: () =>
             BaseResponse<AboutResponse>(create: () => AboutResponse()));
     return response.response.data;
@@ -40,12 +40,43 @@ class LaundryService with ListenableServiceMixin {
     return response.response;
   }
 
+  Future<BaseResponse<NoObjectResponse>> createServiceItems(
+      String name, String desc, int price) async {
+    final request = {"itemName": name, "itemDescription": desc, "price": price};
+    var response = await apiService.request(
+        route: ApiRoute(ApiType.createLaundryServiceItems),
+        data: request,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
+    return response.response;
+  }
+
   Future<BaseResponse<LaundryOrders>?> getLaundryOrders() async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.laundyOrders),
         create: () =>
             BaseResponse<LaundryOrders>(create: () => LaundryOrders()));
     return response.response;
+  }
+
+  Future<BaseResponse<NoObjectResponse>> addAboutUs(String aboutUs) async {
+    final request = {"aboutText": aboutUs};
+    var loginResponse = await apiService.request(
+        route: ApiRoute(ApiType.postLaundryAbout),
+        data: request,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
+    return loginResponse.response;
+  }
+
+  Future<BaseResponse<NoObjectResponse>> editAboutUs(String aboutUs) async {
+    final request = {"aboutText": aboutUs};
+    var loginResponse = await apiService.request(
+        route: ApiRoute(ApiType.changeLaundrAbout),
+        data: request,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
+    return loginResponse.response;
   }
 
   Future<BaseResponse<NoObjectResponse>> submitOrder(

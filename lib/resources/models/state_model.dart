@@ -51,3 +51,56 @@ class LGAResponse implements FromJson<LGAResponse> {
     return lgaList;
   }
 }
+
+class NewStateResponse implements FromJson<NewStateResponse> {
+  int? currentPage;
+  List<StateItems>? items;
+  int? totalItems;
+  int? totalPages;
+
+  NewStateResponse(
+      {this.currentPage, this.items, this.totalItems, this.totalPages});
+
+  NewStateResponse fromJson(Map<String, dynamic> json) {
+    currentPage = json['currentPage'];
+    if (json['items'] != null) {
+      items = <StateItems>[];
+      json['items'].forEach((v) {
+        items!.add(new StateItems.fromJson(v));
+      });
+    }
+    totalItems = json['totalItems'];
+    totalPages = json['totalPages'];
+    return this;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['currentPage'] = this.currentPage;
+    if (this.items != null) {
+      data['items'] = this.items!.map((v) => v.toJson()).toList();
+    }
+    data['totalItems'] = this.totalItems;
+    data['totalPages'] = this.totalPages;
+    return data;
+  }
+}
+
+class StateItems {
+  String? stateId;
+  String? stateName;
+
+  StateItems({this.stateId, this.stateName});
+
+  StateItems.fromJson(Map<String, dynamic> json) {
+    stateId = json['stateId'];
+    stateName = json['stateName'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['stateId'] = this.stateId;
+    data['stateName'] = this.stateName;
+    return data;
+  }
+}

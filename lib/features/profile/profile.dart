@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/giftcards/selected_card_screen.dart';
+import 'package:limcad/features/laundry/laundry_detail.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/profile/business_detail.dart';
 import 'package:limcad/features/profile/faq.dart';
 import 'package:limcad/features/profile/model/profile_view_model.dart';
@@ -17,7 +19,8 @@ import 'package:stacked/stacked.dart';
 
 class ProfilePage extends StatefulWidget {
   final String? role;
-  ProfilePage({super.key, this.role});
+  UserType userType;
+  ProfilePage({super.key, this.role, required this.userType});
   @override
   _ProfilePageState createState() => _ProfilePageState();
 }
@@ -105,8 +108,11 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildSection("Services", [
                 ListTile(
                   onTap: () {
-                    NavigationService.pushScreen(context,
-                        screen: BusinessDetailScreen(), withNavBar: true);
+                    userTypeToString(widget.userType) == "BUSINESS"
+                        ? NavigationService.pushScreen(context,
+                            screen: BusinessDetailScreen(), withNavBar: true)
+                        : NavigationService.pushScreen(context,
+                            screen: LaundryDetailScreen(), withNavBar: true);
                   },
                   title: const Text("Description"),
                   leading: const Icon(Icons.wallet_giftcard),
@@ -189,6 +195,17 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+
+  String userTypeToString(UserType type) {
+    switch (type) {
+      case UserType.personal:
+        return 'PERSONAL';
+      case UserType.business:
+        return 'BUSINESS';
+      default:
+        return '';
+    }
   }
 
   void _showEditNameDialog() {

@@ -245,9 +245,9 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                   },
                   body: TabBarView(
                     children: [
-                      AboutComponent(model),
-                      ServicesComponent(),
-                      GalleryWidget(),
+                      // AboutComponent(model),
+                      // ServicesComponent(),
+                      // GalleryWidget(),
                       const ReviewScreen()
                     ],
                   ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/auth/auth/reset_password.dart';
+import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -108,8 +109,12 @@ class _LoginPageState extends State<LoginPage> {
                                 : () {
                                     FocusScope.of(context).unfocus();
                                     model.formKey.currentState!.save();
-
-                                    model.proceedLogin(widget.theUsertype);
+                                    final SignupRequest request =
+                                        new SignupRequest();
+                                    request.email = model.emailController.text;
+                                    request.password = model.password.text;
+                                    model.proceedLogin(
+                                        widget.theUsertype, request);
                                   },
                             child: const Text("Sign In"),
                           )

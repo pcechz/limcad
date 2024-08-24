@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.dart';
+import 'package:limcad/features/laundry/components/ServiceDetail/CreateService.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
@@ -154,10 +155,10 @@ class BusinessDetailScreenState extends State<BusinessDetailScreen> {
                   },
                   body: TabBarView(
                     children: [
-                      AboutComponent(model),
-                      ServicesComponent(),
-                      GalleryWidget(),
-                      AboutComponent(model)
+                      BusinessAboutComponent(model),
+                      CreateServicesComponent(model: model),
+                      BusinessGalleryWidget(),
+                      BusinessAboutComponent(model)
                     ],
                   ),
                 ),

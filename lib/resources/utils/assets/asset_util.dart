@@ -31,4 +31,5 @@ class AssetUtil {
   static const String referralGift = "assets/images/referral_gift.png";
   static const String vectorUpload = "assets/images/Vector.png";
   static const String upload = "assets/images/upload_2716054 1.png";
+  static const String editIcon = "assets/images/edit.png";
 }

@@ -9,9 +9,12 @@ enum ApiType {
   login,
   profile,
   laundyAbout,
+  postLaundryAbout,
+  changeLaundrAbout,
   passwordResetCodeRequest,
   passwordReset,
   laundyServiceItems,
+  createLaundryServiceItems,
   updateProfile,
   submitOrder,
   laundyOrders,
@@ -92,6 +95,20 @@ class ApiRoute implements APIRouteConfigurable {
             path: '/laundry-about/organizations/$routeParams',
             method: ApiMethod.get);
 
+      case ApiType.postLaundryAbout:
+        return RequestOptions(
+            path: '/laundry-about',
+            method: ApiMethod.post,
+            data: data,
+            extra: authorize);
+
+      case ApiType.changeLaundrAbout:
+        return RequestOptions(
+            path: '/laundry-about',
+            method: ApiMethod.put,
+            data: data,
+            extra: authorize);
+
       case ApiType.passwordResetCodeRequest:
         return RequestOptions(
             path: '/auth/password-reset-code-request',
@@ -106,6 +123,13 @@ class ApiRoute implements APIRouteConfigurable {
         return RequestOptions(
             path: '/laundry-service-items?$routeParams',
             method: ApiMethod.get,
+            extra: authorize);
+
+      case ApiType.createLaundryServiceItems:
+        return RequestOptions(
+            path: '/laundry-service-items',
+            method: ApiMethod.post,
+            data: data,
             extra: authorize);
 
       case ApiType.laundyOrders:

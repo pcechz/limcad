@@ -25,9 +25,22 @@ class BasePreference {
   static const _profile = "profile";
   static const _isRegistered = "isRegistered";
   static const _businessLoginResponse = "businessloginResponse";
+  static const _hasAddedAnAboutUs = "hasAddedAnAboutUs";
 
   void saveIsRegistered(bool isRegistered) {
     preferences.setBool(_isRegistered, isRegistered);
+  }
+
+  void saveHasAddedAnAboutUs(bool value) {
+    preferences.setBool(_hasAddedAnAboutUs, value);
+  }
+
+  bool getHasAddedAnAboutUs() {
+    bool? value = preferences.getBool(_hasAddedAnAboutUs);
+    if (value != null) {
+      return value;
+    }
+    return false;
   }
 
   bool getIsRegistered() {

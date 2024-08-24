@@ -6,14 +6,15 @@ import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class ServicesComponent extends StatefulWidget {
+class BusinessServicesComponent extends StatefulWidget {
   static String tag = '/LSServicesComponent';
 
   @override
-  ServicesComponentState createState() => ServicesComponentState();
+  BusinessServicesComponentState createState() =>
+      BusinessServicesComponentState();
 }
 
-class ServicesComponentState extends State<ServicesComponent> {
+class BusinessServicesComponentState extends State<BusinessServicesComponent> {
   List<ServiceModel> getTopServiceList() {
     return [
       ServiceModel(
