@@ -38,6 +38,7 @@ class BusinessDetailScreenState extends State<BusinessDetailScreen> {
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         title: "About Us",
+        busy: model.loading,
         body: SingleChildScrollView(
           child: Column(
             children: [

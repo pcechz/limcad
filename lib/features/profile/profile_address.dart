@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_places_autocomplete_text_field/google_places_autocomplete_text_field.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
 import 'package:limcad/config/flavor.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/profile/model/profile_view_model.dart';
 import 'package:limcad/resources/models/state_model.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -17,6 +18,8 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 
 class ProfileAddressPage extends StatefulWidget {
+  UserType userType;
+  ProfileAddressPage({super.key, required this.userType});
   @override
   _ProfileAddressPageState createState() => _ProfileAddressPageState();
 }
@@ -31,10 +34,7 @@ class _ProfileAddressPageState extends State<ProfileAddressPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(
-            context,
-            ProfileOption.addAddress,
-          );
+          model.init(context, ProfileOption.addAddress, widget.userType);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,

@@ -36,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, ProfileOption.fetchProfile);
+        model.init(context, ProfileOption.fetchProfile, widget.userType);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: false,
@@ -65,7 +65,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,
-                        screen: ProfileDetailsPage(), withNavBar: true);
+                        screen: ProfileDetailsPage(userType: widget.userType),
+                        withNavBar: true);
                   },
                   title: Text("Profile Details"),
                   leading: Icon(Icons.person),
@@ -80,7 +81,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,
-                        screen: ProfileAddressPage(), withNavBar: true);
+                        screen: ProfileAddressPage(userType: widget.userType),
+                        withNavBar: true);
                   },
                   title: Text("Address"),
                   leading: Icon(Icons.home),

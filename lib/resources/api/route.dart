@@ -16,6 +16,7 @@ enum ApiType {
   laundyServiceItems,
   createLaundryServiceItems,
   updateProfile,
+  updateOrganization,
   submitOrder,
   laundyOrders,
   businessOnboarding,
@@ -142,6 +143,12 @@ class ApiRoute implements APIRouteConfigurable {
       case ApiType.updateProfile:
         return RequestOptions(
             path: '/users',
+            method: ApiMethod.patch,
+            data: data,
+            extra: authorize);
+      case ApiType.updateOrganization:
+        return RequestOptions(
+            path: '/organizations',
             method: ApiMethod.patch,
             data: data,
             extra: authorize);

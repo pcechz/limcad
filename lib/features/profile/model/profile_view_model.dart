@@ -61,12 +61,13 @@ class ProfileVM extends BaseVM {
   ProfileResponse? profileResponse = ProfileResponse();
   User? user = User();
   String? role;
+  UserType? _userType;
 
-  init(BuildContext context, ProfileOption profileOption) {
+  init(BuildContext context, ProfileOption profileOption, UserType userType) {
     this.context = context;
     this.profileOption = profileOption;
     this.role = role;
-
+    this._userType = userType;
     if (profileOption == ProfileOption.addAddress) {
       fetchState();
     }
@@ -132,8 +133,6 @@ class ProfileVM extends BaseVM {
 
   Future<void> updateUserAddress() async {
     try {
-
-
       final response = await locator<AuthenticationService>().changeAddress();
 
       Logger().i('Profile update status: ${response.status}');
@@ -141,17 +140,17 @@ class ProfileVM extends BaseVM {
         showUpdatedDialog(context, BottomSheetOption.address);
         reset();
         await locator<AuthenticationService>().getProfile();
-    getProfile();
-    } else {
-    Logger().e('Profile update failed with status: ${response.status}');
-    reset();
-    showErrorDialog(context, 'Profile update failed. Please try again.');
-    }
+        getProfile();
+      } else {
+        Logger().e('Profile update failed with status: ${response.status}');
+        reset();
+        showErrorDialog(context, 'Profile update failed. Please try again.');
+      }
     } catch (e) {
-    reset();
+      reset();
 
-    showErrorDialog(
-    context, 'An unexpected error occurred. Please try again.');
+      showErrorDialog(
+          context, 'An unexpected error occurred. Please try again.');
     }
   }
 
@@ -224,7 +223,9 @@ class ProfileVM extends BaseVM {
                           //validate: (value) => ValidationUtil.validateLastName(value),
                           onSave: (value) =>
                               profileLastNameController.text = value,
-                        ).padding(bottom: 40),
+                        )
+                            .padding(bottom: 40)
+                            .hideIf(_userType == UserType.business),
                       ],
                     ),
                   if (bottomSheetOption == BottomSheetOption.phoneNumber)
@@ -294,12 +295,14 @@ class ProfileVM extends BaseVM {
     String? dob,
     BottomSheetOption? option,
   ) async {
+    final authService = locator<AuthenticationService>();
+    final fullName = '${name ?? ''} ${lastName ?? ''}';
+    final phone = phoneNumber ?? '';
+    final userEmail = email ?? '';
     try {
-      final response = await locator<AuthenticationService>().changeProfile(
-        '${name ?? ''} ${lastName ?? ''}',
-        phoneNumber ?? '',
-        email ?? '',
-      );
+      final response = _userType == UserType.personal
+          ? await authService.changeProfile(fullName, phone, userEmail)
+          : await authService.updateOrganization(fullName, phone, userEmail);
 
       Logger().i('Profile update status: ${response.status}');
       if (response.status == 200) {

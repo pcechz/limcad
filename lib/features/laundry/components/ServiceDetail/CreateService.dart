@@ -172,6 +172,7 @@ class CreateServicesComponentState extends State<CreateServicesComponent> {
                               final name = _nameController.text;
                               final description = _descriptionController.text;
                               final price = _priceController.text;
+                              Navigator.pop(context);
                               isEditing
                                   ? await model.editLaundryItems(
                                       id,
@@ -185,7 +186,6 @@ class CreateServicesComponentState extends State<CreateServicesComponent> {
                               _nameController.clear();
                               _descriptionController.clear();
                               _priceController.clear();
-                              Navigator.pop(context);
                             }
                           },
                           child: Text(isEditing ? "Edit" : 'Submit'),

@@ -413,6 +413,7 @@ class LaundryVM extends BaseVM {
 
 // ================================================================= About Us Functions
   Future<void> getLaundryAbout(int id) async {
+    isLoading(true);
     laundryAbout = await laundryService.getAbout(id);
 
     if (laundryAbout?.aboutText != null) {
@@ -422,7 +423,7 @@ class LaundryVM extends BaseVM {
       aboutUsController.text = '';
       hasUsedAboutUs = false;
     }
-
+    isLoading(false);
     notifyListeners();
   }
 
@@ -448,6 +449,7 @@ class LaundryVM extends BaseVM {
 
   Future<void> createServiceItem(String name, String desc, int price) async {
     try {
+      isLoading(true);
       final response =
           await laundryService.createServiceItems(name, desc, price);
       if (response.status == 200 && response.data != null) {
@@ -455,11 +457,14 @@ class LaundryVM extends BaseVM {
         if (laundryServiceItems != null) {
           laundryServiceItems!.add(response.data!);
         }
+        isLoading(false);
         notifyListeners();
       } else {
+        isLoading(false);
         Logger().e('Failed to create service item. Status: ${response.status}');
       }
     } catch (e) {
+      isLoading(false);
       Logger().e('Error creating service item: $e');
     }
   }
@@ -488,12 +493,14 @@ class LaundryVM extends BaseVM {
 
   Future<void> editLaundryItems(int id, LaundryServiceItem item) async {
     Logger().i(item.toString());
+    isLoading(true);
     final response =
         await locator<LaundryService>().updateServiceItems(id, item);
     if (response.status == 200) {
       laundryServiceItems?.removeWhere((element) => element.id == id);
       laundryServiceItems?.add(response.data!);
       Logger().i(response.data);
+      isLoading(false);
       notifyListeners();
     }
   }
