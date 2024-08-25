@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/CreateService.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
@@ -28,141 +30,121 @@ class BusinessDetailScreenState extends State<BusinessDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return ViewModelBuilder<LaundryVM>.reactive(
-        viewModelBuilder: () => LaundryVM(),
-        onViewModelReady: (model) {
-          this.model = model;
-          model.context = context;
-          model.init(context, LaundryOption.about, 0);
-        },
-        builder: (BuildContext context, model, child) => Scaffold(
-              body: DefaultTabController(
-                length: 4,
-                child: NestedScrollView(
-                  headerSliverBuilder:
-                      (BuildContext context, bool innerBoxIsScrolled) {
-                    return [
-                      SliverAppBar(
-                        leading: Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Container(
-                            height: 32,
-                            width: 32,
-                            decoration: BoxDecoration(
-                                color: Colors.white, shape: BoxShape.circle),
-                            child: Center(
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.arrow_back,
-                                  color: CustomColors.limcadPrimary,
-                                  size: 17,
+      viewModelBuilder: () => LaundryVM(),
+      onViewModelReady: (model) {
+        this.model = model;
+        model.context = context;
+        model.init(context, LaundryOption.about, 0);
+      },
+      builder: (BuildContext context, model, child) => DefaultScaffold2(
+        title: "About Us",
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Text(widget.model.laundryAbout?.aboutText ?? "",
+                    //     style: secondaryTextStyle(), textAlign: TextAlign.start),
+                    16.height,
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Container(
+                              height: 300,
+                              child: TextField(
+                                style: const TextStyle(
+                                    fontSize: 18.0, color: Colors.black),
+                                controller: model.aboutUsController,
+                                maxLines: null,
+                                expands: true,
+                                textAlignVertical: TextAlignVertical.top,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  hintText: 'About us',
+                                  border: InputBorder.none,
+                                  contentPadding: EdgeInsets.only(
+                                      left: 20.0, top: 20, right: 10),
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
                               ),
-                            ),
-                          ),
-                        ),
-                        pinned: true,
-                        elevation: 0.5,
-                        expandedHeight: 370,
-                        flexibleSpace: FlexibleSpaceBar(
-                          titlePadding:
-                              EdgeInsets.only(bottom: 66, left: 30, right: 50),
-                          collapseMode: CollapseMode.parallax,
-                          title: Text(
-                            '',
-                            style: boldTextStyle(),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ).hideIf(!innerBoxIsScrolled),
-                          background: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Stack(
-                                children: [
-                                  commonCacheImageWidget(
-                                      AssetUtil.laundryWall, 300,
-                                      width: context.width(),
-                                      fit: BoxFit.cover),
-                                  Container(
-                                    height: 300,
-                                    width: context.width(),
-                                    color: black.withOpacity(0.6),
+                            ).paddingBottom(20),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                if (model.hasUsedAboutUs)
+                                  SizedBox(
+                                    width: 86,
+                                    height: 30,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        model.editLaundryAbout(
+                                            model.aboutUsController.text);
+                                      },
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.edit,
+                                            size: 16,
+                                          ),
+                                          Text("Edit")
+                                        ],
+                                      ),
+                                    ),
                                   ),
-                                ],
-                              ),
-                              Text('Withdraw money into your saved card',
-                                      textAlign: TextAlign.center,
-                                      style: secondaryTextStyle(
-                                        color: CustomColors.black900,
-                                        size: 16,
-                                      ))
-                                  .paddingSymmetric(
-                                      horizontal: 16, vertical: 16),
-                            ],
-                          ),
-                        ),
-                        bottom: TabBar(
-                          labelStyle:
-                              boldTextStyle(color: CustomColors.limcadPrimary),
-                          labelColor: CustomColors.limcadPrimary,
-                          unselectedLabelColor: black,
-                          unselectedLabelStyle:
-                              boldTextStyle(color: CustomColors.blackPrimary),
-                          indicatorColor: CustomColors.limcadPrimary,
-                          indicatorPadding:
-                              EdgeInsets.only(left: 16, right: 16),
-                          indicatorWeight: 3,
-                          isScrollable: false,
-                          tabs: [
-                            Tab(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text('About',
-                                    style: primaryTextStyle(
-                                        size: 14, weight: FontWeight.w500)),
-                              ),
-                            ),
-                            Tab(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text('Services',
-                                    style: primaryTextStyle(
-                                        size: 14, weight: FontWeight.w500)),
-                              ),
-                            ),
-                            Tab(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text('Media',
-                                    style: primaryTextStyle(
-                                        size: 14, weight: FontWeight.w500)),
-                              ),
-                            ),
-                            Tab(
-                              child: Align(
-                                alignment: Alignment.center,
-                                child: Text('Reviews',
-                                    style: primaryTextStyle(
-                                        size: 14, weight: FontWeight.w500)),
-                              ),
-                            ),
+                                if (!model.hasUsedAboutUs)
+                                  SizedBox(
+                                    width: 86,
+                                    height: 30,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        model.addLaundryAbout(
+                                            model.aboutUsController.text);
+                                      },
+                                      child: const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.edit,
+                                            size: 16,
+                                          ),
+                                          Text("Add")
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            )
                           ],
-                        ),
-                      )
-                    ];
-                  },
-                  body: TabBarView(
-                    children: [
-                      BusinessAboutComponent(model),
-                      CreateServicesComponent(model: model),
-                      BusinessGalleryWidget(),
-                      BusinessAboutComponent(model)
-                    ],
-                  ),
+                        ).paddingTop(0).expand(),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-            ));
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
+
+//  BusinessAboutComponent(model)
+            
+
+
+                        //  BusinessGalleryWidget(),

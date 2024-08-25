@@ -38,7 +38,8 @@ enum LaundryOption {
   order_details,
   businessOrder,
   businessOrderDetails,
-  image
+  image,
+  services
 }
 
 enum OrderStatus {
@@ -88,15 +89,17 @@ extension OrderStatusExtension on OrderStatus {
 
 class LaundryVM extends BaseVM {
   final apiService = locator<APIClient>();
+  final laundryService = locator<LaundryService>();
   late BuildContext context;
   String title = "";
   final instructionController = TextEditingController();
   final aboutUsController = TextEditingController();
   bool isPreview = false;
   bool isButtonEnabled = false;
+
   AboutResponse? laundryAbout;
   LaundryOption? laundryOption;
-  List<LaundryServiceItem>? items = [];
+  List<LaundryServiceItem>? laundryServiceItems = [];
   List<LaundryOrderItem>? laundryOrderItems = [];
   List<ReviewResponse>? reviews = [];
   LaundryOrders? laundryOrders;
@@ -130,7 +133,16 @@ class LaundryVM extends BaseVM {
       }
     }
     if (laundryOpt == LaundryOption.selectClothe) {
-      getLaundryItems();
+      getLaundryItems(6, 0, 10);
+    }
+
+    if (laundryOpt == LaundryOption.services) {
+      final preferences = await BasePreference.getInstance();
+      final value = preferences.getBusinessLoginDetails();
+
+      if (value!.id != null) {
+        getLaundryItems(value.id!, 0, 10);
+      }
     }
 
     if (laundryOpt == LaundryOption.order_details) {
@@ -176,14 +188,6 @@ class LaundryVM extends BaseVM {
   void proceed() {
     isPreview = true;
     notifyListeners();
-  }
-
-  Future<void> createServiceItem(String name, String desc, int price) async {
-    final response =
-        await locator<LaundryService>().createServiceItems(name, desc, price);
-    if (response.status == 200) {
-      Logger().i(response.data);
-    }
   }
 
   double calculateTotalPrice() {
@@ -280,7 +284,7 @@ class LaundryVM extends BaseVM {
 
   Map<String, dynamic> generateOrderJson() {
     List<Map<String, dynamic>> itemsJson = selectedItems.entries.map((entry) {
-      int itemId = items!.indexOf(entry.key) + 1; // 1-based index
+      int itemId = laundryServiceItems!.indexOf(entry.key) + 1; // 1-based index
       return {
         "itemId": itemId,
         "quantity": entry.value.toInt(),
@@ -305,50 +309,6 @@ class LaundryVM extends BaseVM {
       Logger().i(response.data);
     }
     isLoading(false);
-  }
-
-  Future<void> getLaundryAbout(int id) async {
-    laundryAbout = await locator<LaundryService>().getAbout(id);
-
-    if (laundryAbout?.aboutText != null) {
-      aboutUsController.text = laundryAbout!.aboutText!;
-      hasUsedAboutUs = true;
-    } else {
-      aboutUsController.text = '';
-      hasUsedAboutUs = false;
-    }
-
-    notifyListeners();
-  }
-
-  Future<void> addLaundryAbout(String aboutUs) async {
-    if (aboutUs.isNotEmpty) {
-      final response = await locator<LaundryService>().addAboutUs(aboutUs);
-      if (response.status == 200) {
-        Logger().i(response.data);
-      }
-    }
-  }
-
-  Future<void> editLaundryAbout(String aboutUs) async {
-    if (aboutUs.isNotEmpty) {
-      final response = await locator<LaundryService>().editAboutUs(aboutUs);
-      if (response.status == 200) {
-        Logger().i(response.data);
-      }
-    }
-  }
-
-  Future<void> getLaundryItems() async {
-    isLoading(true);
-    final response = await locator<LaundryService>().getLaundryServiceItems();
-    laundryServiceResponse = response?.data;
-    if (laundryServiceResponse!.items!.isNotEmpty) {
-      items?.addAll(laundryServiceResponse!.items?.toList() ?? []);
-      Logger().i(response?.data);
-    }
-    isLoading(false);
-    notifyListeners();
   }
 
   Future<void> getOrders() async {
@@ -449,6 +409,73 @@ class LaundryVM extends BaseVM {
         notifyListeners();
       }
     }
+  }
+
+// ================================================================= About Us Functions
+  Future<void> getLaundryAbout(int id) async {
+    laundryAbout = await laundryService.getAbout(id);
+
+    if (laundryAbout?.aboutText != null) {
+      aboutUsController.text = laundryAbout!.aboutText!;
+      hasUsedAboutUs = true;
+    } else {
+      aboutUsController.text = '';
+      hasUsedAboutUs = false;
+    }
+
+    notifyListeners();
+  }
+
+  Future<void> addLaundryAbout(String aboutUs) async {
+    if (aboutUs.isNotEmpty) {
+      final response = await laundryService.addAboutUs(aboutUs);
+      if (response.status == 200) {
+        Logger().i(response.data);
+      }
+    }
+  }
+
+  Future<void> editLaundryAbout(String aboutUs) async {
+    if (aboutUs.isNotEmpty) {
+      final response = await laundryService.editAboutUs(aboutUs);
+      if (response.status == 200) {
+        Logger().i(response.data);
+      }
+    }
+  }
+
+  //---------------------------------------------------------------- Create Service
+
+  Future<void> createServiceItem(String name, String desc, int price) async {
+    try {
+      final response =
+          await laundryService.createServiceItems(name, desc, price);
+      if (response.status == 200 && response.data != null) {
+        Logger().i(response.data);
+        if (laundryServiceItems != null) {
+          laundryServiceItems!.add(response.data!);
+        }
+        notifyListeners();
+      } else {
+        Logger().e('Failed to create service item. Status: ${response.status}');
+      }
+    } catch (e) {
+      Logger().e('Error creating service item: $e');
+    }
+  }
+
+  Future<void> getLaundryItems(int orgId, int page, int size) async {
+    isLoading(true);
+    final response = await locator<LaundryService>()
+        .getLaundryServiceItems(orgId, page, size);
+    laundryServiceResponse = response.data;
+    if (laundryServiceResponse!.items!.isNotEmpty) {
+      laundryServiceItems
+          ?.addAll(laundryServiceResponse!.items?.toList() ?? []);
+      Logger().i(response.data);
+    }
+    isLoading(false);
+    notifyListeners();
   }
 
   List<GuideLinesModel> getGalleryImgList(List<FileResponse?> fileResponse) {

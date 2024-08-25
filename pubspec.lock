@@ -689,7 +689,7 @@ packages:
     source: hosted
     version: "2.3.2"
   intl:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: intl
       sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
@@ -793,7 +793,7 @@ packages:
     source: hosted
     version: "1.11.0"
   mime:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: mime
       sha256: "2e123074287cc9fd6c09de8336dae606d1ddb88d9ac47358826db698c176a1f2"
@@ -1213,6 +1213,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.1"
+  textfields:
+    dependency: "direct main"
+    description:
+      name: textfields
+      sha256: beec9af133d41846ed4bc4ae8cd2f281fc42bf66464a7ef11e34caa7f5a2ac28
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   timelines:
     dependency: "direct main"
     description:

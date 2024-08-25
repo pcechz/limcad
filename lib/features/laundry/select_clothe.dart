@@ -112,11 +112,11 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ListView.builder(
-          itemCount: model.items?.length ?? 0,
+          itemCount: model.laundryServiceItems?.length ?? 0,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            LaundryServiceItem? clothe = model.items?[index];
+            LaundryServiceItem? clothe = model.laundryServiceItems?[index];
             double quantity = model.selectedItems[clothe] ?? 0;
 
             return GestureDetector(
