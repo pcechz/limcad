@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:limcad/features/auth/models/signup_response.dart';
 import 'package:limcad/resources/api/from_json.dart';
+import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 
 class BusinessOrderDetailResponse
     implements FromJson<BusinessOrderDetailResponse> {
@@ -14,6 +15,7 @@ class BusinessOrderDetailResponse
   List<int>? payments;
   String? pickupDate;
   num? price;
+  double? amountPaid;
   String? status;
   String? updatedAt;
 
@@ -27,13 +29,14 @@ class BusinessOrderDetailResponse
       this.payments,
       this.pickupDate,
       this.price,
+      this.amountPaid,
       this.status,
       this.updatedAt});
 
   BusinessOrderDetailResponse fromJson(Map<String, dynamic> json) {
     address =
         json['address'] != null ? new Address.fromJson(json['address']) : null;
-    createdAt = json['createdAt'];
+    createdAt = ViewUtil.formatDate(json['createdAt']);
     customer = json['customer'] != null
         ? new Customer.fromJson(json['customer'])
         : null;
@@ -50,8 +53,9 @@ class BusinessOrderDetailResponse
     payments = json['payments'].cast<int>();
     pickupDate = json['pickupDate'];
     price = json['price'];
+    amountPaid = json['amountPaid'];
     status = json['status'];
-    updatedAt = json['updatedAt'];
+    updatedAt =  ViewUtil.formatDate(json['updatedAt']);
     return this;
   }
 
@@ -74,6 +78,7 @@ class BusinessOrderDetailResponse
     data['payments'] = this.payments;
     data['pickupDate'] = this.pickupDate;
     data['price'] = this.price;
+    data['amountPaid'] = this.amountPaid;
     data['status'] = this.status;
     data['updatedAt'] = this.updatedAt;
     return data;

@@ -73,6 +73,10 @@ dependencies:
   flutter_chat_types: ^3.6.2
   flutter_chat_ui: ^1.6.14
   shimmer: ^3.0.0
+  webview_flutter: 4.7.0
+  flutter_inappwebview: ^5.8.0
+
+
 
 
 dev_dependencies:
@@ -88,6 +92,9 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
+
+dependency_overrides:
+  webview_flutter_android: 3.16.1
 
 # The following section is specific to Flutter packages.
 flutter:

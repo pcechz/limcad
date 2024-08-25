@@ -99,7 +99,7 @@ class DashboardVM extends BaseVM {
       Logger().i("Response received: $response");
 
       if (response?.data?.items != null && response!.data!.items!.isNotEmpty) {
-        laundryOrganisations = response.data!.items!;
+        laundryOrganisations = response.data!.items!.reversed.toList();
       } else {
         laundryOrganisations = [];
       }

@@ -251,14 +251,22 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                   },
                   body: TabBarView(
                     children: [
-                      BusinessServicesComponent(),
-                       BusinessServicesComponent(),
-                      BusinessServicesComponent(),
-                      const ReviewScreen()
+                      AboutComponent(laundry:  model.laundry),
+                       ServicesComponent(laundry:  model.laundry),
+                      GalleryWidget(laundry:  model.laundry),
+                      ReviewScreen(laundry:  model.laundry)
                     ],
                   ),
                 ),
               ),
+          bottomNavigationBar: Container(
+            decoration: boxDecorationWithShadow(backgroundColor: context.cardColor),
+            padding: EdgeInsets.only(left: 16, bottom: 40, right: 16),
+            child: ElevatedButton(onPressed: () {    NavigationService.pushScreen(context,
+                screen: SelectClothesPage(laundry: model.laundry,), withNavBar: true); }, child: Text('Book service now',
+                style: primaryTextStyle(size: 16, weight: FontWeight.w500, color: white)),
+            ),
+          ),
             ));
   }
 }

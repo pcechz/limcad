@@ -295,3 +295,80 @@ class _CustomTextAreaState extends State<CustomTextArea> {
     );
   }
 }
+
+
+class DateInputWidget extends StatelessWidget {
+  final String? label;
+  final String hint;
+  final TextEditingController controller;
+  final Function? validator;
+  final Function? onTap;
+  final String? title;
+  final Widget? suffix;
+  final Widget? leading;
+
+  const DateInputWidget({
+    Key? key,
+    this.label,
+    this.validator,
+    this.onTap,
+    required this.hint,
+    required this.controller,
+    this.title = '',
+    this.suffix,
+    this.leading,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title ?? '',
+          style: TextStyle(
+              color: CustomColors.blackPrimary,
+              fontSize: 14,
+              fontWeight: FontWeight.w300),
+        ).padding(bottom: 8).hideIf(title!.isEmpty),
+        GestureDetector(
+          onTap: onTap as void Function()?,
+          child: AbsorbPointer(
+            child: TextFormField(
+              style: const TextStyle(
+                  fontWeight: FontWeight.w300, fontSize: 14, color: CustomColors.blackPrimary),
+              controller: controller,
+              validator: (value) => validator != null ? validator!(value) : null,
+              decoration: InputDecoration(
+                  fillColor: controller.text.isEmpty == true
+                      ? Colors.white
+                      : Colors.white,
+                  hintText: hint,
+                  prefixIcon: leading,
+                  hintStyle:
+                  TextStyle(color: CustomColors.blackPrimary),
+                  contentPadding: EdgeInsets.only(left: 16, top: 16),
+                  focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          width: 1.0,
+                          color: CustomColors.smallTextGrey.withOpacity(0.5))),
+                  enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          width: 1.0,
+                          color: CustomColors.smallTextGrey.withOpacity(0.5))),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide(
+                          width: 1.0,
+                          color: CustomColors.smallTextGrey.withOpacity(0.5))),
+                  labelText: label,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}

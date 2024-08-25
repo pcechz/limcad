@@ -108,10 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
               _buildSection("Services", [
                 ListTile(
                   onTap: () {
-                    userTypeToString(widget.userType) == "BUSINESS"
-                        ? NavigationService.pushScreen(context,
-                            screen: BusinessDetailScreen(), withNavBar: true)
-                        : NavigationService.pushScreen(context,
+                     NavigationService.pushScreen(context,
                             screen: LaundryDetailScreen(), withNavBar: true);
                   },
                   title: const Text("Description"),

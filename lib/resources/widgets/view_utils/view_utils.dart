@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
+import 'package:limcad/features/laundry/model/order_items_response.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/size_util.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:intl/intl.dart';
 
 class ViewUtil {
   late BuildContext context;
@@ -138,7 +140,7 @@ class ViewUtil {
     );
   }
 
-  static Widget orderInfo(String title, List<OrderItems>? items, double total) {
+  static Widget orderInfo(String title, List<OrderItem>? items, double total) {
     final itemCount = items?.length ?? 0;
     final itemList = items ?? [];
 
@@ -270,5 +272,69 @@ class ViewUtil {
       msg: message!,
       toastLength: Toast.LENGTH_LONG,
     );
+  }
+
+  static String? replaceLocalhost(String? url) {
+    const String oldHost = 'localhost:8080';
+    const String newHost = '172.187.176.43';
+
+// Replace the old host with the new one
+    return url?.replaceAll(oldHost, newHost);
+  }
+
+  static String extractCodeFromUrl(String url) {
+    try {
+      // Extract the portion after the last '/'
+      final uri = Uri.parse(url);
+      final pathSegments = uri.pathSegments;
+      if (pathSegments.isNotEmpty) {
+        return pathSegments.last;
+      } else {
+        throw ArgumentError('Invalid URL format');
+      }
+    } catch (e) {
+      // Handle parsing error or invalid URL
+      print('Error extracting code: $e');
+      return '';
+    }
+  }
+
+
+  static Widget bottomSheetCloseIcon(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        width: 24,
+        height: 24,
+        padding: EdgeInsets.all(3),
+        decoration:
+        BoxDecoration(shape: BoxShape.circle, color: CustomColors.neutral1),
+        child: Center(child: Icon(Icons.close, size: 16, color: CustomColors.blackPrimary)),
+      ),
+    );
+  }
+
+  static String formatDate(String inputDate) {
+    // Parse the input date string to a DateTime object
+    DateTime dateTime = DateTime.parse(inputDate);
+
+    // Define the desired output format
+    DateFormat outputFormat = DateFormat('EEE d, MMM yyyy h:mm a');
+
+    // Format the date
+    return outputFormat.format(dateTime);
+  }
+
+  static String getOnlyTime(String inputDate) {
+    // Parse the input date string to a DateTime object
+    DateTime dateTime = DateFormat('EEE d, MMM yyyy h:mm a').parse(inputDate);
+
+    // Define the desired output format for time only
+    DateFormat timeFormat = DateFormat('h:mm a');
+
+    // Format the time
+    return timeFormat.format(dateTime);
   }
 }
