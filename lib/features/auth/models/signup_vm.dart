@@ -1,7 +1,9 @@
 import 'dart:math';
 
 import 'package:camera/camera.dart';
+import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_places_autocomplete_text_field/model/prediction.dart';
 import 'package:limcad/features/auth/auth/business_signup.dart';
@@ -35,7 +37,8 @@ import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:logger/logger.dart';
-import 'package:nb_utils/nb_utils.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+
 import 'package:stacked/stacked_annotations.dart';
 
 enum OnboardingPageType {
@@ -477,7 +480,24 @@ class AuthVM extends BaseVM {
 
       if (profileResponse.status == ResponseCode.success &&
           profileResponse.data != null) {
-        print("the user userType: ${userType}");
+        // final credential =
+        // await fireAuth.FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //   email: signupRequest?.email ?? "",
+        //   password: signupRequest?.password ?? "",
+        // );
+        // await FirebaseChatCore.instance.createUserInFirestore(
+        //   types.User(
+        //     firstName: "Limcad",
+        //     id: credential.user!.uid,
+        //     imageUrl: 'https://i.pravatar.cc/300?u=${signupRequest?.email}',
+        //     lastName: "Laundry",
+        //   ),
+        // );
+        //
+        // await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
+        //   email: signupRequest?.email ?? "",
+        //   password: signupRequest?.password ?? "",
+        // );
         if (context.mounted) {
           NavigationService.pushScreen(
             context,

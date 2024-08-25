@@ -157,7 +157,7 @@ class LaundryService with ListenableServiceMixin {
 
   Future<BaseResponse<NoObjectResponse>> submitReview(
       int star, int id, String text) async {
-    final request = {"organizationId": id, "rating": star, "reviewText": text};
+    final request = {"organizationId": 6, "rating": star, "reviewText": text};
     var loginResponse = await apiService.request(
         route: ApiRoute(ApiType.submitReview),
         data: request,

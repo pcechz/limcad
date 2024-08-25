@@ -410,7 +410,7 @@ class LaundryVM extends BaseVM {
 
   Future<void> updateStatus(OrderStatus status) async {
     final response = await locator<LaundryService>()
-        .updateStatus(10, status.toString().split(".").last);
+        .updateStatus(orderId ?? 0, status.toString().split(".").last);
     if (response.status == 200) {
       ViewUtil.showSnackBar("Updated Successfully", false);
       businessOrderDetails = response.data;

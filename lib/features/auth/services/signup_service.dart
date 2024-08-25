@@ -148,6 +148,34 @@ class AuthenticationService with ListenableServiceMixin {
     return response.response;
   }
 
+
+  Future<BaseResponse<ChangeProfileResponse>> changeAddress() async {
+    final   request =
+
+    {
+
+    "addresses": [
+    {
+    "name": "Home Address",
+    "additionalInfo": "20A Balogun Street Lekki",
+    "lgaRequest": {
+    "lgaId": 9,
+    "stateId": "LA"
+    }
+    }
+    ]
+    };
+    var response = await apiService.request(
+      route: ApiRoute(ApiType.updateProfile),
+      data: request,
+      create: () => BaseResponse<ChangeProfileResponse>(
+          create: () => ChangeProfileResponse()),
+    );
+
+    return response.response;
+  }
+
+
   Future<BaseResponse<LoginResponse>> validateOtp(
       String? email, String? otp, String userType) async {
     final otprequest = {

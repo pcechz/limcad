@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:limcad/features/analytics/analytics.dart';
+import 'package:limcad/features/chat/room.dart';
 import 'package:limcad/features/dashboard/business_dashboard.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
 import 'package:limcad/features/explore/explore.dart';
@@ -79,19 +80,19 @@ class _HomePageState extends State<HomePage>
         controller: tabController,
         dragStartBehavior: DragStartBehavior.down,
         physics: const BouncingScrollPhysics(),
-        children: userTypeToString(widget.userType!) == "BUSINESS"
+        children: widget.userType == UserType.business
             ? [
                 BusinessDashboard(),
                 AnalyticsPage(),
                 BusinessOrdersPage(),
-                ExploreScreen(),
+                RoomsPage(),
                 ProfilePage(userType: widget.userType!)
               ]
             : [
                 Dashboard(),
                 ExploreScreen(),
                 OrdersPage(),
-                ExploreScreen(),
+                RoomsPage(),
                 ProfilePage(userType: widget.userType!)
               ],
       ),
@@ -149,7 +150,7 @@ class _HomePageState extends State<HomePage>
                           fit: BoxFit.scaleDown,
                         ))).padding(bottom: 8, top: 16),
                 Text(
-                  userTypeToString(widget.userType!) == "BUSINESS"
+                  widget.userType == UserType.business
                       ? "Analytics"
                       : "Explore",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
@@ -229,7 +230,7 @@ class _HomePageState extends State<HomePage>
                         height: 20,
                         child: SvgPicture.asset(
                           AssetUtil.profileIcon,
-                          color: currentPage == 4
+                          color: currentPage == 3
                               ? CustomColors.limcadPrimary
                               : CustomColors.blackPrimary,
                           fit: BoxFit.scaleDown,
@@ -237,7 +238,7 @@ class _HomePageState extends State<HomePage>
                 Text(
                   "Profile",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 4
+                        color: currentPage == 3
                             ? CustomColors.limcadPrimary
                             : CustomColors.blackPrimary,
                         fontFamily: "inter",
