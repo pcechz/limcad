@@ -61,6 +61,7 @@ dependencies:
   dotted_border: ^2.1.0
   file_picker: ^5.2.0
   textfields: ^0.0.3
+  intl: ^0.19.0
   # calendar_date_picker2: ^1.1.5
   # firebase_core: ^3.2.0
   flutter_firebase_chat_core: ^1.6.8
@@ -77,6 +78,7 @@ dependencies:
   flutter_inappwebview: ^5.8.0
 
 
+  flutter_swipe_action_cell: ^3.1.4
 
 
 dev_dependencies:

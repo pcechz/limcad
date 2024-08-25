@@ -1,6 +1,6 @@
 import 'package:limcad/resources/api/from_json.dart';
 
-class LaundryServiceItem {
+class LaundryServiceItem implements FromJson<LaundryServiceItem> {
   int? id;
   String? itemDescription;
   String? itemName;
@@ -13,11 +13,12 @@ class LaundryServiceItem {
     this.price,
   });
 
-  LaundryServiceItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
+  LaundryServiceItem fromJson(Map<String, dynamic> json) {
+    id = json["id"];
     itemDescription = json['itemDescription'];
     itemName = json['itemName'];
     price = json['price'];
+    return this;
   }
 
   Map<String, dynamic> toJson() {
@@ -27,6 +28,11 @@ class LaundryServiceItem {
     data['itemName'] = itemName;
     data['price'] = price;
     return data;
+  }
+
+  @override
+  String toString() {
+    return 'LaundryServiceItem{id: $id, itemDescription: $itemDescription, itemName: $itemName, price: $price}';
   }
 }
 

@@ -18,6 +18,7 @@ enum ApiType {
   laundries,
   createLaundryServiceItems,
   updateProfile,
+  updateOrganization,
   submitOrder,
   laundyOrders,
   businessLaundryOrders,
@@ -30,6 +31,10 @@ enum ApiType {
   getFile,
   submitReview,
   getReview, ordersItems
+  getReview,
+  giftCard,
+  deleteServiceItems,
+  updateServiceItems,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -161,6 +166,12 @@ class ApiRoute implements APIRouteConfigurable {
             method: ApiMethod.patch,
             data: data,
             extra: authorize);
+      case ApiType.updateOrganization:
+        return RequestOptions(
+            path: '/organizations',
+            method: ApiMethod.patch,
+            data: data,
+            extra: authorize);
       case ApiType.businessOnboarding:
         return RequestOptions(
             path: "/business/onboard",
@@ -221,6 +232,25 @@ class ApiRoute implements APIRouteConfigurable {
         return RequestOptions(
           path: "/organization-reviews/organization/$routeParams",
           method: ApiMethod.get,
+          extra: authorize,
+        );
+      case ApiType.giftCard:
+        return RequestOptions(
+            path: '/gift-cards/create',
+            method: ApiMethod.post,
+            extra: authorize,
+            data: data);
+      case ApiType.deleteServiceItems:
+        return RequestOptions(
+          path: "/laundry-service-items/$routeParams",
+          method: ApiMethod.delete,
+          extra: authorize,
+        );
+      case ApiType.updateServiceItems:
+        return RequestOptions(
+          path: "/laundry-service-items/$routeParams",
+          method: ApiMethod.patch,
+          data: data,
           extra: authorize,
         );
       default:

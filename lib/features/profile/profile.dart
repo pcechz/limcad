@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/giftcards/selected_card_screen.dart';
+import 'package:limcad/features/laundry/components/ServiceDetail/CreateService.dart';
 import 'package:limcad/features/laundry/laundry_detail.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/profile/business_detail.dart';
@@ -35,7 +36,7 @@ class _ProfilePageState extends State<ProfilePage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, ProfileOption.fetchProfile);
+        model.init(context, ProfileOption.fetchProfile, widget.userType);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: false,
@@ -64,7 +65,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,
-                        screen: ProfileDetailsPage(), withNavBar: true);
+                        screen: ProfileDetailsPage(userType: widget.userType),
+                        withNavBar: true);
                   },
                   title: Text("Profile Details"),
                   leading: Icon(Icons.person),
@@ -79,7 +81,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,
-                        screen: ProfileAddressPage(), withNavBar: true);
+                        screen: ProfileAddressPage(userType: widget.userType),
+                        withNavBar: true);
                   },
                   title: Text("Address"),
                   leading: Icon(Icons.home),
@@ -121,6 +124,37 @@ class _ProfilePageState extends State<ProfilePage> {
                 const Divider(
                   thickness: 0.5,
                 ).paddingSymmetric(horizontal: 16),
+                ListTile(
+                  onTap: () {},
+                  title: const Text("Staff Management"),
+                  leading: const Icon(Icons.wallet_giftcard),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 12,
+                  ),
+                ).hideIf(userTypeToString(widget.userType) != "BUSINESS"),
+                const Divider(
+                  thickness: 0.5,
+                )
+                    .paddingSymmetric(horizontal: 16)
+                    .hideIf(userTypeToString(widget.userType) != "BUSINESS"),
+                ListTile(
+                  onTap: () {
+                    NavigationService.pushScreen(context,
+                        screen: CreateServicesComponent());
+                  },
+                  title: const Text("Services"),
+                  leading: const Icon(Icons.wallet_giftcard),
+                  trailing: const Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 12,
+                  ),
+                ).hideIf(userTypeToString(widget.userType) != "BUSINESS"),
+                const Divider(
+                  thickness: 0.5,
+                )
+                    .paddingSymmetric(horizontal: 16)
+                    .hideIf(userTypeToString(widget.userType) != "BUSINESS"),
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,

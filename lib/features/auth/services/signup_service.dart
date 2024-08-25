@@ -148,22 +148,38 @@ class AuthenticationService with ListenableServiceMixin {
     return response.response;
   }
 
+  Future<BaseResponse<ChangeProfileResponse>> updateOrganization(
+      String? name, String? phoneNumber, String? email) async {
+    final Map<String, dynamic> request = {};
+    if (name != null && name.isNotEmpty) {
+      request['name'] = name;
+    }
+    if (phoneNumber != null && phoneNumber.isNotEmpty) {
+      request['phoneNumber'] = phoneNumber;
+    }
+    if (email != null && email.isNotEmpty) {
+      request['email'] = email;
+    }
+
+    var response = await apiService.request(
+      route: ApiRoute(ApiType.updateOrganization),
+      data: request,
+      create: () => BaseResponse<ChangeProfileResponse>(
+          create: () => ChangeProfileResponse()),
+    );
+
+    return response.response;
+  }
 
   Future<BaseResponse<ChangeProfileResponse>> changeAddress() async {
-    final   request =
-
-    {
-
-    "addresses": [
-    {
-    "name": "Home Address",
-    "additionalInfo": "20A Balogun Street Lekki",
-    "lgaRequest": {
-    "lgaId": 9,
-    "stateId": "LA"
-    }
-    }
-    ]
+    final request = {
+      "addresses": [
+        {
+          "name": "Home Address",
+          "additionalInfo": "20A Balogun Street Lekki",
+          "lgaRequest": {"lgaId": 9, "stateId": "LA"}
+        }
+      ]
     };
     var response = await apiService.request(
       route: ApiRoute(ApiType.updateProfile),
@@ -174,7 +190,6 @@ class AuthenticationService with ListenableServiceMixin {
 
     return response.response;
   }
-
 
   Future<BaseResponse<LoginResponse>> validateOtp(
       String? email, String? otp, String userType) async {
