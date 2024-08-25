@@ -322,16 +322,20 @@ class LaundryVM extends BaseVM {
   }
 
   Future<void> addLaundryAbout(String aboutUs) async {
-    final response = await locator<LaundryService>().addAboutUs(aboutUs);
-    if (response.status == 200) {
-      Logger().i(response.data);
+    if (aboutUs.isNotEmpty) {
+      final response = await locator<LaundryService>().addAboutUs(aboutUs);
+      if (response.status == 200) {
+        Logger().i(response.data);
+      }
     }
   }
 
   Future<void> editLaundryAbout(String aboutUs) async {
-    final response = await locator<LaundryService>().editAboutUs(aboutUs);
-    if (response.status == 200) {
-      Logger().i(response.data);
+    if (aboutUs.isNotEmpty) {
+      final response = await locator<LaundryService>().editAboutUs(aboutUs);
+      if (response.status == 200) {
+        Logger().i(response.data);
+      }
     }
   }
 

@@ -26,7 +26,8 @@ enum ApiType {
   uploadFile,
   getFile,
   submitReview,
-  getReview
+  getReview,
+  giftCard,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -198,6 +199,12 @@ class ApiRoute implements APIRouteConfigurable {
           method: ApiMethod.get,
           extra: authorize,
         );
+      case ApiType.giftCard:
+        return RequestOptions(
+            path: '/gift-cards/create',
+            method: ApiMethod.post,
+            extra: authorize,
+            data: data);
       default:
         return null;
     }

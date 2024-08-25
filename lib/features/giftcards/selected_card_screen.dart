@@ -230,7 +230,9 @@ class _SelectedCardScreenState extends State<SelectedCardScreen> {
                       ),
                       const SizedBox(height: 16),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async {
+                          await model.submitGiftCard();
+                        },
                         child: const Text('Go to checkout'),
                       ),
                     ],

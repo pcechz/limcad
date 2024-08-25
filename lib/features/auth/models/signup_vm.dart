@@ -416,7 +416,7 @@ class AuthVM extends BaseVM {
       if (request == null || userType == null) {
         throw Exception('Invalid signup request or user type');
       }
-
+      print(request);
       isLoading(true);
       final response =
           await locator<AuthenticationService>().login(request, userType);
