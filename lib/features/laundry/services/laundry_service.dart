@@ -31,10 +31,10 @@ class LaundryService with ListenableServiceMixin {
     return response.response.data;
   }
 
-  Future<BaseResponse<LaundryServiceResponse>?> getLaundryServiceItems() async {
+  Future<BaseResponse<LaundryServiceResponse>?> getLaundryServiceItems(int? id) async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.laundyServiceItems,
-            routeParams: "organizationId=6&page=0&size=10"),
+            routeParams: "organizationId=$id&page=0&size=10"),
         create: () => BaseResponse<LaundryServiceResponse>(
             create: () => LaundryServiceResponse()));
     return response.response;
@@ -81,7 +81,7 @@ class LaundryService with ListenableServiceMixin {
 
   Future<BaseResponse<NoObjectResponse>> submitOrder(
       Map<String, dynamic> orderItemJson,
-      int organizationId,
+      int? organizationId,
       ProfileResponse? profile) async {
     // BasePreference basePreference = await BasePreference.getInstance();
 
@@ -166,7 +166,7 @@ class LaundryService with ListenableServiceMixin {
     return loginResponse.response;
   }
 
-  Future<BaseResponse<ReviewServiceResponse>> getReview(int id) async {
+  Future<BaseResponse<ReviewServiceResponse>> getReview(int? id) async {
     var response = await apiService.request(
         route: ApiRoute(ApiType.getReview, routeParams: "$id?page=0&size=10"),
         create: () => BaseResponse<ReviewServiceResponse>(

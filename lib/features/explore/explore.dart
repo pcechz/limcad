@@ -101,24 +101,24 @@ class _ExploreScreenState extends State<ExploreScreen> {
             ).paddingSymmetric(horizontal: 16),
           ),
 
-          Positioned(
-            bottom: 120.0,
-            right: 8.0,
-            left: 8.0,
-            child:  SizedBox(
-              height: 240,
-              child: ListView.builder(
-                itemCount: expiringSoon.length,
-                
-                padding: EdgeInsets.all(8),
-                itemBuilder: (_, index) {
-                  return ConstrainedBox(constraints: BoxConstraints(maxHeight: 238), child: ServiceItemWidget(expiringSoon[index]).paddingAll(8));
-                },
-                shrinkWrap: true,
-                scrollDirection: Axis.horizontal,
-              ),
-            ),
-          ),
+          // Positioned(
+          //   bottom: 120.0,
+          //   right: 8.0,
+          //   left: 8.0,
+          //   child:  SizedBox(
+          //     height: 240,
+          //     child: ListView.builder(
+          //       itemCount: expiringSoon.length,
+          //
+          //       padding: EdgeInsets.all(8),
+          //       itemBuilder: (_, index) {
+          //         return ConstrainedBox(constraints: BoxConstraints(maxHeight: 238), child: ServiceItemWidget(expiringSoon[index]).paddingAll(8));
+          //       },
+          //       shrinkWrap: true,
+          //       scrollDirection: Axis.horizontal,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
 

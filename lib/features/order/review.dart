@@ -23,7 +23,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.review, 6);
+        model.init(context, LaundryOption.review, );
       },
       builder: (BuildContext context, model, child) {
         return DefaultScaffold2(

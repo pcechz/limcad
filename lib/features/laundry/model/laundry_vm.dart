@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:limcad/features/auth/services/signup_service.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
 import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
 import 'package:limcad/features/laundry/model/file_response.dart';
@@ -106,7 +107,7 @@ class LaundryVM extends BaseVM {
   List<GuideLinesModel> imgList = [];
   List<FileResponse?> fileResponse = [];
   int selectedIndex = 0;
-  int? orderId;
+  LaundryItem? laundry;
   OrderStatus orderStatus = OrderStatus.PENDING;
   double totalPrice = 0;
   XFile? _selectedFile;
@@ -115,11 +116,18 @@ class LaundryVM extends BaseVM {
   double ratingValue = 0;
   final profile = locator<AuthenticationService>().profile;
   bool hasUsedAboutUs = false;
+  int? orderId;
 
-  void init(BuildContext context, LaundryOption laundryOpt, int? id) async {
+
+  void init(BuildContext context, LaundryOption laundryOpt, [LaundryItem? laundry, int? orderId]) async {
     this.context = context;
     this.laundryOption = laundryOpt;
-    this.orderId = id;
+    if(laundry != null){
+      this.laundry = laundry;
+    }
+    if(orderId != null){
+      this.orderId = orderId;
+    }
 
     if (laundryOpt == LaundryOption.about) {
       final preferences = await BasePreference.getInstance();
@@ -134,7 +142,7 @@ class LaundryVM extends BaseVM {
     }
 
     if (laundryOpt == LaundryOption.order_details) {
-      getOrderDetail(id!);
+      getOrderDetail(orderId!);
     }
 
     if (laundryOpt == LaundryOption.orders) {
@@ -156,7 +164,6 @@ class LaundryVM extends BaseVM {
     if (laundryOpt == LaundryOption.image) {
       fetchImage();
     }
-    this.orderId = id;
   }
 
   Future<bool> hasAddedAnAboutUs() async {
@@ -298,7 +305,7 @@ class LaundryVM extends BaseVM {
     print('Order JSON: $orderJson');
 
     final response =
-        await locator<LaundryService>().submitOrder(orderJson, 6, profile);
+        await locator<LaundryService>().submitOrder(orderJson, laundry?.id, profile);
 
     if (response.status == ResponseCode.success ||
         response.status == ResponseCode.created) {
@@ -337,7 +344,7 @@ class LaundryVM extends BaseVM {
 
   Future<void> getLaundryItems() async {
     isLoading(true);
-    final response = await locator<LaundryService>().getLaundryServiceItems();
+    final response = await locator<LaundryService>().getLaundryServiceItems(laundry?.id);
     laundryServiceResponse = response?.data;
     if (laundryServiceResponse!.items!.isNotEmpty) {
       items?.addAll(laundryServiceResponse!.items?.toList() ?? []);
@@ -374,7 +381,7 @@ class LaundryVM extends BaseVM {
   Future<void> getReview() async {
     print("Getting Review");
     isLoading(true);
-    final response = await locator<LaundryService>().getReview(6);
+    final response = await locator<LaundryService>().getReview(laundry?.id);
     if (response.status == 200) {
       print("response is: ${response.data.toString()}");
       if (response.data!.items!.isNotEmpty) {

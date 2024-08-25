@@ -97,13 +97,13 @@ class AuthVM extends BaseVM {
   final addressController = TextEditingController();
   String? gender;
   UserType? userType;
-  int? lgaId;
-  String? stateId;
   List<StateItems> states = [];
   List<LGAResponse> lgas = [];
-  String? selectedState;
-  String? selectedLGA;
+  StateItems? selectedState;
+  LGAResponse? selectedLGA;
   Prediction? prediction;
+
+  bool otpSent = false;
 
   void init(BuildContext context,
       [OnboardingPageType? route, UserType? userT]) async {
@@ -129,7 +129,7 @@ class AuthVM extends BaseVM {
           states.addAll(response.data!.items!.toList());
         }
         if (states.isNotEmpty) {
-          selectedState = states[0].stateName;
+          selectedState = states[0];
           Logger().i("Selected state: $selectedState");
         }
       } else {
@@ -157,8 +157,6 @@ class AuthVM extends BaseVM {
     print('Latitude: ${prediction?.lat}');
     print('Longitude: ${prediction?.lng}');
     print('Address: ${addressController.text}');
-    print('LGA ID: $lgaId');
-    print('State ID: $stateId');
 
     signupRequest?.email = emailController.text;
     signupRequest?.name = fullNameController.text;
@@ -167,9 +165,9 @@ class AuthVM extends BaseVM {
 
     signupRequest?.addressRequest ??= [];
     signupRequest?.addressRequest?.add(AddressRequest(
-        additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
-        name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
+        additionalInfo: addressController.text,
+        name: "Main Address",
+        lgaRequest: LgaRequest(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
 
     print('Signup Request: ${signupRequest?.toJson()}');
 
@@ -188,13 +186,9 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest!.addressRequest ??= [];
     onboardingRequest?.organizationRequest ??= OrganizationRequest();
     onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
-        additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
-        name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
-    onboardingRequest?.staffRequest?.addressRequest?.add(AddressRequest(
-        additionalInfo: "{lag: ${prediction?.lat}, long: ${prediction?.lng} ",
-        name: addressController.text,
-        lgaRequest: LgaRequest(lgaId: lgaId, stateId: stateId)));
+        additionalInfo: addressController.text,
+        name: "Address",
+        lgaRequest: LgaRequest(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
     onboardingRequest?.staffRequest?.gender = gender;
     onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
     onboardingRequest?.staffRequest?.userType = userType?.name.toString();
@@ -277,8 +271,12 @@ class AuthVM extends BaseVM {
     isLoading(true);
     final response = await locator<AuthenticationService>()
         .requestResetPasswordCode(userType, emailController.text);
-    Logger().i(response.status);
     isLoading(false);
+
+    if(response.status == 204){
+      otpSent = true;
+      notifyListeners();
+    }
   }
 
   Future<void> proceedVerifyOTP() async {
@@ -432,7 +430,7 @@ class AuthVM extends BaseVM {
           NavigationService.pushScreen(
             context,
             screen: SignupOtpPage(
-              request: signupRequest,
+              request: request,
               userType: userType,
               from: LoginPage.routeName,
             ),
@@ -549,17 +547,14 @@ class AuthVM extends BaseVM {
     }));
   }
 
-  Future<void> setStateValue(String value) async {
-    selectedState = value;
-
+   setStateValue(String value) async {
+    selectedState = states.firstWhere((element) => element.stateName?.toLowerCase() == value.toLowerCase() );
     if (selectedState != null) {
-      stateId = getStateID(selectedState!);
+      getStateID(selectedState?.stateId);
       isLoading(true);
-      Logger().i("State ID: $stateId");
-      Logger().i("State: $selectedState");
       try {
         final response =
-            await locator<AuthenticationService>().getLGAs(stateId);
+            await locator<AuthenticationService>().getLGAs(selectedState?.stateId);
         if (response.data != null && response.data!.isNotEmpty) {
           lgas.addAll(response.data!.toList());
         } else {
@@ -579,7 +574,7 @@ class AuthVM extends BaseVM {
     }
   }
 
-  String? getStateID(String name) {
+  String? getStateID(String? name) {
     for (StateItems stateItem in states) {
       if (stateItem.stateName == name) {
         return stateItem.stateId;
@@ -588,15 +583,12 @@ class AuthVM extends BaseVM {
     return null;
   }
 
-  Future<void> setLGAValue(String value) async {
+  Future<void> setLGAValue(LGAResponse? value) async {
     selectedLGA = value;
-    lgaId = getLGAID(value);
-    Logger().i("LGA ID :${lgaId}");
-    Logger().i("Selected value :${selectedLGA}");
     notifyListeners();
   }
 
-  int? getLGAID(String name) {
+  int? getLGAID(String? name) {
     for (LGAResponse item in lgas) {
       if (item.lgaName == name) {
         return item.id?.lgaId;
@@ -614,5 +606,65 @@ class AuthVM extends BaseVM {
     Navigator.push(context, MaterialPageRoute(builder: (context) {
       return LoginPage(theUsertype: userType!);
     }));
+  }
+
+  changePassword() async {
+
+    isLoading(true);
+    final response = await locator<AuthenticationService>()
+        .changePassword(emailController.text,  otpController.text, userType!.name, password.text);
+    isLoading(false);
+    if (response.status == ResponseCode.success ||
+        response.status == ResponseCode.success04) {
+
+      // ignore: use_build_context_synchronously
+      ViewUtil.showDynamicDialogWithButton(
+          barrierDismissible: false,
+          context: context,
+          titlePresent: false,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Center(
+                child: Image.asset(
+                  AssetUtil.successCheck,
+                  width: 64,
+                  height: 64,
+                ).padding(bottom: 24, top: 22),
+              ),
+              const Text(
+                "Password Changed",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: CustomColors.kBlack,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 32,
+                    height: 1.2),
+              ).padding(bottom: 16),
+              const Text(
+                "You have successfully changed your password",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    color: CustomColors.kBlack,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 16,
+                    height: 1.2),
+              ).padding(bottom: 24)
+            ],
+          ),
+          buttonText: "Login",
+          dialogAction1: () async {
+            Navigator.pop(context);
+            NavigationService.pushScreen(context,
+                screen:
+                 LoginPage(theUsertype: userType),
+                withNavBar: false);
+
+          });
+
+      notifyListeners();
+    }else{
+      ViewUtil.showSnackBar(response.message ?? "An error occurred", true);
+    }
   }
 }

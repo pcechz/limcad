@@ -106,9 +106,9 @@ class BusinessDashboardState extends State<BusinessDashboard> {
                       title: Text('Welcome Back,',
                           style: primaryTextStyle(
                               size: 16, weight: FontWeight.w400)),
-                      subtitle: Text(profileResponse?.name ?? 'Helen laundry',
+                      subtitle: Text(profileResponse?.name ?? '',
                           style: primaryTextStyle(
-                              size: 18, weight: FontWeight.w600)),
+                              size: 14, weight: FontWeight.w600)),
                     ),
                   ),
                   Padding(

@@ -43,8 +43,8 @@ class BaseResponse<T> extends GenericObject<T> implements FromJson<BaseResponse<
   @override
   BaseResponse<T> fromJson(dynamic json) {
     try {
-      status = json['status'];
-      message = json['message'];
+      status = json['status'] ?? json['code'];
+      message = json['message'] ?? json['error'];
       if (message != null && message!.isNotEmpty && message!.contains("exception")) {
         message = "An error occurred, please try again later.";
       }
@@ -77,8 +77,8 @@ class BaseAPIListResponse<T> extends GenericObject<T> implements FromJson<BaseAP
 
   @override
   BaseAPIListResponse<T> fromJson(dynamic json) {
-    status = json['status'];
-    message = json['message'];
+    status = json['status'] ?? json['code'];
+    message = json['message'] ?? json['error'];
     nMeta = json['_meta'];
     nLinks = json['_links'];
     data = [];
@@ -105,8 +105,8 @@ class BaseAPIListPaginationResponse<T> extends BaseAPIListResponse<T> {
 
   @override
   BaseAPIListPaginationResponse<T> fromJson(dynamic json) {
-    status = json['status'];
-    message = json['message'];
+    status = json['status'] ?? json['code'];
+    message = json['message'] ?? json['error'];
     nMeta = json['_meta'];
     nLinks = json['_links'];
     data = [];

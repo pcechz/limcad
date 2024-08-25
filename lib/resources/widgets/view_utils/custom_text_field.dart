@@ -91,24 +91,7 @@ class _CustomInputfieldsFieldState extends State<CustomTextFields> {
               hintText: widget.hintText,
               hintStyle: TextStyle(color: Colors.grey[400]),
               contentPadding: EdgeInsets.only(left: 27),
-              // prefixText: widget.iconPresent ? "|     " : "",
-              // prefixStyle: const TextStyle(
-              //   fontWeight: FontWeight.bold,
-              //   color: Color(0xffEBE8E8),
-              // ),
-              // prefixIcon: widget.iconPresent
-              //     ? Transform.scale(
-              //   scale: 0.5,
-              //   child: ImageIcon(
-              //     AssetImage(
-              //       widget.icon!,
-              //     ),
-              //     size: 10,
-              //     color: widget.iconColor,
-              //   ),
-              // )
-              //     : const SizedBox(),
-              // suffix: widget.suffixWidget,
+
               focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
                   borderSide: const BorderSide(

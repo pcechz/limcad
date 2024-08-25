@@ -34,7 +34,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.businessOrderDetails, 3);
+        model.init(context, LaundryOption.businessOrderDetails, );
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,

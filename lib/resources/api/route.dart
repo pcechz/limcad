@@ -4,6 +4,7 @@ enum ApiType {
   registerUser,
   requestEmailOtp,
   validateEmailOtp,
+  changePassword,
   states,
   lgas,
   login,
@@ -14,6 +15,7 @@ enum ApiType {
   passwordResetCodeRequest,
   passwordReset,
   laundyServiceItems,
+  laundries,
   createLaundryServiceItems,
   updateProfile,
   submitOrder,
@@ -83,6 +85,12 @@ class ApiRoute implements APIRouteConfigurable {
             data: data,
             extra: authorize);
 
+      case ApiType.changePassword:
+        return RequestOptions(
+            path: '/auth/password-reset',
+            method: ApiMethod.post,
+            data: data);
+
       case ApiType.submitOrder:
         return RequestOptions(
             path: '/laundry-orders?$routeParams',
@@ -122,6 +130,12 @@ class ApiRoute implements APIRouteConfigurable {
       case ApiType.laundyServiceItems:
         return RequestOptions(
             path: '/laundry-service-items?$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
+
+      case ApiType.laundries:
+        return RequestOptions(
+            path: '/organizations?$routeParams',
             method: ApiMethod.get,
             extra: authorize);
 

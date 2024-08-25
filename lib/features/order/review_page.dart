@@ -47,7 +47,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
           this.model = model;
           model.context = context;
           model.orderId = widget.id;
-          model.init(context, LaundryOption.sendReview, widget.id ?? 0);
+          model.init(context, LaundryOption.sendReview, );
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
             showAppBar: true,

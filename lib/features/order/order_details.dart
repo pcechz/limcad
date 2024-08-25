@@ -75,7 +75,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
           this.model = model;
           model.context = context;
           model.orderId = widget.id;
-          model.init(context, LaundryOption.order_details, widget.id ?? 0);
+          model.init(context, LaundryOption.order_details, null, widget.id);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,

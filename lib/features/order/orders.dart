@@ -34,7 +34,7 @@ class _OrdersPageState extends State<OrdersPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.orders, 0);
+          model.init(context, LaundryOption.orders, );
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -22,7 +23,9 @@ import 'package:stacked/stacked.dart';
 class SelectClothesPage extends StatefulWidget {
   static const String routeName = "/SelectClothesPage";
 
-  const SelectClothesPage({Key? key}) : super(key: key);
+  final LaundryItem? laundry;
+
+  const SelectClothesPage({Key? key, this.laundry}) : super(key: key);
 
   @override
   State<SelectClothesPage> createState() => _SelectClothesPageState();
@@ -38,7 +41,7 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.selectClothe, 0);
+        model.init(context, LaundryOption.selectClothe, widget.laundry);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,

@@ -32,7 +32,7 @@ class BusinessDetailScreenState extends State<BusinessDetailScreen> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.about, 0);
+          model.init(context, LaundryOption.about,);
         },
         builder: (BuildContext context, model, child) => Scaffold(
               body: DefaultTabController(

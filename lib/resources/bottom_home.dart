@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage>
           controller: tabController,
           dragStartBehavior: DragStartBehavior.down,
           physics: const BouncingScrollPhysics(),
-          children: widget.userType == UserType.business ?  [ BusinessDashboard(), AnalyticsPage(), BusinessOrdersPage(), RoomsPage(), ProfilePage()] :  [ Dashboard(), ExploreScreen(), OrdersPage(), RoomsPage(), ProfilePage()],
+          children: widget.userType == UserType.business ?  [ BusinessDashboard(), AnalyticsPage(), BusinessOrdersPage(), RoomsPage(), ProfilePage(userType: UserType.business,)] :  [ Dashboard(), ExploreScreen(), OrdersPage(), RoomsPage(), ProfilePage(userType: UserType.personal,)],
         ),
         child: TabBar(
           padding: EdgeInsets.zero,

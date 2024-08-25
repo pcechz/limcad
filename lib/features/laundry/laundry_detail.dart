@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
@@ -19,6 +20,10 @@ import 'package:stacked/stacked.dart';
 class LaundryDetailScreen extends StatefulWidget {
   static String tag = '/LSServiceDetailScreen';
 
+  final LaundryItem? laundry;
+
+  const LaundryDetailScreen({Key? key, this.laundry}) : super(key: key);
+
   @override
   LaundryDetailScreenState createState() => LaundryDetailScreenState();
 }
@@ -33,7 +38,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.init(context, LaundryOption.about, 6);
+          model.init(context, LaundryOption.about, widget.laundry);
         },
         builder: (BuildContext context, model, child) => Scaffold(
               body: DefaultTabController(
@@ -122,8 +127,7 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                             children: [
                               Stack(
                                 children: [
-                                  commonCacheImageWidget(
-                                      AssetUtil.laundryWall, 300,
+                                  placeHolderWidget( height: 300,
                                       width: context.width(),
                                       fit: BoxFit.cover),
                                   Container(
@@ -176,13 +180,15 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('Helen Laundry',
+                                      Text(widget.laundry?.name ?? "",
+                                          overflow: TextOverflow.ellipsis,
                                           style: boldTextStyle(
                                             size: 24,
                                             color: Colors.black,
                                           )),
                                       4.height,
-                                      Text('48, Bank-Anthony Way, Yaba, Lagos.',
+                                      Text(widget.laundry?.address ?? "",
+                                          overflow: TextOverflow.ellipsis,
                                           style: secondaryTextStyle(
                                               color: Colors.black38, size: 14)),
                                       4.height,
@@ -245,9 +251,9 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
                   },
                   body: TabBarView(
                     children: [
-                      // AboutComponent(model),
-                      // ServicesComponent(),
-                      // GalleryWidget(),
+                      BusinessServicesComponent(),
+                       BusinessServicesComponent(),
+                      BusinessServicesComponent(),
                       const ReviewScreen()
                     ],
                   ),
