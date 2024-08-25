@@ -478,6 +478,26 @@ class LaundryVM extends BaseVM {
     notifyListeners();
   }
 
+  Future<void> deleteLaundryItems(int id) async {
+    final response = await locator<LaundryService>().deleteServiceItems(id);
+    if (response.status == 200) {
+      laundryServiceItems?.removeWhere((element) => element.id == id);
+      notifyListeners();
+    }
+  }
+
+  Future<void> editLaundryItems(int id, LaundryServiceItem item) async {
+    Logger().i(item.toString());
+    final response =
+        await locator<LaundryService>().updateServiceItems(id, item);
+    if (response.status == 200) {
+      laundryServiceItems?.removeWhere((element) => element.id == id);
+      laundryServiceItems?.add(response.data!);
+      Logger().i(response.data);
+      notifyListeners();
+    }
+  }
+
   List<GuideLinesModel> getGalleryImgList(List<FileResponse?> fileResponse) {
     List<GuideLinesModel> list = [];
 

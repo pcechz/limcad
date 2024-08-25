@@ -28,6 +28,8 @@ enum ApiType {
   submitReview,
   getReview,
   giftCard,
+  deleteServiceItems,
+  updateServiceItems,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -205,6 +207,19 @@ class ApiRoute implements APIRouteConfigurable {
             method: ApiMethod.post,
             extra: authorize,
             data: data);
+      case ApiType.deleteServiceItems:
+        return RequestOptions(
+          path: "/laundry-service-items/$routeParams",
+          method: ApiMethod.delete,
+          extra: authorize,
+        );
+      case ApiType.updateServiceItems:
+        return RequestOptions(
+          path: "/laundry-service-items/$routeParams",
+          method: ApiMethod.patch,
+          data: data,
+          extra: authorize,
+        );
       default:
         return null;
     }

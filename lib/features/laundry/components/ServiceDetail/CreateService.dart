@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_swipe_action_cell/core/cell.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
@@ -54,16 +55,49 @@ class CreateServicesComponentState extends State<CreateServicesComponent> {
                       itemCount: model.laundryServiceItems!.length,
                       itemBuilder: (context, index) {
                         final item = model.laundryServiceItems![index];
-                        return ItemDetailsCard(item: item);
+                        return SwipeActionCell(
+                          key: Key(item.id.toString()),
+                          trailingActions: <SwipeAction>[
+                            SwipeAction(
+                                title: "Delete",
+                                backgroundRadius: 20,
+                                performsFirstActionWithFullSwipe: true,
+                                onTap: (CompletionHandler handler) async {
+                                  await handler(true);
+                                  model.deleteLaundryItems(item.id!);
+                                },
+                                color: Colors.red),
+                          ],
+                          leadingActions: [
+                            SwipeAction(
+                                title: "Edit",
+                                backgroundRadius: 20,
+                                onTap: (CompletionHandler handler) async {
+                                  _showAddServiceBottomSheet(context,
+                                      isEditing: true,
+                                      item: item,
+                                      id: item.id!);
+                                },
+                                color: Colors.yellow),
+                          ],
+                          child: ItemDetailsCard(item: item),
+                        ).paddingBottom(10);
                       },
-                    ).paddingSymmetric(vertical: 35, horizontal: 16)
+                    ).paddingOnly(top: 20, right: 16, left: 16)
                   : Center(
                       child: Text('No laundry service items available'),
                     ));
         });
   }
 
-  void _showAddServiceBottomSheet(BuildContext context) {
+  void _showAddServiceBottomSheet(BuildContext context,
+      {bool isEditing = false, LaundryServiceItem? item, int id = 0}) {
+    if (isEditing && item != null) {
+      _nameController.text = item.itemName!;
+      _descriptionController.text = item.itemDescription!;
+      _priceController.text = item.price!.toString();
+    }
+
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -138,16 +172,23 @@ class CreateServicesComponentState extends State<CreateServicesComponent> {
                               final name = _nameController.text;
                               final description = _descriptionController.text;
                               final price = _priceController.text;
+                              isEditing
+                                  ? await model.editLaundryItems(
+                                      id,
+                                      LaundryServiceItem(
+                                          price: double.parse(price),
+                                          itemName: name,
+                                          itemDescription: description))
+                                  : await model.createServiceItem(
+                                      name, description, int.parse(price));
 
-                              await model.createServiceItem(
-                                  name, description, int.parse(price));
                               _nameController.clear();
                               _descriptionController.clear();
                               _priceController.clear();
                               Navigator.pop(context);
                             }
                           },
-                          child: Text('Submit'),
+                          child: Text(isEditing ? "Edit" : 'Submit'),
                         ),
                       ],
                     ),
@@ -169,44 +210,46 @@ class ItemDetailsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              item.itemName ?? "",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              item.itemDescription ?? "",
-              style: TextStyle(fontSize: 14),
-            ),
-            SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+    return Container(
+        decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(20)),
+        child: ListTile(
+          title: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Price: \₦${item.price?.toStringAsFixed(2) ?? 0}',
+                  item.itemName ?? "",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: CustomColors.limcadPrimary,
                   ),
+                ),
+                SizedBox(height: 8),
+                Text(
+                  item.itemDescription ?? "",
+                  style: TextStyle(fontSize: 14),
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'Price: ₦${item.price?.toStringAsFixed(2) ?? 0}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: CustomColors.limcadPrimary,
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    ).paddingBottom(10);
+          ),
+        ));
   }
 }
 
