@@ -2,6 +2,8 @@ import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:limcad/features/CourierAccount/Delivery/delivery.dart';
+import 'package:limcad/features/CourierAccount/Home/courier_home.dart';
 import 'package:limcad/features/analytics/analytics.dart';
 import 'package:limcad/features/chat/room.dart';
 import 'package:limcad/features/dashboard/business_dashboard.dart';
@@ -80,21 +82,7 @@ class _HomePageState extends State<HomePage>
         controller: tabController,
         dragStartBehavior: DragStartBehavior.down,
         physics: const BouncingScrollPhysics(),
-        children: widget.userType == UserType.business
-            ? [
-                BusinessDashboard(),
-                AnalyticsPage(),
-                BusinessOrdersPage(),
-                RoomsPage(),
-                ProfilePage(userType: widget.userType!)
-              ]
-            : [
-                Dashboard(),
-                ExploreScreen(),
-                OrdersPage(),
-                RoomsPage(),
-                ProfilePage(userType: widget.userType!)
-              ],
+        children: getPage(widget.userType!),
       ),
       child: TabBar(
         padding: EdgeInsets.zero,
@@ -143,14 +131,17 @@ class _HomePageState extends State<HomePage>
                         width: 20,
                         height: 20,
                         child: SvgPicture.asset(
-                          AssetUtil.exploreIcon,
+                          widget.userType == UserType.courier
+                              ? AssetUtil.analyticsIcon
+                              : AssetUtil.exploreIcon,
                           color: currentPage == 1
                               ? CustomColors.limcadPrimary
                               : CustomColors.blackPrimary,
                           fit: BoxFit.scaleDown,
                         ))).padding(bottom: 8, top: 16),
                 Text(
-                  widget.userType == UserType.business
+                  widget.userType == UserType.business ||
+                          widget.userType == UserType.courier
                       ? "Analytics"
                       : "Explore",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
@@ -173,14 +164,16 @@ class _HomePageState extends State<HomePage>
                         width: 20,
                         height: 20,
                         child: SvgPicture.asset(
-                          AssetUtil.orderIcon,
+                          widget.userType == UserType.courier
+                              ? AssetUtil.deliveryIcon
+                              : AssetUtil.orderIcon,
                           color: currentPage == 2
                               ? CustomColors.limcadPrimary
                               : CustomColors.blackPrimary,
                           fit: BoxFit.scaleDown,
                         ))).padding(bottom: 8, top: 16),
                 Text(
-                  "Order",
+                  widget.userType == UserType.courier ? "Delivery" : "Order",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
                         color: currentPage == 2
                             ? CustomColors.limcadPrimary
@@ -230,7 +223,7 @@ class _HomePageState extends State<HomePage>
                         height: 20,
                         child: SvgPicture.asset(
                           AssetUtil.profileIcon,
-                          color: currentPage == 3
+                          color: currentPage == 4
                               ? CustomColors.limcadPrimary
                               : CustomColors.blackPrimary,
                           fit: BoxFit.scaleDown,
@@ -238,7 +231,7 @@ class _HomePageState extends State<HomePage>
                 Text(
                   "Profile",
                   style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 3
+                        color: currentPage == 4
                             ? CustomColors.limcadPrimary
                             : CustomColors.blackPrimary,
                         fontFamily: "inter",
@@ -258,8 +251,41 @@ class _HomePageState extends State<HomePage>
         return 'PERSONAL';
       case UserType.business:
         return 'BUSINESS';
+      case UserType.courier:
+        return 'COURIER';
       default:
         return '';
+    }
+  }
+
+  List<Widget> getPage(UserType type) {
+    switch (type) {
+      case UserType.personal:
+        return [
+          Dashboard(),
+          ExploreScreen(),
+          OrdersPage(),
+          RoomsPage(),
+          ProfilePage(userType: widget.userType!)
+        ];
+      case UserType.business:
+        return [
+          BusinessDashboard(),
+          AnalyticsPage(),
+          BusinessOrdersPage(),
+          RoomsPage(),
+          ProfilePage(userType: widget.userType!)
+        ];
+      case UserType.courier:
+        return [
+          CourierHomeScreen(),
+          CourierHomeScreen(),
+          DeliveryHistoryScreen(),
+          CourierHomeScreen(),
+          CourierHomeScreen()
+        ];
+      default:
+        return [];
     }
   }
 // ... (Add dispose method to clean up controllers)

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/onboarding/constants/constants.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
+import 'package:limcad/resources/bottom_home.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -77,7 +78,8 @@ class _UserTypePageState extends State<UserTypePage> {
                 ),
               ),
             ),
-            businessBody().padding(top: 40)
+            businessBody().padding(top: 40),
+            courierBody().padding(top: 40)
           ],
         ).paddingSymmetric(horizontal: 16, vertical: 16),
       );
@@ -203,6 +205,21 @@ class _UserTypePageState extends State<UserTypePage> {
                     withNavBar: false);
               },
               child: const Text("Business account"),
+            )
+          ],
+        ).paddingSymmetric(horizontal: 16, vertical: 16),
+      );
+
+  Widget courierBody() => Container(
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.pushScreen(context,
+                    screen: const HomePage(UserType.courier),
+                    withNavBar: false);
+              },
+              child: const Text("Courier account"),
             )
           ],
         ).paddingSymmetric(horizontal: 16, vertical: 16),

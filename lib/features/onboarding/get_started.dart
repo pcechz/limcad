@@ -9,7 +9,7 @@ import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/default_scafold.dart';
 
-enum UserType { personal, business }
+enum UserType { personal, business, courier }
 
 class GetStartedPage extends StatefulWidget {
   static const String routeName = "/getStarted";
