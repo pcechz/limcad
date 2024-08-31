@@ -2,6 +2,8 @@ import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:limcad/features/CourierAccount/Analytics/courier_analytics.dart';
+import 'package:limcad/features/CourierAccount/Analytics/widget/earning_chart.dart';
 import 'package:limcad/features/CourierAccount/Delivery/delivery.dart';
 import 'package:limcad/features/CourierAccount/Home/courier_home.dart';
 import 'package:limcad/features/analytics/analytics.dart';
@@ -279,9 +281,9 @@ class _HomePageState extends State<HomePage>
       case UserType.courier:
         return [
           CourierHomeScreen(),
-          CourierHomeScreen(),
+          EarningsSummary(),
           DeliveryHistoryScreen(),
-          CourierHomeScreen(),
+          EarningsChart(),
           CourierHomeScreen()
         ];
       default:
