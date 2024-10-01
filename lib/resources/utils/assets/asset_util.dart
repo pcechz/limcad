@@ -32,4 +32,8 @@ class AssetUtil {
   static const String vectorUpload = "assets/images/Vector.png";
   static const String upload = "assets/images/upload_2716054 1.png";
   static const String editIcon = "assets/images/edit.png";
+  static const String greenDot = "assets/images/greendot.png";
+  static const String deliveryIcon = "assets/images/delivery.png";
+  static const String greenArrow = "assets/images/greenArrow.png";
+  static const String analyticsIcon = "assets/images/analytics.png";
 }

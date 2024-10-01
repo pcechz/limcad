@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:limcad/features/CourierAccount/Home/courier_home.dart';
 import 'package:limcad/features/auth/auth/create_password.dart';
 import 'package:limcad/features/auth/auth/login.dart';
 import 'package:limcad/features/auth/auth/reset_password.dart';
@@ -31,6 +32,7 @@ final Map<String, WidgetBuilder> routes = {
       ),
   ResetPassword.routeName: (context) =>
       const ResetPassword(userType: UserType.personal),
+  CourierHomeScreen.routeName: (context) => CourierHomeScreen(),
 };
 
 class NavigationService {
