@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/auth/services/signup_service.dart';
+import 'package:limcad/features/dashboard/model/Dashboard_vm.dart';
 import 'package:limcad/features/dashboard/widgets/services_widget.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/laundry_detail.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
+import 'package:limcad/resources/locator.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -9,6 +13,8 @@ import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/default_scafold.dart';
 import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
+import 'package:shimmer/shimmer.dart';
+import 'package:stacked/stacked.dart';
 
 class Dashboard extends StatefulWidget {
   static String tag = '/Dashboard';
@@ -18,6 +24,9 @@ class Dashboard extends StatefulWidget {
 }
 
 class DashboardState extends State<Dashboard> {
+
+  late DashboardVM model;
+
   List<ServiceModel> getTopServiceList() {
     return [
       ServiceModel(
@@ -62,206 +71,249 @@ class DashboardState extends State<Dashboard> {
 
   List<OSDataModel> expiringSoon = getExpiringSoon();
 
+
   @override
   Widget build(BuildContext context) {
-    return DefaultScaffold2(
-      showAppBar: false,
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 220,
-              floating: true,
-              toolbarHeight: 150,
-              forceElevated: innerBoxIsScrolled,
-              pinned: true,
-              automaticallyImplyLeading: false,
-              titleSpacing: 0,
-              backgroundColor: CustomColors.limcadPrimary,
-              actionsIconTheme: IconThemeData(opacity: 0.0),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                            shape: BoxShape.rectangle,
-                            color: CustomColors.limcadPrimaryLight,
-                            borderRadius: BorderRadius.circular(10)),
-                        child: Center(
-                            child: Icon(
-                          Icons.notifications,
-                          color: white,
-                          size: 24,
-                        ))),
-                  )
-                ],
-              ),
-              flexibleSpace: FlexibleSpaceBar(
-                background: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Location',
+    return ViewModelBuilder<DashboardVM>.reactive(
+        viewModelBuilder: () => DashboardVM(),
+        onViewModelReady: (model) {
+          this.model = model;
+          model.context = context;
+          model.init(context, UserType.personal);
+        },
+        builder: (BuildContext context, model, child) => DefaultScaffold2(
+          showAppBar: false,
+          busy: model.loading,
+          body:
+          NestedScrollView(
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              return <Widget>[
+                SliverAppBar(
+                  expandedHeight: 220,
+                  floating: true,
+                  toolbarHeight: 150,
+                  forceElevated: innerBoxIsScrolled,
+                  pinned: true,
+                  automaticallyImplyLeading: false,
+                  titleSpacing: 0,
+                  backgroundColor: CustomColors.limcadPrimary,
+                  actionsIconTheme: IconThemeData(opacity: 0.0),
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.rectangle,
+                                color: CustomColors.limcadPrimaryLight,
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Center(
+                                child: Icon(
+                                  Icons.notifications,
+                                  color: white,
+                                  size: 24,
+                                ))),
+                      )
+                    ],
+                  ),
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Location',
                             style: primaryTextStyle(
                                 color: lightGray,
                                 size: 14,
                                 weight: FontWeight.w500))
-                        .paddingOnly(left: 16, right: 16, top: 8),
-                    Row(
-                      children: <Widget>[
-                        Icon(Icons.location_on,
-                            color: CustomColors.limcadYellow, size: 24),
-                        Text('48, Jane Doe Avenue',
-                            style: primaryTextStyle(
-                                color: white,
-                                size: 18,
-                                fontFamily: "Josefin Sans",
-                                weight: FontWeight.w600)),
-                        Icon(Icons.expand_more_outlined,
-                                color: CustomColors.limcadYellow, size: 24)
-                            .padding(top: 4, left: 4)
-                      ],
-                    ).paddingAll(16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          width: 280,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(8)),
-                              color: context.scaffoldBackgroundColor),
-                          child: AppTextField(
-                            textFieldType: TextFieldType.NAME,
-                            textAlignVertical: TextAlignVertical.center,
-                            decoration: InputDecoration(
-                              fillColor: white,
-                              hintText: 'Search ',
-                              border: InputBorder.none,
-                              prefixIcon: Icon(Icons.search, color: grey),
-                              contentPadding: EdgeInsets.only(
-                                  left: 24.0, bottom: 8.0, top: 8.0, right: 24.0),
+                            .paddingOnly(left: 16, right: 16, top: 8),
+                        Row(
+                          children: <Widget>[
+                            Icon(Icons.location_on,
+                                color: CustomColors.limcadYellow, size: 24),
+                            SizedBox(
+                              width: 160,
+                              child: Text(locator<AuthenticationService>().profile?.address?[0].name ?? "",
+                                  overflow: TextOverflow.ellipsis,
+                                  style: primaryTextStyle(
+                                      color: white,
+                                      size: 18,
+                                      fontFamily: "Josefin Sans",
+                                      weight: FontWeight.w600)),
                             ),
-                          ),
-                        ),
-                        Container(
-                            width: 56,
-                            height: 50,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.rectangle,
-                                color: white,
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Center(
-                                child: Image.asset(
-                              AssetUtil.filterIcon,
-                              height: 24,
-                              width: 24,
-                              scale: 1,
-                            )))
+                            Icon(Icons.expand_more_outlined,
+                                color: CustomColors.limcadYellow, size: 24)
+                                .padding(top: 4, left: 4)
+                          ],
+                        ).paddingAll(16),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              width: 280,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(8)),
+                                  color: context.scaffoldBackgroundColor),
+                              child: AppTextField(
+                                textFieldType: TextFieldType.NAME,
+                                textAlignVertical: TextAlignVertical.center,
+                                decoration: InputDecoration(
+                                  fillColor: white,
+                                  hintText: 'Search ',
+                                  border: InputBorder.none,
+                                  prefixIcon: Icon(Icons.search, color: grey),
+                                  contentPadding: EdgeInsets.only(
+                                      left: 24.0, bottom: 8.0, top: 8.0, right: 24.0),
+                                ),
+                              ),
+                            ),
+                            Container(
+                                width: 56,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.rectangle,
+                                    color: white,
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Center(
+                                    child: Image.asset(
+                                      AssetUtil.filterIcon,
+                                      height: 24,
+                                      width: 24,
+                                      scale: 1,
+                                    )))
+                          ],
+                        ).paddingSymmetric(horizontal: 16),
+
                       ],
-                    ).paddingSymmetric(horizontal: 16),
-
-                  ],
-                ).paddingTop(60),
-              ),
-            )
-          ];
-        },
-        body: Container(
-          color: CustomColors.limcardSecondary.withOpacity(0.55),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text('Services',
-                            style: primaryTextStyle(
-                                size: 24, weight: FontWeight.w500))
-                        .expand(),
-                    TextButton(
-                        onPressed: () {
-                          // LSOfferAllScreen().launch(context);
-                        },
-                        child: Text('See All',
-                            style: secondaryTextStyle(
-                                color: CustomColors.limcadPrimary)))
-                  ],
-                ).paddingOnly(left: 16, right: 16),
-                HorizontalList(
-                  itemCount: getTopServiceList().length,
-                  itemBuilder: (BuildContext context, int index) {
-                    ServiceModel data = getTopServiceList()[index];
-
-                    return Column(
-                      children: [
-                        Container(
-                          height: 70,
-                          width: 70,
-                          alignment: Alignment.center,
-                          margin: EdgeInsets.all(8),
-                          decoration: boxDecorationRoundedWithShadow(40,
-                              backgroundColor: data.iconBack),
-                          child: commonCacheImageWidget(
-                            data.img.validate(),
-                            35,
-                            width: 35,
-                            fit: BoxFit.contain,
-                          ),
-                        ),
-                        Text(data.title.validate(),
-                            style: primaryTextStyle(
-                                size: 14, weight: FontWeight.w500)),
-                      ],
-                    ).onTap(() {
-                      NavigationService.pushScreen(context,
-                          screen: LaundryDetailScreen(), withNavBar: true);
-                    });
-                  },
-                ).paddingSymmetric(horizontal: 16),
-                Row(
-                  children: [
-                    Text('Popular Services',
-                            style: primaryTextStyle(
-                                size: 24, weight: FontWeight.w500))
-                        .expand(),
-                    TextButton(
-                        onPressed: () {
-                          // LSOfferAllScreen().launch(context);
-                        },
-                        child: Text('See All',
-                            style: secondaryTextStyle(
-                                color: CustomColors.limcadPrimary)))
-                  ],
-                ).paddingOnly(left: 16, right: 16, top: 23, bottom: 8),
-
-                GridView.builder(
-                  itemCount: expiringSoon.length,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2, // Number of columns
-                    crossAxisSpacing: 16, // Spacing between columns
-                    mainAxisSpacing: 16, // Spacing between rows
-                    childAspectRatio:
-                        0.9,
+                    ).paddingTop(60),
                   ),
-                  padding: const EdgeInsets.all(8),
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemBuilder: (_, index) {
-                    return ServiceItemWidget(expiringSoon[index]);
-                  },
-                ),
-                //  LSSOfferPackageComponent(),
-              ],
-            ).paddingSymmetric(vertical: 23),
+                )
+              ];
+            },
+            body: Container(
+              color: CustomColors.limcardSecondary.withOpacity(0.55),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Text('Services',
+                            style: primaryTextStyle(
+                                size: 24, weight: FontWeight.w500))
+                            .expand(),
+                        TextButton(
+                            onPressed: () {
+                              // LSOfferAllScreen().launch(context);
+                            },
+                            child: Text('See All',
+                                style: secondaryTextStyle(
+                                    color: CustomColors.limcadPrimary)))
+                      ],
+                    ).paddingOnly(left: 16, right: 16),
+                    HorizontalList(
+                      itemCount: getTopServiceList().length,
+                      itemBuilder: (BuildContext context, int index) {
+                        ServiceModel data = getTopServiceList()[index];
+
+                        return Column(
+                          children: [
+                            Container(
+                              height: 70,
+                              width: 70,
+                              alignment: Alignment.center,
+                              margin: EdgeInsets.all(8),
+                              decoration: boxDecorationRoundedWithShadow(40,
+                                  backgroundColor: data.iconBack),
+                              child: commonCacheImageWidget(
+                                data.img.validate(),
+                                35,
+                                width: 35,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            Text(data.title.validate(),
+                                style: primaryTextStyle(
+                                    size: 14, weight: FontWeight.w500)),
+                          ],
+                        ).onTap(() {
+                          // NavigationService.pushScreen(context,
+                          //     screen: LaundryDetailScreen(), withNavBar: true);
+                        });
+                      },
+                    ).paddingSymmetric(horizontal: 16),
+                    Row(
+                      children: [
+                        Text('Popular Services',
+                            style: primaryTextStyle(
+                                size: 24, weight: FontWeight.w500))
+                            .expand(),
+                        TextButton(
+                            onPressed: () {
+                              // LSOfferAllScreen().launch(context);
+                            },
+                            child: Text('See All',
+                                style: secondaryTextStyle(
+                                    color: CustomColors.limcadPrimary)))
+                      ],
+                    ).paddingOnly(left: 16, right: 16, top: 23, bottom: 8),
+
+                    model.isShimmerLoading
+                        ? buildShimmerLoader() // Shimmer loader
+                        : GridView.builder(
+                      itemCount: model.laundryOrganisations?.length ?? 0,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2, // Number of columns
+                        crossAxisSpacing: 16, // Spacing between columns
+                        mainAxisSpacing: 16, // Spacing between rows
+                        childAspectRatio: 0.9,
+                      ),
+                      padding: const EdgeInsets.all(8),
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemBuilder: (_, index) {
+                        return ServiceItemWidget(model.laundryOrganisations![index]);
+                      },
+                    ),
+                    //  LSSOfferPackageComponent(),
+                  ],
+                ).paddingSymmetric(vertical: 23),
+              ),
+            ),
           ),
-        ),
+        ));
+  }
+
+  Widget buildShimmerLoader() {
+    return GridView.builder(
+      itemCount: 4, // Show 4 shimmer items
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 0.9,
       ),
+      padding: const EdgeInsets.all(8),
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (_, __) {
+        return Shimmer.fromColors(
+          baseColor: Colors.grey[300]!,
+          highlightColor: Colors.grey[100]!,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+        );
+      },
     );
   }
+
 }
 
 class OSDataModel {

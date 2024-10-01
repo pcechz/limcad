@@ -3,6 +3,7 @@ import 'package:limcad/features/auth/auth/reset_password.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
+import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
@@ -93,8 +94,13 @@ class _LoginPageState extends State<LoginPage> {
                             children: [
                               Text("forgot password? "),
                               TextButton(
-                                  onPressed: () => Navigator.pushNamed(
-                                      context, ResetPassword.routeName),
+                                  onPressed: () {
+                                    NavigationService.pushScreen(context,
+                                        screen:  ResetPassword(
+                                          userType: widget.theUsertype,
+                                        ),
+                                        withNavBar: false);
+                                  },
                                   child: const Text(
                                     'reset here',
                                     style: TextStyle(

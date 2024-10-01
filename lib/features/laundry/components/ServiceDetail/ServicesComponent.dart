@@ -1,20 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
+import 'package:limcad/resources/utils/extensions/widget_extension.dart';
 import 'package:limcad/resources/widgets/view_utils/app_widget.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-class BusinessServicesComponent extends StatefulWidget {
+class ServicesComponent extends StatefulWidget {
   static String tag = '/LSServicesComponent';
 
+  final LaundryItem? laundry;
+
+  const ServicesComponent({Key? key, this.laundry}) : super(key: key);
+
   @override
-  BusinessServicesComponentState createState() =>
-      BusinessServicesComponentState();
+  ServicesComponentState createState() =>
+      ServicesComponentState();
 }
 
-class BusinessServicesComponentState extends State<BusinessServicesComponent> {
+class ServicesComponentState extends State<ServicesComponent> {
   List<ServiceModel> getTopServiceList() {
     return [
       ServiceModel(
@@ -126,18 +132,7 @@ class BusinessServicesComponentState extends State<BusinessServicesComponent> {
                 );
               },
             ),
-            SizedBox(
-              height: 100,
-            ),
-            ElevatedButton(
-              onPressed: () {
-                NavigationService.pushScreen(context,
-                    screen: SelectClothesPage(), withNavBar: true);
-              },
-              child: Text('Book service now',
-                  style: primaryTextStyle(
-                      size: 16, weight: FontWeight.w500, color: white)),
-            ),
+
           ],
         ).paddingSymmetric(horizontal: 16, vertical: 32));
   }

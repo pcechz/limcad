@@ -43,17 +43,22 @@ class BaseResponse<T> extends GenericObject<T> implements FromJson<BaseResponse<
   @override
   BaseResponse<T> fromJson(dynamic json) {
     try {
-      status = json['status'];
-      message = json['message'];
-      if (message != null && message!.isNotEmpty && message!.contains("exception")) {
-        message = "An error occurred, please try again later.";
-      }
-      nMeta = json['_meta'] ?? "";
-      nLinks = json['_links'] ?? "";
-      if (json['data'] != null) {
-        data = genericObject(json['data']);
-      }else{
-        data = genericObject(json);
+      if (json is String) {
+        message = json;
+        status = 200; // You may set an arbitrary status code to indicate success
+      } else {
+        status = json['status'] ?? json['code'];
+        message = json['message'] ?? json['error'];
+        if (message != null && message!.isNotEmpty && message!.contains("exception")) {
+          message = "An error occurred, please try again later.";
+        }
+        nMeta = json['_meta'] ?? "";
+        nLinks = json['_links'] ?? "";
+        if (json['data'] != null) {
+          data = genericObject(json['data']);
+        } else {
+          data = genericObject(json);
+        }
       }
     } catch (e, stackTrace) {
       debugPrint(e.toString());
@@ -77,8 +82,8 @@ class BaseAPIListResponse<T> extends GenericObject<T> implements FromJson<BaseAP
 
   @override
   BaseAPIListResponse<T> fromJson(dynamic json) {
-    status = json['status'];
-    message = json['message'];
+    status = json['status'] ?? json['code'];
+    message = json['message'] ?? json['error'];
     nMeta = json['_meta'];
     nLinks = json['_links'];
     data = [];
@@ -105,8 +110,8 @@ class BaseAPIListPaginationResponse<T> extends BaseAPIListResponse<T> {
 
   @override
   BaseAPIListPaginationResponse<T> fromJson(dynamic json) {
-    status = json['status'];
-    message = json['message'];
+    status = json['status'] ?? json['code'];
+    message = json['message'] ?? json['error'];
     nMeta = json['_meta'];
     nLinks = json['_links'];
     data = [];

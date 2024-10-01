@@ -73,14 +73,14 @@ class AuthenticationService with ListenableServiceMixin {
     return loginResponse.response;
   }
 
-  Future<BaseResponse<GeneralResponse>> requestResetPasswordCode(
+  Future<BaseResponse<NoObjectResponse>> requestResetPasswordCode(
       UserType? userType, String? email) async {
     final request = {"email": email, "userType": userType?.name.toUpperCase()};
     var response = await apiService.request(
       route: ApiRoute(ApiType.passwordResetCodeRequest),
       data: request,
       create: () =>
-          BaseResponse<GeneralResponse>(create: () => GeneralResponse()),
+          BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()),
     );
 
     return response.response;
@@ -204,6 +204,23 @@ class AuthenticationService with ListenableServiceMixin {
         create: () =>
             BaseResponse<LoginResponse>(create: () => LoginResponse()));
     return loginResponse.response;
+  }
+
+
+  Future<BaseResponse<NoObjectResponse>> changePassword(
+      String? email, String? otp, String userType, String password) async {
+    final otprequest = {
+      "email": email,
+      "code": otp,
+      "password": password,
+      "userType": userType.toUpperCase()
+    };
+    var response = await apiService.request(
+        route: ApiRoute(ApiType.changePassword),
+        data: otprequest,
+        create: () =>
+            BaseResponse<NoObjectResponse>(create: () => NoObjectResponse()));
+    return response.response;
   }
 
   Future<BaseResponse<NewStateResponse>> getStates() async {

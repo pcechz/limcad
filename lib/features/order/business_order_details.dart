@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
+import 'package:limcad/features/laundry/model/business_orders.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/order/order_details.dart';
 import 'package:limcad/resources/routes.dart';
@@ -14,9 +16,9 @@ import 'package:stacked/stacked.dart';
 
 class BusinessOrdersDetailsPage extends StatefulWidget {
   static const String routeName = "/BusinessOrdersDetailsPage";
-
+final LaundryOrder? order;
   const BusinessOrdersDetailsPage({
-    Key? key,
+    Key? key, this.order,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.businessOrderDetails, 3);
+        model.init(context, LaundryOption.businessOrderDetails, null,  widget.order?.id);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,
@@ -60,13 +62,13 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                         'First Name':
                             "${model.businessOrderDetails?.customer?.name}",
                         'Address':
-                            "${model.businessOrderDetails?.address?.name}",
+                            "${model.businessOrderDetails?.customer?.addresses?[0].name}",
                         'Phone':
                             "${model.businessOrderDetails?.customer?.phoneNumber}",
                         'Email':
                             "${model.businessOrderDetails?.customer?.email}",
                         'Rating': "4.5",
-                        'Verified payment': "₦0.0",
+                        'Verified payment': "₦${model.businessOrderDetails?.amountPaid}",
                       }).paddingSymmetric(vertical: 16, horizontal: 16)
                     ],
                   )).paddingBottom(24),
@@ -80,7 +82,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                     children: [
                       ViewUtil.orderInfo(
                               'Order info',
-                              model.businessOrderDetails?.orderItems,
+                              model.orderItems,
                               model.totalPrice)
                           .paddingSymmetric(vertical: 16, horizontal: 16),
                     ],
@@ -110,7 +112,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                       width: 80,
                       child: ElevatedButton(
                         onPressed: () {
-                          _showBottomSheet(context);
+                          _showBottomSheet(context, model.businessOrderDetails);
                         },
                         style: ElevatedButton.styleFrom(
                           foregroundColor: CustomColors.limcadPrimary,
@@ -141,7 +143,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
     );
   }
 
-  void _showBottomSheet(BuildContext context) {
+  void _showBottomSheet(BuildContext context, BusinessOrderDetailResponse? businessOrderDetails) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -193,7 +195,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        model.updateStatus(model.orderStatus);
+                        model.updateStatus(model.orderStatus, businessOrderDetails);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: CustomColors.limcadPrimary,

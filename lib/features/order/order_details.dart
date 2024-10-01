@@ -75,7 +75,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
           this.model = model;
           model.context = context;
           model.orderId = widget.id;
-          model.init(context, LaundryOption.order_details, widget.id ?? 0);
+          model.init(context, LaundryOption.order_details, null, widget.id);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
               showAppBar: true,
@@ -153,7 +153,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                         GestureDetector(
                           onTap: () {
                             NavigationService.pushScreen(context,
-                                screen: ReviewsPage(widget.id),
+                                screen: ReviewsPage(model.businessOrderDetails),
                                 withNavBar: true);
                           },
                           child: Container(
@@ -172,7 +172,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                                       size: 12,
                                     )),
                               )),
-                        ),
+                        ).hideIf(model.businessOrderDetails?.status?.toLowerCase() == "pending"),
                       ],
                     ).padding(bottom: 40),
                     Divider(
@@ -180,7 +180,7 @@ class _OrdersDetailsPageState extends State<OrdersDetailsPage> {
                     ).padding(bottom: 40),
                     ViewUtil.orderInfo(
                         'Order info',
-                        model.businessOrderDetails?.orderItems,
+                        model.orderItems,
                         model.totalPrice),
                     // ListView.builder(
                     //     itemCount: items.length,
@@ -393,8 +393,8 @@ class _OrderTitle extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              '4:50pm',
+                             Text(
+                              ViewUtil.getOnlyTime(orderInfo!.createdAt!),
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 12,
@@ -447,8 +447,8 @@ class _OrderTitle extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text(
-                              '5:30pm',
+                             Text(
+                              ViewUtil.getOnlyTime(orderInfo!.updatedAt!),
                               style: TextStyle(
                                   fontWeight: FontWeight.w400,
                                   fontSize: 12,

@@ -1,10 +1,13 @@
 import 'package:camera/camera.dart';
 import 'package:ficonsax/ficonsax.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
@@ -22,7 +25,9 @@ import 'package:stacked/stacked.dart';
 class SelectClothesPage extends StatefulWidget {
   static const String routeName = "/SelectClothesPage";
 
-  const SelectClothesPage({Key? key}) : super(key: key);
+  final LaundryItem? laundry;
+
+  const SelectClothesPage({Key? key, this.laundry}) : super(key: key);
 
   @override
   State<SelectClothesPage> createState() => _SelectClothesPageState();
@@ -38,12 +43,12 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.selectClothe, 0);
+        model.init(context, LaundryOption.selectClothe, widget.laundry);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,
         includeAppBarBackButton: true,
-        title: "Helen Laundry",
+        title: widget.laundry?.name ?? "",
         backgroundColor: CustomColors.backgroundColor,
         busy: model.loading,
         body: SingleChildScrollView(
@@ -67,20 +72,45 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
                 child: clothesView(model.isPreview),
               ),
               16.height,
-              CustomTextArea(
-                controller: model.instructionController,
-                keyboardType: TextInputType.name,
-                label: "Instruction (Optional)",
-                showLabel: true,
-                formatter: InputFormatter.stringOnly,
-                maxLines: 5,
-                autocorrect: false,
-                onSave: (value) => model.instructionController.text = value,
-              ).padding(bottom: 20).hideIf(model.isPreview),
+              DateInputWidget(
+                title: "Pickup Date",
+                hint: "Select your preferred pickup date",
+                controller: model.pickupDateController,
+                suffix: Icon(CupertinoIcons.chevron_down,
+                  size: 20,
+                ),
+                onTap: () async {
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime.now(),
+                    lastDate: DateTime(2101),
+                  );
+                  if (pickedDate != null) {
+                    String formattedDate = DateFormat('yyyy-MM-dd').format(pickedDate);
+                     model.pickupDate = formattedDate;
+                     setState(() {
+                       model.pickupDateController.text = formattedDate;
+                     });
+
+                  }
+                },
+              ).padding(bottom: 20),
+              // CustomTextArea(
+              //   controller: model.instructionController,
+              //   keyboardType: TextInputType.name,
+              //   label: "Instruction (Optional)",
+              //   showLabel: true,
+              //   formatter: InputFormatter.stringOnly,
+              //   maxLines: 5,
+              //   autocorrect: false,
+              //   onSave: (value) => model.instructionController.text = value,
+              // ).padding(bottom: 20).hideIf(model.isPreview),
               ElevatedButton(
-                onPressed: () {
+                onPressed:  model.laundryServiceItems!.isEmpty || model.selectedItems.isEmpty || model.pickupDateController.text.isEmpty ? null :
+                () {
                   FocusScope.of(context).unfocus();
-                  model.proceed();
+               model.isPreview ? model.proceedToPay() :   model.proceed();
                 },
                 child: Text(
                   model.isPreview ? "Proceed to payment" : "Preview order",
@@ -88,17 +118,17 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
                       fontSize: 16, fontWeight: FontWeight.w500),
                 ),
               ),
-              16.height.hideIf(!model.isPreview),
-              OutlinedButton(
-                onPressed: () {
-                  model.proceedToPay();
-                },
-                child: Text(
-                  "Pay on delivery",
-                  style: const TextStyle(
-                      fontSize: 16, fontWeight: FontWeight.w500),
-                ),
-              ).hideIf(!model.isPreview),
+              // 16.height.hideIf(!model.isPreview),
+              // OutlinedButton(
+              //   onPressed: () {
+              //     model.proceedToPay();
+              //   },
+              //   child: Text(
+              //     "Pay on delivery",
+              //     style: const TextStyle(
+              //         fontSize: 16, fontWeight: FontWeight.w500),
+              //   ),
+              // ).hideIf(!model.isPreview),
             ],
           ).paddingSymmetric(horizontal: 16, vertical: 16),
         ),
@@ -117,7 +147,7 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
           shrinkWrap: true,
           itemBuilder: (context, index) {
             LaundryServiceItem? clothe = model.laundryServiceItems?[index];
-            double quantity = model.selectedItems[clothe] ?? 0;
+            num quantity = model.selectedItems[clothe] ?? 0;
 
             return GestureDetector(
               onTap: () {},
@@ -127,7 +157,7 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
                     height: 60,
                     child: ListTile(
                       leading: commonCachedNetworkImage(
-                        "assets/images/placeholder.jpg",
+                        "assets/images/summer.png",
                         height: 32,
                         width: 32,
                         fit: BoxFit.cover,
@@ -154,6 +184,7 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
                                 initVal: quantity,
                                 steps: 1,
                                 minVal: 0,
+                                decimalPlaces: 0,
                                 qtyFormProps: QtyFormProps(enableTyping: false),
                                 decoration: QtyDecorationProps(
                                   btnColor: black,

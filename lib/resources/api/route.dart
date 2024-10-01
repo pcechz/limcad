@@ -4,6 +4,7 @@ enum ApiType {
   registerUser,
   requestEmailOtp,
   validateEmailOtp,
+  changePassword,
   states,
   lgas,
   login,
@@ -14,11 +15,13 @@ enum ApiType {
   passwordResetCodeRequest,
   passwordReset,
   laundyServiceItems,
+  laundries,
   createLaundryServiceItems,
   updateProfile,
   updateOrganization,
   submitOrder,
   laundyOrders,
+  businessLaundryOrders,
   businessOnboarding,
   businessProfile,
   businessOrders,
@@ -27,7 +30,7 @@ enum ApiType {
   uploadFile,
   getFile,
   submitReview,
-  getReview,
+  getReview, ordersItems,
   giftCard,
   deleteServiceItems,
   updateServiceItems,
@@ -87,6 +90,12 @@ class ApiRoute implements APIRouteConfigurable {
             data: data,
             extra: authorize);
 
+      case ApiType.changePassword:
+        return RequestOptions(
+            path: '/auth/password-reset',
+            method: ApiMethod.post,
+            data: data);
+
       case ApiType.submitOrder:
         return RequestOptions(
             path: '/laundry-orders?$routeParams',
@@ -129,6 +138,12 @@ class ApiRoute implements APIRouteConfigurable {
             method: ApiMethod.get,
             extra: authorize);
 
+      case ApiType.laundries:
+        return RequestOptions(
+            path: '/organizations?$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
+
       case ApiType.createLaundryServiceItems:
         return RequestOptions(
             path: '/laundry-service-items',
@@ -138,7 +153,11 @@ class ApiRoute implements APIRouteConfigurable {
 
       case ApiType.laundyOrders:
         return RequestOptions(
-            path: '/laundry-orders', method: ApiMethod.get, extra: authorize);
+            path: '/laundry-orders?$routeParams', method: ApiMethod.get, extra: authorize);
+
+      case ApiType.businessLaundryOrders:
+        return RequestOptions(
+            path: '/laundry-orders/$routeParams', method: ApiMethod.get, extra: authorize);
 
       case ApiType.updateProfile:
         return RequestOptions(
@@ -165,7 +184,13 @@ class ApiRoute implements APIRouteConfigurable {
             extra: authorize);
       case ApiType.businessOrders:
         return RequestOptions(
-          path: "api/order-items",
+          path: "/order-items",
+          method: ApiMethod.get,
+          extra: authorize,
+        );
+      case ApiType.ordersItems:
+        return RequestOptions(
+          path: "/order-items/$routeParams",
           method: ApiMethod.get,
           extra: authorize,
         );
@@ -191,7 +216,7 @@ class ApiRoute implements APIRouteConfigurable {
             headers: {"Content-Type": "multipart/form-data"});
       case ApiType.getFile:
         return RequestOptions(
-          path: "/organization-images/organization/$routeParams",
+          path: "/images/organization/$routeParams",
           method: ApiMethod.get,
           extra: authorize,
         );

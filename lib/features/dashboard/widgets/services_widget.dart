@@ -1,6 +1,7 @@
 import 'package:ficonsax/ficonsax.dart';
 import 'package:flutter/material.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/laundry_detail.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
@@ -10,7 +11,7 @@ import 'package:nb_utils/nb_utils.dart';
 
 class ServiceItemWidget extends StatefulWidget {
   static String tag = '/CommonWidgets';
-  final OSDataModel dataModel;
+  final LaundryItem dataModel;
 
   ServiceItemWidget(this.dataModel);
 
@@ -25,7 +26,7 @@ class ServiceItemWidgetState extends State<ServiceItemWidget> {
     return InkWell(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return LaundryDetailScreen();
+          return LaundryDetailScreen(laundry: widget.dataModel);
         }));
       },
       splashColor: Colors.transparent,
@@ -46,8 +47,7 @@ class ServiceItemWidgetState extends State<ServiceItemWidget> {
                   padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
                   child: ClipRRect(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
-                    child: commonCachedNetworkImage(
-                      widget.dataModel.image!,
+                    child: placeHolderWidget(
                       height: 108,
                       width: 178,
                       fit: BoxFit.cover,
@@ -102,7 +102,7 @@ class ServiceItemWidgetState extends State<ServiceItemWidget> {
                 ),
               ],
             ),
-            Text("Helen Laundry", overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)).padding(left: 8, bottom: 4),
+            Text(widget.dataModel.name ?? "", overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)).padding(left: 8, bottom: 4),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(
                 children: [

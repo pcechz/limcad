@@ -184,34 +184,26 @@ class _HomePageState extends State<HomePage>
                       )),
                 )
               ],
+
             ),
-          ),
-          Container(
-            height: 65,
-            width: 65,
-            child: Column(
-              children: [
-                Center(
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: SvgPicture.asset(
-                          AssetUtil.chatIcon,
-                          color: currentPage == 3
-                              ? CustomColors.limcadPrimary
-                              : CustomColors.blackPrimary,
-                          fit: BoxFit.scaleDown,
-                        ))).padding(bottom: 8, top: 16),
-                Text(
-                  "Chat",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 3
-                            ? CustomColors.limcadPrimary
-                            : CustomColors.blackPrimary,
-                        fontFamily: "inter",
-                      )),
-                )
-              ],
+
+            Container(
+              height: 65,
+              width: 65,
+              child: Column(
+                children: [
+                  Center(
+                      child: SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: SvgPicture.asset(
+                            AssetUtil.chatIcon,
+                            color: currentPage == 3 ? CustomColors.limcadPrimary : CustomColors.blackPrimary,
+                            fit: BoxFit.scaleDown,
+                          ))).padding(bottom: 8, top: 16),
+                  Text("Chat",  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(color: currentPage == 3 ? CustomColors.limcadPrimary : CustomColors.blackPrimary, fontFamily: "inter",)),)
+                ],
+              ),
             ),
           ),
           Container(
@@ -240,11 +232,11 @@ class _HomePageState extends State<HomePage>
                       )),
                 )
               ],
+
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
   }
 
   String userTypeToString(UserType type) {

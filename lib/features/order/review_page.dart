@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:input_quantity/input_quantity.dart';
 import 'package:limcad/features/auth/models/signup_request.dart';
 import 'package:limcad/features/auth/models/signup_vm.dart';
+import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/order/order_details.dart';
 import 'package:limcad/resources/routes.dart';
@@ -22,9 +23,9 @@ import 'package:stacked/stacked.dart';
 
 class ReviewsPage extends StatefulWidget {
   static const String routeName = "/ReviewsPage";
-  final int? id;
+  final BusinessOrderDetailResponse? businessOrderDetailsid;
   const ReviewsPage(
-    this.id, {
+    this.businessOrderDetailsid, {
     Key? key,
   }) : super(key: key);
 
@@ -46,8 +47,8 @@ class _ReviewsPageState extends State<ReviewsPage> {
         onViewModelReady: (model) {
           this.model = model;
           model.context = context;
-          model.orderId = widget.id;
-          model.init(context, LaundryOption.sendReview, widget.id ?? 0);
+          model.orderId = widget.businessOrderDetailsid?.id;
+          model.init(context, LaundryOption.sendReview, null, widget.businessOrderDetailsid?.id);
         },
         builder: (BuildContext context, model, child) => DefaultScaffold2(
             showAppBar: true,
@@ -101,11 +102,9 @@ class _ReviewsPageState extends State<ReviewsPage> {
                         ).padding(bottom: 40),
                         CustomTextArea(
                           controller: model.instructionController,
-                          keyboardType: TextInputType.name,
                           label: "Drop a comment",
                           showLabel: true,
                           //labelText: "Please type instruction here, if there is any...",
-                          formatter: InputFormatter.stringOnly,
                           maxLines: 5,
                           autocorrect: false,
                           //validate: (value) => ValidationUtil.validateLastName(value),
@@ -118,7 +117,7 @@ class _ReviewsPageState extends State<ReviewsPage> {
                               : () {
                                   FocusScope.of(context).unfocus();
 
-                                  model.submitReview();
+                                  model.submitReview(widget.businessOrderDetailsid);
                                 },
                           child: const Text(
                             "Add review",

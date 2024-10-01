@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/dashboard/widgets/review_card.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/resources/utils/extensions/widget_extension.dart';
@@ -7,7 +8,9 @@ import 'package:nb_utils/nb_utils.dart';
 import 'package:stacked/stacked.dart';
 
 class ReviewScreen extends StatefulWidget {
-  const ReviewScreen({super.key});
+  final LaundryItem? laundry;
+
+  const ReviewScreen({Key? key, this.laundry}) : super(key: key);
 
   @override
   State<ReviewScreen> createState() => _ReviewScreenState();
@@ -23,7 +26,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.review, 6);
+        model.init(context, LaundryOption.review, widget.laundry);
       },
       builder: (BuildContext context, model, child) {
         return DefaultScaffold2(

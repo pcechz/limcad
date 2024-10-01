@@ -3,18 +3,23 @@ import 'dart:ffi';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:limcad/features/auth/services/signup_service.dart';
+import 'package:limcad/features/dashboard/model/laundry_model.dart';
+import 'package:limcad/features/laundry/components/payment_web_page.dart';
 import 'package:limcad/features/laundry/model/about_response.dart';
 import 'package:limcad/features/laundry/model/business_order_detail_response.dart';
+import 'package:limcad/features/laundry/model/business_orders.dart';
 import 'package:limcad/features/laundry/model/file_response.dart';
 import 'package:limcad/features/laundry/model/laundry_order_response.dart';
 import 'package:limcad/features/laundry/model/laundry_orders_response.dart';
 import 'package:limcad/features/laundry/model/laundry_service_response.dart';
+import 'package:limcad/features/laundry/model/order_items_response.dart';
 import 'package:limcad/features/laundry/model/review_response.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
@@ -94,6 +99,7 @@ class LaundryVM extends BaseVM {
   String title = "";
   final instructionController = TextEditingController();
   final aboutUsController = TextEditingController();
+  final pickupDateController = TextEditingController();
   bool isPreview = false;
   bool isButtonEnabled = false;
 
@@ -101,39 +107,57 @@ class LaundryVM extends BaseVM {
   LaundryOption? laundryOption;
   List<LaundryServiceItem>? laundryServiceItems = [];
   List<LaundryOrderItem>? laundryOrderItems = [];
+  List<LaundryOrder>? businessLaundryOrderItems = [];
+  List<OrderItem>? orderItems = [];
+
   List<ReviewResponse>? reviews = [];
   LaundryOrders? laundryOrders;
+  BusinessLaundryOrders? businessLaundryOrders;
   LaundryServiceResponse? laundryServiceResponse;
-  Map<LaundryServiceItem, double> selectedItems = {};
+  Map<LaundryServiceItem, num> selectedItems = {};
   BusinessOrderDetailResponse? businessOrderDetails;
   List<GuideLinesModel> imgList = [];
   List<FileResponse?> fileResponse = [];
   int selectedIndex = 0;
-  int? orderId;
+  LaundryItem? laundry;
   OrderStatus orderStatus = OrderStatus.PENDING;
-  double totalPrice = 0;
+  double totalPrice = 0.0;
   XFile? _selectedFile;
+
+  String? checkoutUrl;
   XFile? get selectedFile => _selectedFile;
   final ImagePicker picker = ImagePicker();
   double ratingValue = 0;
   final profile = locator<AuthenticationService>().profile;
   bool hasUsedAboutUs = false;
+  int? orderId;
+  String? pickupDate;
+  late BasePreference _preference;
+  String? paymentReference;
+  String? extractedCode;
 
-  void init(BuildContext context, LaundryOption laundryOpt, int? id) async {
+
+  void init(BuildContext context, LaundryOption laundryOpt, [LaundryItem? laundry, int? orderId]) async {
     this.context = context;
     this.laundryOption = laundryOpt;
-    this.orderId = id;
-
-    if (laundryOpt == LaundryOption.about) {
-      final preferences = await BasePreference.getInstance();
-      final value = preferences.getBusinessLoginDetails();
-
-      if (value!.id != null) {
-        getLaundryAbout(value.id!);
-      }
+    if(laundry != null){
+      this.laundry = laundry;
     }
+    if(orderId != null){
+      this.orderId = orderId;
+    }
+
     if (laundryOpt == LaundryOption.selectClothe) {
-      getLaundryItems(6, 0, 10);
+      getLaundryItems();
+    }
+
+    if (laundryOpt == LaundryOption.order_details) {
+      getOrderDetail(orderId!);
+      getOrderDetailItems(orderId!);
+    }
+
+    if (laundryOpt == LaundryOption.orders) {
+      getOrders();
     }
 
     if (laundryOpt == LaundryOption.services) {
@@ -141,23 +165,18 @@ class LaundryVM extends BaseVM {
       final value = preferences.getBusinessLoginDetails();
 
       if (value!.id != null) {
-        getLaundryItems(value.id!, 0, 10);
+        getLaundryItemsProfile(value.id!, 0, 10);
       }
     }
 
-    if (laundryOpt == LaundryOption.order_details) {
-      getOrderDetail(id!);
-    }
-
-    if (laundryOpt == LaundryOption.orders) {
-      getOrders();
+    if (laundryOpt == LaundryOption.businessOrder) {
+      getBusinessOrders();
     }
 
     if (laundryOpt == LaundryOption.businessOrderDetails) {
-      final preferences = await BasePreference.getInstance();
-      final value = preferences.getBusinessLoginDetails();
-      if (value!.id != null) {
-        getOrderDetail(value.id!);
+      if (this.orderId != null) {
+        getOrderDetail(this.orderId!);
+        getOrderDetailItems(this.orderId!);
       }
     }
 
@@ -168,7 +187,8 @@ class LaundryVM extends BaseVM {
     if (laundryOpt == LaundryOption.image) {
       fetchImage();
     }
-    this.orderId = id;
+    _preference = await BasePreference.getInstance();
+
   }
 
   Future<bool> hasAddedAnAboutUs() async {
@@ -176,7 +196,7 @@ class LaundryVM extends BaseVM {
     return preferences.getHasAddedAnAboutUs();
   }
 
-  void updateSelectedItem(LaundryServiceItem item, double quantity) {
+  void updateSelectedItem(LaundryServiceItem item, num quantity) {
     if (quantity > 0) {
       selectedItems[item] = quantity;
     } else {
@@ -232,12 +252,14 @@ class LaundryVM extends BaseVM {
     }
   }
 
-  Future<void> submitReview() async {
+  Future<void> submitReview(BusinessOrderDetailResponse? businessOrderDetailsid) async {
+   isLoading(true);
     final response = await locator<LaundryService>().submitReview(
-        ratingValue.toInt(), orderId ?? 0, instructionController.text);
+        ratingValue.toInt(), businessOrderDetailsid?.organization?.id, instructionController.text);
     if (response.status == 200) {
       reviewOrder();
     }
+   isLoading(false);
   }
 
   void reviewOrder() {
@@ -283,10 +305,10 @@ class LaundryVM extends BaseVM {
   }
 
   Map<String, dynamic> generateOrderJson() {
+    // Generate the order details based on the selected items
     List<Map<String, dynamic>> itemsJson = selectedItems.entries.map((entry) {
-      int itemId = laundryServiceItems!.indexOf(entry.key) + 1; // 1-based index
       return {
-        "itemId": itemId,
+        "itemId": entry.key.id,
         "quantity": entry.value.toInt(),
       };
     }).toList();
@@ -297,18 +319,114 @@ class LaundryVM extends BaseVM {
   }
 
   Future<void> proceedToPay() async {
+    isLoading(true); // Indicate the loading state
+    Map<String, dynamic> orderJson = generateOrderJson(); // Generate order JSON
+
+    final dio = Dio(); // Create a Dio instance
+
+    // Prepare the request data
+    final orderRequest = {
+      "organizationId": laundry?.id,
+      "orderDetails": orderJson,
+      "deliveryDetails": {
+        "addressId": profile?.address?[0].id,
+        "pickupDate": pickupDate,
+      },
+    };
+
+    // Retrieve the Bearer token (replace with your actual token retrieval logic)
+    String bearerToken = _preference.getTokens()?.token ?? "";
+
+    try {
+      // Log the request data
+      Logger().i("Sending request to the server: ${jsonEncode(orderRequest)}");
+
+      final response = await dio.post(
+        'http://172.187.176.43/api/laundry-orders?paymentMode=ONLINE',
+        data: orderRequest,
+        options: Options(
+          headers: {
+            'Authorization': 'Bearer $bearerToken',
+            'Content-Type': 'application/json',
+          },
+          responseType: ResponseType.plain,
+        ),
+      );
+
+      // Log the raw response
+      Logger().i("Response received: ${jsonEncode(response.data)}");
+
+      if (response.statusCode == 200) {
+        if (response.data is String) {
+          checkoutUrl = response.data;
+          Logger().i("Checkout URL: $checkoutUrl");
+
+          if (checkoutUrl!.isNotEmpty) {
+            extractedCode = ViewUtil.extractCodeFromUrl(checkoutUrl!);
+            showPaymentSheet(
+              header: 'Payment to ${laundry?.name}',
+              url: Uri.encodeFull( checkoutUrl!),
+            );
+          }
+        } else if (response.data is Map<String, dynamic>) {
+          ViewUtil.showSnackBar(response.data['message'], true);
+        } else {
+          ViewUtil.showSnackBar("Unexpected response format", true);
+        }
+      } else {
+        // Handle non-200 responses
+        Logger().i("Non-200 response: ${response.statusMessage}");
+        ViewUtil.showSnackBar(response.statusMessage ?? "An Error Occurred", true);
+      }
+    } catch (e) {
+      // Handle exceptions, including Dio-specific ones
+      if (e is DioException) {
+        Logger().e("DioException occurred: ${e.response?.data}");
+        ViewUtil.showSnackBar("An Error Occurred: ${e.message}", true);
+      } else {
+        Logger().e("General exception occurred: $e");
+        ViewUtil.showSnackBar("An Error Occurred", true);
+      }
+    } finally {
+      isLoading(false); // Reset the loading state
+    }
+  }
+
+
+
+  showPaymentSheet({required String url, required String header}) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      enableDrag: false,
+      builder: (context) => PaymentWebPage(
+        url: url,
+        header: header, onConfirmPayment: (String paymentRef) {
+        paymentReference = paymentRef;
+        Logger().i(paymentRef);
+        notifyListeners();
+      },
+      ),
+    );
+  }
+
+
+
+
+
+
+
+  Future<void> getLaundryItems() async {
     isLoading(true);
-    Map<String, dynamic> orderJson = generateOrderJson();
-    print('Order JSON: $orderJson');
-
-    final response =
-        await locator<LaundryService>().submitOrder(orderJson, 6, profile);
-
-    if (response.status == ResponseCode.success ||
-        response.status == ResponseCode.created) {
-      Logger().i(response.data);
+    final response = await locator<LaundryService>().getLaundryServiceItems(laundry?.id);
+    laundryServiceResponse = response?.data;
+    if (laundryServiceResponse!.items!.isNotEmpty) {
+      laundryServiceItems?.addAll(laundryServiceResponse!.items?.toList() ?? []);
+      Logger().i(response?.data);
     }
     isLoading(false);
+    notifyListeners();
   }
 
   Future<void> getOrders() async {
@@ -316,7 +434,19 @@ class LaundryVM extends BaseVM {
     final response = await locator<LaundryService>().getLaundryOrders();
     laundryOrders = response?.data;
     if (laundryOrders!.items!.isNotEmpty) {
-      laundryOrderItems?.addAll(laundryOrders!.items?.toList() ?? []);
+      laundryOrderItems?.addAll(laundryOrders!.items?.reversed.toList() ?? []);
+      Logger().i(response?.data);
+    }
+    isLoading(false);
+    notifyListeners();
+  }
+
+  Future<void> getBusinessOrders() async {
+    isLoading(true);
+    final response = await locator<LaundryService>().getBusinessLaundryOrders();
+    businessLaundryOrders = response?.data;
+    if (businessLaundryOrders!.items!.isNotEmpty) {
+      businessLaundryOrderItems?.addAll(businessLaundryOrders!.items?.reversed.toList() ?? []);
       Logger().i(response?.data);
     }
     isLoading(false);
@@ -330,7 +460,17 @@ class LaundryVM extends BaseVM {
 
     print("print: ${businessOrderDetails.toString()}");
     Logger().i(response);
-    totalPrice = getTotalPrice();
+    totalPrice = businessOrderDetails?.amountPaid ?? 0.0;
+    isLoading(false);
+    notifyListeners();
+  }
+
+
+  Future<void> getOrderDetailItems(int id) async {
+    isLoading(true);
+    final response = await locator<LaundryService>().getOrderDetailItems(id);
+    orderItems = response?.items ?? [];
+    Logger().i(response?.items);
     isLoading(false);
     notifyListeners();
   }
@@ -338,7 +478,7 @@ class LaundryVM extends BaseVM {
   Future<void> getReview() async {
     print("Getting Review");
     isLoading(true);
-    final response = await locator<LaundryService>().getReview(6);
+    final response = await locator<LaundryService>().getReview(laundry?.id);
     if (response.status == 200) {
       print("response is: ${response.data.toString()}");
       if (response.data!.items!.isNotEmpty) {
@@ -350,36 +490,23 @@ class LaundryVM extends BaseVM {
     notifyListeners();
   }
 
-  double getTotalPrice() {
-    final prices = businessOrderDetails?.orderItems?.map((e) {
-          double price = e.item?.price ?? 0.0;
-          print('Item price: $price');
-          return price;
-        }).toList() ??
-        [];
 
-    double total = prices.fold(0.0, (previousValue, currentValue) {
-      double sum = previousValue + currentValue;
-      print('Running total: $sum');
-      return sum;
-    });
 
-    print('Final total price: $total');
-    return total;
-  }
-
-  Future<void> updateStatus(OrderStatus status) async {
+  Future<void> updateStatus(OrderStatus status, BusinessOrderDetailResponse? businessOrderDetails) async {
     final response = await locator<LaundryService>()
-        .updateStatus(orderId ?? 0, status.toString().split(".").last);
-    if (response.status == 200) {
+        .updateStatus(businessOrderDetails?.id ?? 0, status.toString().split(".").last);
+    if (response.status == 200 || response.status == 201) {
       ViewUtil.showSnackBar("Updated Successfully", false);
-      businessOrderDetails = response.data;
+      this.businessOrderDetails = response.data;
+      getOrderDetail(businessOrderDetails!.id!);
+      getOrderDetailItems(businessOrderDetails!.id!);
       notifyListeners();
     }
   }
 
   void setStatus(OrderStatus status) {
     orderStatus = status;
+    notifyListeners();
   }
 
   Future<void> uploadFile(XFile? filename) async {
@@ -397,16 +524,20 @@ class LaundryVM extends BaseVM {
     final profileResponse = basePreference.getProfileDetails();
     if (profileResponse?.id != null) {
       final response =
-          await locator<LaundryService>().getFile(profileResponse!.id!);
+          await locator<LaundryService>().getFile(laundry?.id);
       if (response.status == 200) {
-        print("response: ${response.data}");
         if (response.data != null) {
-          fileResponse.add(response.data);
-          print("hello:${fileResponse}");
+          List<FileResponse> files = [];
+          for (var element in (response.data as List)) {
+            files.add(element as FileResponse);
+          }
+          if(files.isNotEmpty){
+           fileResponse = files;
+           imgList = getGalleryImgList(fileResponse);
+           notifyListeners();
+          }
         }
 
-        imgList = getGalleryImgList(fileResponse);
-        notifyListeners();
       }
     }
   }
@@ -428,26 +559,30 @@ class LaundryVM extends BaseVM {
   }
 
   Future<void> addLaundryAbout(String aboutUs) async {
+    isLoading(true);
     if (aboutUs.isNotEmpty) {
       final response = await laundryService.addAboutUs(aboutUs);
       if (response.status == 200) {
         Logger().i(response.data);
       }
     }
+    isLoading(false);
   }
 
   Future<void> editLaundryAbout(String aboutUs) async {
+    isLoading(true);
     if (aboutUs.isNotEmpty) {
       final response = await laundryService.editAboutUs(aboutUs);
       if (response.status == 200) {
         Logger().i(response.data);
       }
     }
+    isLoading(false);
   }
 
   //---------------------------------------------------------------- Create Service
 
-  Future<void> createServiceItem(String name, String desc, int price) async {
+  Future<void> createServiceItem(String name, String desc, double price) async {
     try {
       isLoading(true);
       final response =
@@ -469,10 +604,10 @@ class LaundryVM extends BaseVM {
     }
   }
 
-  Future<void> getLaundryItems(int orgId, int page, int size) async {
+  Future<void> getLaundryItemsProfile(int orgId, int page, int size) async {
     isLoading(true);
     final response = await locator<LaundryService>()
-        .getLaundryServiceItems(orgId, page, size);
+        .getLaundryServiceItemsProfile(orgId, page, size);
     laundryServiceResponse = response.data;
     if (laundryServiceResponse!.items!.isNotEmpty) {
       laundryServiceItems
