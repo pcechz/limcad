@@ -3,6 +3,7 @@ import 'package:limcad/features/giftcards/selected_card_screen.dart';
 import 'package:limcad/features/laundry/components/ServiceDetail/CreateService.dart';
 import 'package:limcad/features/laundry/laundry_detail.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
+import 'package:limcad/features/onboarding/user_type.dart';
 import 'package:limcad/features/profile/business_detail.dart';
 import 'package:limcad/features/profile/faq.dart';
 import 'package:limcad/features/profile/model/profile_view_model.dart';
@@ -78,22 +79,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 Divider(
                   thickness: 0.5,
                 ).paddingSymmetric(horizontal: 16),
-                ListTile(
-                  onTap: () {
-                    NavigationService.pushScreen(context,
-                        screen: ProfileAddressPage(userType: widget.userType),
-                        withNavBar: true);
-                  },
-                  title: Text("Address"),
-                  leading: Icon(Icons.home),
-                  trailing: Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    size: 12,
-                  ),
-                ),
-                Divider(
-                  thickness: 0.5,
-                ).paddingSymmetric(horizontal: 16),
+                // ListTile(
+                //   onTap: () {
+                //     NavigationService.pushScreen(context,
+                //         screen: ProfileAddressPage(userType: widget.userType),
+                //         withNavBar: true);
+                //   },
+                //   title: Text("Address"),
+                //   leading: Icon(Icons.home),
+                //   trailing: Icon(
+                //     Icons.arrow_forward_ios_sharp,
+                //     size: 12,
+                //   ),
+                // ),
+                // Divider(
+                //   thickness: 0.5,
+                // ).paddingSymmetric(horizontal: 16),
                 ListTile(
                   onTap: () {
                     NavigationService.pushScreen(context,
@@ -109,21 +110,28 @@ class _ProfilePageState extends State<ProfilePage> {
               ]),
 
               _buildSection("Services", [
-                ListTile(
-                  onTap: () {
-                     NavigationService.pushScreen(context,
+                Column(
+                  children: [
+                    ListTile(
+                      onTap: () {
+                        userTypeToString(widget.userType) == "BUSINESS"
+                            ? NavigationService.pushScreen(context,
+                            screen: BusinessDetailScreen(), withNavBar: true)
+                            : NavigationService.pushScreen(context,
                             screen: LaundryDetailScreen(), withNavBar: true);
-                  },
-                  title: const Text("Description"),
-                  leading: const Icon(Icons.wallet_giftcard),
-                  trailing: const Icon(
-                    Icons.arrow_forward_ios_sharp,
-                    size: 12,
-                  ),
-                ),
-                const Divider(
-                  thickness: 0.5,
-                ).paddingSymmetric(horizontal: 16),
+                      },
+                      title: const Text("Description"),
+                      leading: const Icon(Icons.wallet_giftcard),
+                      trailing: const Icon(
+                        Icons.arrow_forward_ios_sharp,
+                        size: 12,
+                      ),
+                    ),
+                    const Divider(
+                      thickness: 0.5,
+                    ).paddingSymmetric(horizontal: 16),
+                  ],
+                ).hideIf(userTypeToString(widget.userType) == "PERSONAL"),
                 ListTile(
                   onTap: () {},
                   title: const Text("Staff Management"),
@@ -192,6 +200,27 @@ class _ProfilePageState extends State<ProfilePage> {
                   },
                   title: Text("FAQ"),
                   leading: Icon(Icons.person),
+                  trailing: Icon(
+                    Icons.arrow_forward_ios_sharp,
+                    size: 12,
+                  ),
+                ),
+                Divider(
+                  thickness: 0.5,
+                ).paddingSymmetric(horizontal: 16),
+
+                ListTile(
+                  onTap: () {
+
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UserTypePage()),
+                            (Route<dynamic> route) => false
+                    );
+                  },
+                  title: Text("Log Out"),
+                  leading: Icon(Icons.logout, color: Colors.red,),
                   trailing: Icon(
                     Icons.arrow_forward_ios_sharp,
                     size: 12,

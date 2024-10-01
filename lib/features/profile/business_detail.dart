@@ -34,7 +34,7 @@ class BusinessDetailScreenState extends State<BusinessDetailScreen> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.about, 0);
+        model.init(context, LaundryOption.about, null);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         title: "About Us",

@@ -34,11 +34,11 @@ class _BusinessOrdersPageState extends State<BusinessOrdersPage> {
         model.init(context, LaundryOption.businessOrder);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
-        showAppBar: true,
-        includeAppBarBackButton: true,
-        title: "Current Orders",
-        backgroundColor: CustomColors.backgroundColor,
         busy: model.loading,
+        includeAppBarBackButton: false,
+        overrideBackButton: (){
+
+        },
         body: Container(
           padding: const EdgeInsets.all(16),
           width: context.width(),
@@ -47,9 +47,9 @@ class _BusinessOrdersPageState extends State<BusinessOrdersPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [32.height, Expanded(child: OrdersListWidget(context, model))],
-          ),
+          ).paddingSymmetric(horizontal: 16, vertical: 30),
         ),
-      ).paddingSymmetric(horizontal: 16, vertical: 30),
+      )
     );
   }
 

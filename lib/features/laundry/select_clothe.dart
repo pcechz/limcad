@@ -107,9 +107,9 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
               //   onSave: (value) => model.instructionController.text = value,
               // ).padding(bottom: 20).hideIf(model.isPreview),
               ElevatedButton(
-                onPressed: model.items!.isEmpty || model.selectedItems.isEmpty || model.pickupDateController.text.isEmpty ? null : () {
+                onPressed:  model.laundryServiceItems!.isEmpty || model.selectedItems.isEmpty || model.pickupDateController.text.isEmpty ? null :
+                () {
                   FocusScope.of(context).unfocus();
-                  print("ddd");
                model.isPreview ? model.proceedToPay() :   model.proceed();
                 },
                 child: Text(
@@ -142,11 +142,11 @@ class _SelectClothesPageState extends State<SelectClothesPage> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         ListView.builder(
-          itemCount: model.items?.length ?? 0,
+          itemCount: model.laundryServiceItems?.length ?? 0,
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            LaundryServiceItem? clothe = model.items?[index];
+            LaundryServiceItem? clothe = model.laundryServiceItems?[index];
             num quantity = model.selectedItems[clothe] ?? 0;
 
             return GestureDetector(

@@ -35,7 +35,7 @@ class CreateServicesComponentState extends State<CreateServicesComponent> {
         viewModelBuilder: () => LaundryVM(),
         onViewModelReady: (model) {
           this.model = model;
-          model.init(context, LaundryOption.services, 0);
+          model.init(context, LaundryOption.services, null);
         },
         builder: (BuildContext context, model, child) {
           return DefaultScaffold2(
@@ -181,7 +181,7 @@ class CreateServicesComponentState extends State<CreateServicesComponent> {
                                           itemName: name,
                                           itemDescription: description))
                                   : await model.createServiceItem(
-                                      name, description, int.parse(price));
+                                      name, description, double.parse(price));
 
                               _nameController.clear();
                               _descriptionController.clear();

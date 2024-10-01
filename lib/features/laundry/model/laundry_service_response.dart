@@ -55,7 +55,7 @@ class LaundryServiceResponse implements FromJson<LaundryServiceResponse> {
     if (json['items'] != null) {
       items = <LaundryServiceItem>[];
       json['items'].forEach((v) {
-        items!.add(LaundryServiceItem.fromJson(v));
+        items!.add(LaundryServiceItem().fromJson(v));
       });
     }
     totalItems = json['totalItems'];

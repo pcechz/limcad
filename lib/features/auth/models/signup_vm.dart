@@ -344,8 +344,13 @@ class AuthVM extends BaseVM {
             if (profileResponse.status == ResponseCode.success &&
                 profileResponse.data != null) {
               if (context.mounted) {
-                NavigationService.pushScreen(context,
-                    screen: HomePage(userType), withNavBar: false);
+                Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => HomePage(userType)),
+                    (Route<dynamic> route) => false);
+                // NavigationService.pushScreen(context,
+                //     screen: HomePage(userType), withNavBar: false);
               }
             }
             // Navigator.pushReplacement(
@@ -499,11 +504,11 @@ class AuthVM extends BaseVM {
         // );
         print("the user userType: ${userType}");
         if (context.mounted) {
-          NavigationService.pushScreen(
-            context,
-            screen: HomePage(userType),
-            withNavBar: false,
-          );
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomePage(userType)),
+                  (Route<dynamic> route) => false);
         }
       } else {
         throw Exception('Failed to fetch user profile');
@@ -542,9 +547,11 @@ class AuthVM extends BaseVM {
   }
 
   void goToHome() {
-    Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return HomePage(userType);
-    }));
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) => HomePage(userType)),
+            (Route<dynamic> route) => false);
   }
 
    setStateValue(String value) async {

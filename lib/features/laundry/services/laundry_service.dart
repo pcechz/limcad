@@ -42,8 +42,19 @@ class LaundryService with ListenableServiceMixin {
     return response.response;
   }
 
+
+  Future<BaseResponse<LaundryServiceResponse>> getLaundryServiceItemsProfile(
+      int orgId, int page, int size) async {
+    var response = await apiService.request(
+        route: ApiRoute(ApiType.laundyServiceItems,
+            routeParams: "organizationId=$orgId&page=$page&size=$size"),
+        create: () => BaseResponse<LaundryServiceResponse>(
+            create: () => LaundryServiceResponse()));
+    return response.response;
+  }
+
   Future<BaseResponse<LaundryServiceItem>> createServiceItems(
-      String name, String desc, int price) async {
+      String name, String desc, double price) async {
     final request = {"itemName": name, "itemDescription": desc, "price": price};
     var response = await apiService.request(
         route: ApiRoute(ApiType.createLaundryServiceItems),

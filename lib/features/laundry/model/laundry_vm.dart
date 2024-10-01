@@ -160,6 +160,15 @@ class LaundryVM extends BaseVM {
       getOrders();
     }
 
+    if (laundryOpt == LaundryOption.services) {
+      final preferences = await BasePreference.getInstance();
+      final value = preferences.getBusinessLoginDetails();
+
+      if (value!.id != null) {
+        getLaundryItemsProfile(value.id!, 0, 10);
+      }
+    }
+
     if (laundryOpt == LaundryOption.businessOrder) {
       getBusinessOrders();
     }
@@ -402,40 +411,18 @@ class LaundryVM extends BaseVM {
     );
   }
 
-  Future<void> getLaundryAbout(int id) async {
-    laundryAbout = await locator<LaundryService>().getAbout(id);
 
-    if (laundryAbout?.aboutText != null) {
-      aboutUsController.text = laundryAbout!.aboutText!;
-      hasUsedAboutUs = true;
-    } else {
-      aboutUsController.text = '';
-      hasUsedAboutUs = false;
-    }
 
-    notifyListeners();
-  }
 
-  Future<void> addLaundryAbout(String aboutUs) async {
-    final response = await locator<LaundryService>().addAboutUs(aboutUs);
-    if (response.status == 200) {
-      Logger().i(response.data);
-    }
-  }
 
-  Future<void> editLaundryAbout(String aboutUs) async {
-    final response = await locator<LaundryService>().editAboutUs(aboutUs);
-    if (response.status == 200) {
-      Logger().i(response.data);
-    }
-  }
+
 
   Future<void> getLaundryItems() async {
     isLoading(true);
     final response = await locator<LaundryService>().getLaundryServiceItems(laundry?.id);
     laundryServiceResponse = response?.data;
     if (laundryServiceResponse!.items!.isNotEmpty) {
-      items?.addAll(laundryServiceResponse!.items?.toList() ?? []);
+      laundryServiceItems?.addAll(laundryServiceResponse!.items?.toList() ?? []);
       Logger().i(response?.data);
     }
     isLoading(false);
@@ -572,26 +559,30 @@ class LaundryVM extends BaseVM {
   }
 
   Future<void> addLaundryAbout(String aboutUs) async {
+    isLoading(true);
     if (aboutUs.isNotEmpty) {
       final response = await laundryService.addAboutUs(aboutUs);
       if (response.status == 200) {
         Logger().i(response.data);
       }
     }
+    isLoading(false);
   }
 
   Future<void> editLaundryAbout(String aboutUs) async {
+    isLoading(true);
     if (aboutUs.isNotEmpty) {
       final response = await laundryService.editAboutUs(aboutUs);
       if (response.status == 200) {
         Logger().i(response.data);
       }
     }
+    isLoading(false);
   }
 
   //---------------------------------------------------------------- Create Service
 
-  Future<void> createServiceItem(String name, String desc, int price) async {
+  Future<void> createServiceItem(String name, String desc, double price) async {
     try {
       isLoading(true);
       final response =
@@ -613,10 +604,10 @@ class LaundryVM extends BaseVM {
     }
   }
 
-  Future<void> getLaundryItems(int orgId, int page, int size) async {
+  Future<void> getLaundryItemsProfile(int orgId, int page, int size) async {
     isLoading(true);
     final response = await locator<LaundryService>()
-        .getLaundryServiceItems(orgId, page, size);
+        .getLaundryServiceItemsProfile(orgId, page, size);
     laundryServiceResponse = response.data;
     if (laundryServiceResponse!.items!.isNotEmpty) {
       laundryServiceItems

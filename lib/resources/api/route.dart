@@ -30,8 +30,7 @@ enum ApiType {
   uploadFile,
   getFile,
   submitReview,
-  getReview, ordersItems
-  getReview,
+  getReview, ordersItems,
   giftCard,
   deleteServiceItems,
   updateServiceItems,

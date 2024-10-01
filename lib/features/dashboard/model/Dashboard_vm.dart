@@ -76,6 +76,8 @@ class DashboardVM extends BaseVM {
 
   bool otpSent = false;
 
+  bool isShimmerLoading = false;
+
   void init(BuildContext context,
       [ UserType? userT]) async {
     userType = userT;
@@ -92,7 +94,7 @@ class DashboardVM extends BaseVM {
 
   void fetchOrganisations() async {
     try {
-      isLoading(true);
+      isShimmerLoading = true;
       notifyListeners();
 
       final response = await locator<DashboardService>().getLaundryServices();
@@ -106,7 +108,7 @@ class DashboardVM extends BaseVM {
     } catch (e) {
       Logger().e("Error fetching laundry organisations: $e");
     } finally {
-      isLoading(false);
+      isShimmerLoading = false;
       notifyListeners();
     }
   }

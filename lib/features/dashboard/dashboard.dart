@@ -261,7 +261,7 @@ class DashboardState extends State<Dashboard> {
                       ],
                     ).paddingOnly(left: 16, right: 16, top: 23, bottom: 8),
 
-                    model.loading
+                    model.isShimmerLoading
                         ? buildShimmerLoader() // Shimmer loader
                         : GridView.builder(
                       itemCount: model.laundryOrganisations?.length ?? 0,

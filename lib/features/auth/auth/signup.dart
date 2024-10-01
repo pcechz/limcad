@@ -319,75 +319,78 @@ class _SignupPageState extends State<SignupPage> {
                               ).padding(bottom: 20),
                             ],
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Gender",
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ).padding(bottom: 6),
-                              DropdownButtonFormField<String>(
-                                decoration: InputDecoration(
-                                  prefixIcon: const Icon(CupertinoIcons.person,
-                                          size: 18)
-                                      .padding(left: 4),
-                                  fillColor: Colors.white,
-                                  contentPadding:
-                                      const EdgeInsets.only(left: 27),
-                                  focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: const BorderSide(
-                                          width: 1.0,
-                                          color: CustomColors.limcardFaded)),
-                                  enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: const BorderSide(
-                                          width: 1.0,
-                                          color: CustomColors.limcardFaded)),
-                                  border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: const BorderSide(
-                                          width: 1.0,
-                                          color: CustomColors.limcardFaded)),
-                                ),
-                                style: const TextStyle(
-                                    color: CustomColors.blackPrimary),
-                                icon: const Icon(CupertinoIcons.chevron_down,
-                                        size: 18)
-                                    .padding(right: 16),
-                                hint: const Text("Gender",
-                                    style: TextStyle(
-                                        color: CustomColors.smallTextGrey,
-                                        fontSize: 14)),
-                                borderRadius: BorderRadius.circular(30),
-                                items: model.genderList
-                                    .map((e) => DropdownMenuItem<String>(
-                                          value: e,
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Text(e,
-                                                style: const TextStyle(
-                                                    fontSize: 14,
-                                                    fontWeight: FontWeight.w400,
-                                                    color: CustomColors
-                                                        .blackPrimary)),
+
+
+
+
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Gender",
+                              style: Theme.of(context).textTheme.bodyMedium!,
+                            ).padding(bottom: 6),
+                            GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                  ),
+                                  builder: (BuildContext context) {
+                                    return Container(
+                                      padding: const EdgeInsets.all(16.0),
+                                      height: MediaQuery.of(context).size.height * 0.5, // Adjust the height as needed
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text(
+                                            "Select Gender",
+                                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                                           ),
-                                        ))
-                                    .toList(),
-                                validator: (value) =>
-                                    ValidationUtil.validateInput(
-                                        value, "Gender"),
-                                onSaved: (String? value) =>
-                                    model.gender = value?.toUpperCase(),
-                                onChanged: (value) {
-                                  if (value != null) {
-                                    model.setGender(value);
-                                  }
-                                },
-                              ).padding(bottom: 20),
-                            ],
-                          ),
+                                          const SizedBox(height: 10),
+                                          Expanded(
+                                            child: ListView.builder(
+                                              itemCount: model.genderList.length,
+                                              itemBuilder: (context, index) {
+                                                final gender = model.genderList[index];
+                                                return ListTile(
+                                                  title: Text(gender ?? ""),
+                                                  onTap: () {
+                                                    Navigator.pop(context); // Close the bottom sheet
+                                                    setState(() {
+                                                      model.setGender(gender);
+                                                    });
+                                                  },
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Container(
+                                height: 48,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: CustomColors.limcardFaded),
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(model.gender ?? "Select Gender"),
+                                    Icon(CupertinoIcons.chevron_down),
+                                  ],
+                                ),
+                              ),
+                            ).padding(bottom: 20),
+                          ],
+                        ),
 
                           ElevatedButton(
                             onPressed: () {
