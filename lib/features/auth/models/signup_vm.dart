@@ -167,7 +167,8 @@ class AuthVM extends BaseVM {
     signupRequest?.addressRequest?.add(AddressRequest(
         additionalInfo: addressController.text,
         name: "Main Address",
-        lgaRequest: LgaRequest(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
+        lgaRequest: LgaRequest(
+            lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
 
     print('Signup Request: ${signupRequest?.toJson()}');
 
@@ -188,7 +189,8 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
         additionalInfo: addressController.text,
         name: "Address",
-        lgaRequest: LgaRequest(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
+        lgaRequest: LgaRequest(
+            lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
     onboardingRequest?.staffRequest?.gender = gender;
     onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
     onboardingRequest?.staffRequest?.userType = userType?.name.toString();
@@ -273,7 +275,7 @@ class AuthVM extends BaseVM {
         .requestResetPasswordCode(userType, emailController.text);
     isLoading(false);
 
-    if(response.status == 204){
+    if (response.status == 204) {
       otpSent = true;
       notifyListeners();
     }
@@ -346,8 +348,7 @@ class AuthVM extends BaseVM {
               if (context.mounted) {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(userType)),
+                    MaterialPageRoute(builder: (context) => HomePage(userType)),
                     (Route<dynamic> route) => false);
                 // NavigationService.pushScreen(context,
                 //     screen: HomePage(userType), withNavBar: false);
@@ -400,6 +401,16 @@ class AuthVM extends BaseVM {
             withNavBar: true);
       }
     } else {
+      if (response.status != 200 || response.status != 201) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'An error has occurred',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ));
+      }
       //ViewUtil.sh
     }
     isLoading(false);
@@ -506,9 +517,8 @@ class AuthVM extends BaseVM {
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage(userType)),
-                  (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => HomePage(userType)),
+              (Route<dynamic> route) => false);
         }
       } else {
         throw Exception('Failed to fetch user profile');
@@ -549,19 +559,19 @@ class AuthVM extends BaseVM {
   void goToHome() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-            builder: (context) => HomePage(userType)),
-            (Route<dynamic> route) => false);
+        MaterialPageRoute(builder: (context) => HomePage(userType)),
+        (Route<dynamic> route) => false);
   }
 
-   setStateValue(String value) async {
-    selectedState = states.firstWhere((element) => element.stateName?.toLowerCase() == value.toLowerCase() );
+  setStateValue(String value) async {
+    selectedState = states.firstWhere(
+        (element) => element.stateName?.toLowerCase() == value.toLowerCase());
     if (selectedState != null) {
       getStateID(selectedState?.stateId);
       isLoading(true);
       try {
-        final response =
-            await locator<AuthenticationService>().getLGAs(selectedState?.stateId);
+        final response = await locator<AuthenticationService>()
+            .getLGAs(selectedState?.stateId);
         if (response.data != null && response.data!.isNotEmpty) {
           lgas.addAll(response.data!.toList());
         } else {
@@ -616,14 +626,15 @@ class AuthVM extends BaseVM {
   }
 
   changePassword() async {
-
     isLoading(true);
-    final response = await locator<AuthenticationService>()
-        .changePassword(emailController.text,  otpController.text, userType!.name, password.text);
+    final response = await locator<AuthenticationService>().changePassword(
+        emailController.text,
+        otpController.text,
+        userType!.name,
+        password.text);
     isLoading(false);
     if (response.status == ResponseCode.success ||
         response.status == ResponseCode.success04) {
-
       // ignore: use_build_context_synchronously
       ViewUtil.showDynamicDialogWithButton(
           barrierDismissible: false,
@@ -663,14 +674,11 @@ class AuthVM extends BaseVM {
           dialogAction1: () async {
             Navigator.pop(context);
             NavigationService.pushScreen(context,
-                screen:
-                 LoginPage(theUsertype: userType),
-                withNavBar: false);
-
+                screen: LoginPage(theUsertype: userType), withNavBar: false);
           });
 
       notifyListeners();
-    }else{
+    } else {
       ViewUtil.showSnackBar(response.message ?? "An error occurred", true);
     }
   }

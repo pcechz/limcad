@@ -54,7 +54,7 @@ dependencies:
   google_maps_flutter: any
   input_quantity: ^2.3.2
   timelines: any
-  fl_chart: ^0.40.0
+  #fl_chart: ^0.40.0
   logger: ^2.0.2+1
   google_places_autocomplete_text_field: ^0.1.3
   image_picker: ^0.8.3

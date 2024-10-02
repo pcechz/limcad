@@ -66,179 +66,200 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     return BottomBar(
-      borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-      duration: const Duration(seconds: 1),
-      curve: Curves.decelerate,
-      showIcon: false,
-      width: MediaQuery.of(context).size.width,
-      start: 4,
-      end: 0,
-      barAlignment: Alignment.bottomCenter,
-      reverse: false,
-      hideOnScroll: false,
-      scrollOpposite: false,
-      onBottomBarHidden: () {},
-      onBottomBarShown: () {},
-      body: (context, controller) => TabBarView(
-        controller: tabController,
-        dragStartBehavior: DragStartBehavior.down,
-        physics: const BouncingScrollPhysics(),
-        children: getPage(widget.userType!),
-      ),
-      child: TabBar(
-        padding: EdgeInsets.zero,
-        controller: tabController,
-        labelPadding:
-            const EdgeInsets.only(left: 5, right: 5, top: 0, bottom: 5),
-        indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(color: Colors.white, width: 0),
-            insets: EdgeInsets.fromLTRB(16, 0, 16, 0)),
-        tabs: [
-          Container(
-            height: 65,
-            width: 65,
-            child: Column(
-              children: [
-                Center(
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: SvgPicture.asset(
-                          AssetUtil.homeIcon,
-                          color: currentPage == 0
-                              ? CustomColors.limcadPrimary
-                              : CustomColors.blackPrimary,
-                          fit: BoxFit.scaleDown,
-                        ))).padding(bottom: 8, top: 16),
-                Text(
-                  "Home",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 0
-                            ? CustomColors.limcadPrimary
-                            : CustomColors.blackPrimary,
-                        fontFamily: "inter",
-                      )),
-                )
-              ],
+        borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+        duration: const Duration(seconds: 1),
+        curve: Curves.decelerate,
+        showIcon: false,
+        width: MediaQuery.of(context).size.width,
+        start: 4,
+        end: 0,
+        barAlignment: Alignment.bottomCenter,
+        reverse: false,
+        hideOnScroll: false,
+        scrollOpposite: false,
+        onBottomBarHidden: () {},
+        onBottomBarShown: () {},
+        body: (context, controller) => TabBarView(
+              controller: tabController,
+              dragStartBehavior: DragStartBehavior.down,
+              physics: const BouncingScrollPhysics(),
+              children: getPage(widget.userType!),
             ),
-          ),
-          Container(
-            height: 65,
-            width: 65,
-            child: Column(
-              children: [
-                Center(
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: SvgPicture.asset(
-                          widget.userType == UserType.courier
-                              ? AssetUtil.analyticsIcon
-                              : AssetUtil.exploreIcon,
-                          color: currentPage == 1
-                              ? CustomColors.limcadPrimary
-                              : CustomColors.blackPrimary,
-                          fit: BoxFit.scaleDown,
-                        ))).padding(bottom: 8, top: 16),
-                Text(
-                  widget.userType == UserType.business ||
-                          widget.userType == UserType.courier
-                      ? "Analytics"
-                      : "Explore",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 1
-                            ? CustomColors.limcadPrimary
-                            : CustomColors.blackPrimary,
-                        fontFamily: "inter",
-                      )),
-                )
-              ],
-            ),
-          ),
-          Container(
-            height: 65,
-            width: 65,
-            child: Column(
-              children: [
-                Center(
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: SvgPicture.asset(
-                          widget.userType == UserType.courier
-                              ? AssetUtil.deliveryIcon
-                              : AssetUtil.orderIcon,
-                          color: currentPage == 2
-                              ? CustomColors.limcadPrimary
-                              : CustomColors.blackPrimary,
-                          fit: BoxFit.scaleDown,
-                        ))).padding(bottom: 8, top: 16),
-                Text(
-                  widget.userType == UserType.courier ? "Delivery" : "Order",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 2
-                            ? CustomColors.limcadPrimary
-                            : CustomColors.blackPrimary,
-                        fontFamily: "inter",
-                      )),
-                )
-              ],
-
-            ),
-          ),
-            Container(
-              height: 65,
-              width: 65,
-              child: Column(
-                children: [
-                  Center(
-                      child: SizedBox(
-                          width: 20,
-                          height: 20,
-                          child: SvgPicture.asset(
-                            AssetUtil.chatIcon,
-                            color: currentPage == 3 ? CustomColors.limcadPrimary : CustomColors.blackPrimary,
-                            fit: BoxFit.scaleDown,
-                          ))).padding(bottom: 8, top: 16),
-                  Text("Chat",  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(color: currentPage == 3 ? CustomColors.limcadPrimary : CustomColors.blackPrimary, fontFamily: "inter",)),)
-                ],
+        child: TabBar(
+            padding: EdgeInsets.zero,
+            controller: tabController,
+            labelPadding:
+                const EdgeInsets.only(left: 5, right: 5, top: 0, bottom: 5),
+            indicator: const UnderlineTabIndicator(
+                borderSide: BorderSide(color: Colors.white, width: 0),
+                insets: EdgeInsets.fromLTRB(16, 0, 16, 0)),
+            tabs: [
+              Container(
+                height: 65,
+                width: 65,
+                child: Column(
+                  children: [
+                    Center(
+                        child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: SvgPicture.asset(
+                              AssetUtil.homeIcon,
+                              color: currentPage == 0
+                                  ? CustomColors.limcadPrimary
+                                  : CustomColors.blackPrimary,
+                              fit: BoxFit.scaleDown,
+                            ))).padding(bottom: 8, top: 16),
+                    Text(
+                      "Home",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .merge(TextStyle(
+                            color: currentPage == 0
+                                ? CustomColors.limcadPrimary
+                                : CustomColors.blackPrimary,
+                            fontFamily: "inter",
+                          )),
+                    )
+                  ],
+                ),
               ),
-            ),
-
-          Container(
-            height: 65,
-            width: 65,
-            child: Column(
-              children: [
-                Center(
-                    child: SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: SvgPicture.asset(
-                          AssetUtil.profileIcon,
-                          color: currentPage == 4
-                              ? CustomColors.limcadPrimary
-                              : CustomColors.blackPrimary,
-                          fit: BoxFit.scaleDown,
-                        ))).padding(bottom: 8, top: 16),
-                Text(
-                  "Profile",
-                  style: Theme.of(context).textTheme.bodySmall!.merge(TextStyle(
-                        color: currentPage == 4
-                            ? CustomColors.limcadPrimary
-                            : CustomColors.blackPrimary,
-                        fontFamily: "inter",
-                      )),
-                )
-              ],
-
-            ),
-
-
-        ),
-      ])
-      );
+              Container(
+                height: 65,
+                width: 65,
+                child: Column(
+                  children: [
+                    Center(
+                        child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: SvgPicture.asset(
+                              widget.userType == UserType.courier
+                                  ? AssetUtil.analyticsIcon
+                                  : AssetUtil.exploreIcon,
+                              color: currentPage == 1
+                                  ? CustomColors.limcadPrimary
+                                  : CustomColors.blackPrimary,
+                              fit: BoxFit.scaleDown,
+                            ))).padding(bottom: 8, top: 16),
+                    Text(
+                      widget.userType == UserType.business ||
+                              widget.userType == UserType.courier
+                          ? "Analytics"
+                          : "Explore",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .merge(TextStyle(
+                            color: currentPage == 1
+                                ? CustomColors.limcadPrimary
+                                : CustomColors.blackPrimary,
+                            fontFamily: "inter",
+                          )),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                height: 65,
+                width: 65,
+                child: Column(
+                  children: [
+                    Center(
+                        child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: SvgPicture.asset(
+                              widget.userType == UserType.courier
+                                  ? AssetUtil.deliveryIcon
+                                  : AssetUtil.orderIcon,
+                              color: currentPage == 2
+                                  ? CustomColors.limcadPrimary
+                                  : CustomColors.blackPrimary,
+                              fit: BoxFit.scaleDown,
+                            ))).padding(bottom: 8, top: 16),
+                    Text(
+                      widget.userType == UserType.courier
+                          ? "Delivery"
+                          : "Order",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .merge(TextStyle(
+                            color: currentPage == 2
+                                ? CustomColors.limcadPrimary
+                                : CustomColors.blackPrimary,
+                            fontFamily: "inter",
+                          )),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                height: 65,
+                width: 65,
+                child: Column(
+                  children: [
+                    Center(
+                        child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: SvgPicture.asset(
+                              AssetUtil.chatIcon,
+                              color: currentPage == 3
+                                  ? CustomColors.limcadPrimary
+                                  : CustomColors.blackPrimary,
+                              fit: BoxFit.scaleDown,
+                            ))).padding(bottom: 8, top: 16),
+                    Text(
+                      "Chat",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .merge(TextStyle(
+                            color: currentPage == 3
+                                ? CustomColors.limcadPrimary
+                                : CustomColors.blackPrimary,
+                            fontFamily: "inter",
+                          )),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                height: 65,
+                width: 65,
+                child: Column(
+                  children: [
+                    Center(
+                        child: SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: SvgPicture.asset(
+                              AssetUtil.profileIcon,
+                              color: currentPage == 4
+                                  ? CustomColors.limcadPrimary
+                                  : CustomColors.blackPrimary,
+                              fit: BoxFit.scaleDown,
+                            ))).padding(bottom: 8, top: 16),
+                    Text(
+                      "Profile",
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodySmall!
+                          .merge(TextStyle(
+                            color: currentPage == 4
+                                ? CustomColors.limcadPrimary
+                                : CustomColors.blackPrimary,
+                            fontFamily: "inter",
+                          )),
+                    )
+                  ],
+                ),
+              ),
+            ]));
   }
 
   String userTypeToString(UserType type) {
@@ -267,7 +288,7 @@ class _HomePageState extends State<HomePage>
       case UserType.business:
         return [
           BusinessDashboard(),
-          AnalyticsPage(),
+          //AnalyticsPage(),
           BusinessOrdersPage(),
           RoomsPage(),
           ProfilePage(userType: widget.userType!)
