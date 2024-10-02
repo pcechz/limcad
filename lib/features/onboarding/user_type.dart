@@ -33,7 +33,7 @@ class _UserTypePageState extends State<UserTypePage> {
             Center(
               child: RichText(
                 textAlign: TextAlign.center,
-                text: TextSpan(
+                text: const TextSpan(
                   children: [
                     TextSpan(
                       text: "Choose the option that ",
@@ -67,7 +67,7 @@ class _UserTypePageState extends State<UserTypePage> {
               ).padding(top: 100, bottom: 72),
             ),
             personalBody().padding(bottom: 40),
-            Center(
+            const Center(
               child: Text(
                 "OR",
                 style: TextStyle(
@@ -100,7 +100,7 @@ class _UserTypePageState extends State<UserTypePage> {
               width: 331,
               child: RichText(
                 textAlign: TextAlign.center,
-                text: TextSpan(
+                text: const TextSpan(
                   children: [
                     TextSpan(
                       text: "Create your ",
@@ -164,7 +164,7 @@ class _UserTypePageState extends State<UserTypePage> {
               width: 331,
               child: RichText(
                 textAlign: TextAlign.center,
-                text: TextSpan(
+                text: const TextSpan(
                   children: [
                     TextSpan(
                       text: "Register your ",
@@ -185,7 +185,7 @@ class _UserTypePageState extends State<UserTypePage> {
                           color: CustomColors.limcadPrimary),
                     ),
                     TextSpan(
-                      text: "tto connect with customers and expand your reach.",
+                      text: "to connect with customers and expand your reach.",
                       style: TextStyle(
                           fontFamily: Constants.OPEN_SANS,
                           fontWeight: FontWeight.w500,
