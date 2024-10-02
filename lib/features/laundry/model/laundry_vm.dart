@@ -342,7 +342,7 @@ class LaundryVM extends BaseVM {
       Logger().i("Sending request to the server: ${jsonEncode(orderRequest)}");
 
       final response = await dio.post(
-        'http://172.187.176.43/api/laundry-orders?paymentMode=ONLINE',
+        'http://167.71.185.95/api/laundry-orders?paymentMode=ONLINE',
         data: orderRequest,
         options: Options(
           headers: {

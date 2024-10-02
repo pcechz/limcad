@@ -276,7 +276,7 @@ class ViewUtil {
 
   static String? replaceLocalhost(String? url) {
     const String oldHost = 'localhost:8080';
-    const String newHost = '172.187.176.43';
+    const String newHost = '167.71.185.95';
 
 // Replace the old host with the new one
     return url?.replaceAll(oldHost, newHost);

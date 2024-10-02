@@ -83,7 +83,7 @@ abstract class Env {
 
 class ProdEnv implements Env {
   @override
-  String baseUrl = "http://172.187.176.43/api";//"http://localhost:8080/api";//
+  String baseUrl = "http://167.71.185.95/api";//"http://localhost:8080/api";//
 
   @override
   int connectionTimeout = 30000;
@@ -98,7 +98,7 @@ class ProdEnv implements Env {
 
 class DevEnv implements Env {
   @override
-  String baseUrl = "http://172.187.176.43/api";
+  String baseUrl = "http://167.71.185.95/api";
 
 
   @override

@@ -186,7 +186,7 @@ class _HomePageState extends State<HomePage>
               ],
 
             ),
-
+          ),
             Container(
               height: 65,
               width: 65,
@@ -205,7 +205,7 @@ class _HomePageState extends State<HomePage>
                 ],
               ),
             ),
-          ),
+
           Container(
             height: 65,
             width: 65,
@@ -234,8 +234,10 @@ class _HomePageState extends State<HomePage>
               ],
 
             ),
-          ],
+
+
         ),
+      ])
       );
   }
 
