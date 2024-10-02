@@ -34,8 +34,8 @@ class _GetStartedPageState extends State<GetStartedPage> {
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.width,
-              width: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height * 0.55,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.cover,
@@ -121,7 +121,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                               const LoginPage(theUsertype: UserType.personal),
                           withNavBar: false);
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign in',
                       style: TextStyle(
                           decoration: TextDecoration.underline,
@@ -201,7 +201,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                           ),
                           withNavBar: false);
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign in',
                       style: TextStyle(
                           decoration: TextDecoration.underline,
