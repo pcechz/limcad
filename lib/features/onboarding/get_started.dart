@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:limcad/features/auth/auth/business_signup.dart';
 import 'package:limcad/features/auth/auth/login.dart';
 import 'package:limcad/features/auth/auth/signup.dart';
@@ -42,7 +43,9 @@ class _GetStartedPageState extends State<GetStartedPage> {
                       image: AssetImage(
                         widget.theUsertype == UserType.personal
                             ? AssetUtil.individualAccountBanner
-                            : AssetUtil.businessAccountBanner,
+                            : (widget.theUsertype == UserType.business
+                                ? AssetUtil.businessAccountBanner
+                                : AssetUtil.courierAccountBanner),
                       ))),
             ),
             personalBody()
@@ -50,7 +53,10 @@ class _GetStartedPageState extends State<GetStartedPage> {
                 .hideIf(widget.theUsertype == UserType.business),
             businessBody()
                 .padding(top: 40)
-                .hideIf(widget.theUsertype == UserType.personal)
+                .hideIf(widget.theUsertype == UserType.personal),
+            deliveryBody().padding(top: 40).hideIf(
+                widget.theUsertype == UserType.business ||
+                    widget.theUsertype == UserType.personal),
           ],
         ),
       );
@@ -173,6 +179,86 @@ class _GetStartedPageState extends State<GetStartedPage> {
             )).padding(bottom: 8),
             const Text(
               "Grow your laundry business by connecting with clients looking for professional services.",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: Constants.OPEN_SANS,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: CustomColors.kBlack),
+            ).padding(bottom: 48),
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.pushScreen(context,
+                    screen: const BusinessSignUpPage(
+                        theUsertype: UserType.business),
+                    withNavBar: false);
+              },
+              child: const Text("Get Started"),
+            ).padding(bottom: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Already have an account? "),
+                TextButton(
+                    onPressed: () {
+                      NavigationService.pushScreen(context,
+                          screen: const LoginPage(
+                            theUsertype: UserType.business,
+                          ),
+                          withNavBar: false);
+                    },
+                    child: const Text(
+                      'Sign in',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: CustomColors.rpBlue),
+                    )),
+              ],
+            )
+          ],
+        ).paddingSymmetric(horizontal: 16, vertical: 16),
+      );
+
+  Widget deliveryBody() => Container(
+        child: Column(
+          children: [
+            Center(
+                child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Join our ",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          color: CustomColors.kBlack),
+                    ),
+                    TextSpan(
+                      text: "platform  ",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          color: CustomColors.limcadPrimary),
+                    ),
+                    TextSpan(
+                      text: "to reach goals.",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          color: CustomColors.kBlack),
+                    ),
+                  ],
+                ),
+              ),
+            )).padding(bottom: 8),
+            const Text(
+              "Expand your delivery services – sign up now for endless opportunities!",
               textAlign: TextAlign.center,
               style: TextStyle(
                   fontFamily: Constants.OPEN_SANS,
