@@ -269,8 +269,8 @@ class _GetStartedPageState extends State<GetStartedPage> {
             ElevatedButton(
               onPressed: () {
                 NavigationService.pushScreen(context,
-                    screen: const BusinessSignUpPage(
-                        theUsertype: UserType.business),
+                    screen:
+                        const BusinessSignUpPage(theUsertype: UserType.courier),
                     withNavBar: false);
               },
               child: const Text("Get Started"),
@@ -283,7 +283,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                     onPressed: () {
                       NavigationService.pushScreen(context,
                           screen: const LoginPage(
-                            theUsertype: UserType.business,
+                            theUsertype: UserType.courier,
                           ),
                           withNavBar: false);
                     },
