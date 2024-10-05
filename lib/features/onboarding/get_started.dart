@@ -27,11 +27,11 @@ class _GetStartedPageState extends State<GetStartedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(child: onBordingBody()),
+      body: SingleChildScrollView(child: getStartedBody()),
     );
   }
 
-  Widget onBordingBody() => Container(
+  Widget getStartedBody() => Container(
         child: Column(
           children: [
             Container(
@@ -50,13 +50,13 @@ class _GetStartedPageState extends State<GetStartedPage> {
             ),
             personalBody()
                 .padding(bottom: 40, top: 40)
-                .hideIf(widget.theUsertype == UserType.business),
+                .hideIf(widget.theUsertype != UserType.personal),
             businessBody()
                 .padding(top: 40)
-                .hideIf(widget.theUsertype == UserType.personal),
-            deliveryBody().padding(top: 40).hideIf(
-                widget.theUsertype == UserType.business ||
-                    widget.theUsertype == UserType.personal),
+                .hideIf(widget.theUsertype != UserType.business),
+            deliveryBody()
+                .padding(top: 40)
+                .hideIf(widget.theUsertype != UserType.courier),
           ],
         ),
       );
