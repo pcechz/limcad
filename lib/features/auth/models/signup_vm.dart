@@ -200,8 +200,6 @@ class AuthVM extends BaseVM {
     onboardingRequest?.organizationRequest?.email =
         onboardingRequest?.staffRequest?.email;
     onboardingRequest?.organizationRequest?.location = addressController.text;
-    onboardingRequest?.organizationRequest?.longitude = num.tryParse(prediction?.lng ?? "000");
-    onboardingRequest?.organizationRequest?.latitude = num.tryParse(prediction?.lat ?? "000");
     onboardingRequest?.organizationRequest?.phoneNumber =
         onboardingRequest?.staffRequest?.phoneNumber;
 
@@ -219,10 +217,19 @@ class AuthVM extends BaseVM {
         print("Sign up request: ${signupRequest?.password}");
         print("Sign up request: ${signupRequest?.email}");
         proceedLogin(userType, signupRequest);
+      } else {
+        if (response.status != 200 || response.status != 201) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+              'An error has occurred',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ));
+        }
       }
-    }else{
-
-    }
+    } else {}
   }
 
   void proceedToSecondPage() {
@@ -279,7 +286,7 @@ class AuthVM extends BaseVM {
         .requestResetPasswordCode(userType, emailController.text);
     isLoading(false);
 
-    if(response.status == 204){
+    if (response.status == 204) {
       otpSent = true;
       notifyListeners();
     }
@@ -406,6 +413,58 @@ class AuthVM extends BaseVM {
             withNavBar: true);
       }
     } else {
+      if (response.status != 200 || response.status != 201) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'An error has occurred',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ));
+      }
+      //ViewUtil.sh
+    }
+    isLoading(false);
+
+    //  }
+  }
+
+  Future<void> proceedPasswordDelivery() async {
+    signupRequest?.password = password.text;
+    isLoading(true);
+    final response =
+        await locator<AuthenticationService>().signUp(signupRequest);
+
+    if (response.status == 200 || response.status == 201) {
+      if (response.data != null) {
+        // _preference.saveProfile(response.data!.);
+        Logger().i("response :${response.data}");
+        // final UserType userType =
+        //     response.data!.userType == userTypeToString(UserType.courier)
+        //         ? UserType.courier
+        //         : UserType.business;
+        print("userType: ${userTypeToString(UserType.courier)}");
+        // ignore: use_build_context_synchronously
+        NavigationService.pushScreen(context,
+            screen: SignupOtpPage(
+              request: signupRequest,
+              userType: UserType.courier,
+              from: SignupPage.routeName,
+            ),
+            withNavBar: true);
+      }
+    } else {
+      if (response.status != 200 || response.status != 201) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'An error has occurred',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ));
+      }
       //ViewUtil.sh
     }
     isLoading(false);

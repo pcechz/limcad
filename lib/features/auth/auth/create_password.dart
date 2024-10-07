@@ -88,7 +88,18 @@ class _CreatePasswordState extends State<CreatePassword> {
                                     FocusScope.of(context).unfocus();
                                     model.formKey.currentState!.save();
 
-                                    model.proceedPassword();
+                                    //model.proceedPassword();
+                                    switch (widget.userType) {
+                                      case UserType.personal:
+                                        model.proceedPassword();
+                                        break;
+                                      case UserType.courier:
+                                        model.proceedPasswordDelivery();
+                                        break;
+
+                                      default:
+                                        print("unhandled user");
+                                    }
                                   },
                             child: const Text("Done"),
                           )

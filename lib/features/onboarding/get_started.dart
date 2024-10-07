@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:limcad/features/auth/auth/business_signup.dart';
 import 'package:limcad/features/auth/auth/login.dart';
 import 'package:limcad/features/auth/auth/signup.dart';
@@ -26,31 +27,36 @@ class _GetStartedPageState extends State<GetStartedPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(child: onBordingBody()),
+      body: SingleChildScrollView(child: getStartedBody()),
     );
   }
 
-  Widget onBordingBody() => Container(
+  Widget getStartedBody() => Container(
         child: Column(
           children: [
             Container(
-              height: MediaQuery.of(context).size.width,
-              width: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height * 0.55,
+              width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
                   image: DecorationImage(
                       fit: BoxFit.cover,
                       image: AssetImage(
                         widget.theUsertype == UserType.personal
                             ? AssetUtil.individualAccountBanner
-                            : AssetUtil.businessAccountBanner,
+                            : (widget.theUsertype == UserType.business
+                                ? AssetUtil.businessAccountBanner
+                                : AssetUtil.courierAccountBanner),
                       ))),
             ),
             personalBody()
                 .padding(bottom: 40, top: 40)
-                .hideIf(widget.theUsertype == UserType.business),
+                .hideIf(widget.theUsertype != UserType.personal),
             businessBody()
                 .padding(top: 40)
-                .hideIf(widget.theUsertype == UserType.personal)
+                .hideIf(widget.theUsertype != UserType.business),
+            deliveryBody()
+                .padding(top: 40)
+                .hideIf(widget.theUsertype != UserType.courier),
           ],
         ),
       );
@@ -121,7 +127,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
                               const LoginPage(theUsertype: UserType.personal),
                           withNavBar: false);
                     },
-                    child: Text(
+                    child: const Text(
                       'Sign in',
                       style: TextStyle(
                           decoration: TextDecoration.underline,
@@ -201,7 +207,86 @@ class _GetStartedPageState extends State<GetStartedPage> {
                           ),
                           withNavBar: false);
                     },
-                    child: Text(
+                    child: const Text(
+                      'Sign in',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: CustomColors.rpBlue),
+                    )),
+              ],
+            )
+          ],
+        ).paddingSymmetric(horizontal: 16, vertical: 16),
+      );
+
+  Widget deliveryBody() => Container(
+        child: Column(
+          children: [
+            Center(
+                child: Container(
+              width: MediaQuery.of(context).size.width,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Join our ",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          color: CustomColors.kBlack),
+                    ),
+                    TextSpan(
+                      text: "platform  ",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          color: CustomColors.limcadPrimary),
+                    ),
+                    TextSpan(
+                      text: "to reach goals.",
+                      style: TextStyle(
+                          fontFamily: Constants.OPEN_SANS,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 32,
+                          color: CustomColors.kBlack),
+                    ),
+                  ],
+                ),
+              ),
+            )).padding(bottom: 8),
+            const Text(
+              "Expand your delivery services – sign up now for endless opportunities!",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  fontFamily: Constants.OPEN_SANS,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 16,
+                  color: CustomColors.kBlack),
+            ).padding(bottom: 48),
+            ElevatedButton(
+              onPressed: () {
+                NavigationService.pushScreen(context,
+                    screen: const SignupPage(theUsertype: UserType.courier),
+                    withNavBar: false);
+              },
+              child: const Text("Get Started"),
+            ).padding(bottom: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text("Already have an account? "),
+                TextButton(
+                    onPressed: () {
+                      NavigationService.pushScreen(context,
+                          screen: const LoginPage(
+                            theUsertype: UserType.courier,
+                          ),
+                          withNavBar: false);
+                    },
+                    child: const Text(
                       'Sign in',
                       style: TextStyle(
                           decoration: TextDecoration.underline,

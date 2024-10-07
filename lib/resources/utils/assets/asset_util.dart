@@ -10,6 +10,8 @@ class AssetUtil {
       "assets/images/individual_banner.png";
   static const String businessAccountBanner =
       "assets/images/business_banner.png";
+  static const String courierAccountBanner =
+      "assets/images/courier_account.png";
   static const String successCheck = "assets/images/check_success.png";
   static const String editAvatar = "assets/images/edit_avatar.png";
   static const String laundryWall = "assets/images/laundry_wall.png";
@@ -36,4 +38,6 @@ class AssetUtil {
   static const String deliveryIcon = "assets/images/delivery.png";
   static const String greenArrow = "assets/images/greenArrow.png";
   static const String analyticsIcon = "assets/images/analytics.png";
+  static const String washingMachineImage = "assets/images/washing-machine.png";
+  static const String bikeImage = "assets/images/bike.png";
 }

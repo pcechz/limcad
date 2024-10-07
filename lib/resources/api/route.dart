@@ -32,10 +32,12 @@ enum ApiType {
   uploadFile,
   getFile,
   submitReview,
-  getReview, ordersItems,
+  getReview,
+  ordersItems,
   giftCard,
   deleteServiceItems,
   updateServiceItems,
+  courier,
 }
 
 class ApiRoute implements APIRouteConfigurable {
@@ -94,9 +96,7 @@ class ApiRoute implements APIRouteConfigurable {
 
       case ApiType.changePassword:
         return RequestOptions(
-            path: '/auth/password-reset',
-            method: ApiMethod.post,
-            data: data);
+            path: '/auth/password-reset', method: ApiMethod.post, data: data);
 
       case ApiType.submitOrder:
         return RequestOptions(
@@ -167,11 +167,15 @@ class ApiRoute implements APIRouteConfigurable {
 
       case ApiType.laundyOrders:
         return RequestOptions(
-            path: '/laundry-orders?$routeParams', method: ApiMethod.get, extra: authorize);
+            path: '/laundry-orders?$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
 
       case ApiType.businessLaundryOrders:
         return RequestOptions(
-            path: '/laundry-orders/$routeParams', method: ApiMethod.get, extra: authorize);
+            path: '/laundry-orders/$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
 
       case ApiType.updateProfile:
         return RequestOptions(
@@ -183,6 +187,12 @@ class ApiRoute implements APIRouteConfigurable {
         return RequestOptions(
             path: '/organizations',
             method: ApiMethod.patch,
+            data: data,
+            extra: authorize);
+      case ApiType.courier:
+        return RequestOptions(
+            path: '/couriers/registration',
+            method: ApiMethod.post,
             data: data,
             extra: authorize);
       case ApiType.businessOnboarding:

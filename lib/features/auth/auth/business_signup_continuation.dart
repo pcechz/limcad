@@ -156,18 +156,23 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                             showModalBottomSheet(
                               context: context,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
                               ),
                               builder: (BuildContext context) {
                                 return Container(
                                   padding: const EdgeInsets.all(16.0),
-                                  height: MediaQuery.of(context).size.height * 0.5, // Adjust the height as needed
+                                  height: MediaQuery.of(context).size.height *
+                                      0.5, // Adjust the height as needed
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         "Select State",
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
                                       ),
                                       const SizedBox(height: 10),
                                       Expanded(
@@ -176,11 +181,14 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                                           itemBuilder: (context, index) {
                                             final state = model.states[index];
                                             return ListTile(
-                                              title: Text(state.stateName ?? ""),
+                                              title:
+                                                  Text(state.stateName ?? ""),
                                               onTap: () {
-                                                Navigator.pop(context); // Close the bottom sheet
+                                                Navigator.pop(
+                                                    context); // Close the bottom sheet
                                                 setState(() {
-                                                  model.setStateValue(state.stateName!);
+                                                  model.setStateValue(
+                                                      state.stateName!);
                                                 });
                                               },
                                             );
@@ -195,15 +203,18 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                           },
                           child: Container(
                             height: 48,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              border: Border.all(color: CustomColors.limcardFaded),
+                              border:
+                                  Border.all(color: CustomColors.limcardFaded),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(model.selectedState?.stateName ?? "Select State"),
+                                Text(model.selectedState?.stateName ??
+                                    "Select State"),
                                 Icon(CupertinoIcons.chevron_down),
                               ],
                             ),
@@ -224,18 +235,23 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                             showModalBottomSheet(
                               context: context,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
                               ),
                               builder: (BuildContext context) {
                                 return Container(
                                   padding: const EdgeInsets.all(16.0),
-                                  height: MediaQuery.of(context).size.height * 0.5, // Adjust the height as needed
+                                  height: MediaQuery.of(context).size.height *
+                                      0.5, // Adjust the height as needed
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         "Select LGA",
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
                                       ),
                                       const SizedBox(height: 10),
                                       Expanded(
@@ -246,7 +262,8 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                                             return ListTile(
                                               title: Text(lga.lgaName ?? ""),
                                               onTap: () {
-                                                Navigator.pop(context); // Close the bottom sheet
+                                                Navigator.pop(
+                                                    context); // Close the bottom sheet
                                                 setState(() {
                                                   model.setLGAValue(lga);
                                                 });
@@ -263,15 +280,18 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                           },
                           child: Container(
                             height: 48,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              border: Border.all(color: CustomColors.limcardFaded),
+                              border:
+                                  Border.all(color: CustomColors.limcardFaded),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(model.selectedLGA?.lgaName ?? "Select LGA"),
+                                Text(
+                                    model.selectedLGA?.lgaName ?? "Select LGA"),
                                 Icon(CupertinoIcons.chevron_down),
                               ],
                             ),
@@ -292,29 +312,36 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                             showModalBottomSheet(
                               context: context,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20)),
                               ),
                               builder: (BuildContext context) {
                                 return Container(
                                   padding: const EdgeInsets.all(16.0),
-                                  height: MediaQuery.of(context).size.height * 0.5, // Adjust the height as needed
+                                  height: MediaQuery.of(context).size.height *
+                                      0.5, // Adjust the height as needed
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         "Select Gender",
-                                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
                                       ),
                                       const SizedBox(height: 10),
                                       Expanded(
                                         child: ListView.builder(
                                           itemCount: model.genderList.length,
                                           itemBuilder: (context, index) {
-                                            final gender = model.genderList[index];
+                                            final gender =
+                                                model.genderList[index];
                                             return ListTile(
                                               title: Text(gender ?? ""),
                                               onTap: () {
-                                                Navigator.pop(context); // Close the bottom sheet
+                                                Navigator.pop(
+                                                    context); // Close the bottom sheet
                                                 setState(() {
                                                   model.setGender(gender);
                                                 });
@@ -331,9 +358,11 @@ class _BusinessSignUpSecondPageState extends State<BusinessSignUpSecondPage> {
                           },
                           child: Container(
                             height: 48,
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              border: Border.all(color: CustomColors.limcardFaded),
+                              border:
+                                  Border.all(color: CustomColors.limcardFaded),
                               borderRadius: BorderRadius.circular(30),
                             ),
                             child: Row(

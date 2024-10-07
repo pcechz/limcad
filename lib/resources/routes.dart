@@ -13,6 +13,7 @@ import 'package:limcad/features/auth/auth/reset_password.dart';
 import 'package:limcad/features/auth/auth/signup.dart';
 import 'package:limcad/features/auth/auth/signup_otp.dart';
 import 'package:limcad/features/auth/auth/signup_payment_details.dart';
+import 'package:limcad/features/onboarding/business_welcome_page.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/onboarding/landing_page.dart';
 import 'package:limcad/features/onboarding/user_type.dart';
@@ -33,6 +34,9 @@ final Map<String, WidgetBuilder> routes = {
   ResetPassword.routeName: (context) =>
       const ResetPassword(userType: UserType.personal),
   CourierHomeScreen.routeName: (context) => CourierHomeScreen(),
+  BusinessWelcomePage.routeName: (context) => const BusinessWelcomePage(
+        userType: UserType.business,
+      ),
 };
 
 class NavigationService {
