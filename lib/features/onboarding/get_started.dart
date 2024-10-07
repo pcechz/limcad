@@ -269,8 +269,7 @@ class _GetStartedPageState extends State<GetStartedPage> {
             ElevatedButton(
               onPressed: () {
                 NavigationService.pushScreen(context,
-                    screen:
-                        const BusinessSignUpPage(theUsertype: UserType.courier),
+                    screen: const SignupPage(theUsertype: UserType.courier),
                     withNavBar: false);
               },
               child: const Text("Get Started"),

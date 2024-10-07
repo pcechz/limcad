@@ -202,8 +202,10 @@ class AuthVM extends BaseVM {
     onboardingRequest?.organizationRequest?.email =
         onboardingRequest?.staffRequest?.email;
     onboardingRequest?.organizationRequest?.location = addressController.text;
-    onboardingRequest?.organizationRequest?.longitude = num.tryParse(prediction?.lng ?? "000");
-    onboardingRequest?.organizationRequest?.latitude = num.tryParse(prediction?.lat ?? "000");
+    onboardingRequest?.organizationRequest?.longitude =
+        num.tryParse(prediction?.lng ?? "000");
+    onboardingRequest?.organizationRequest?.latitude =
+        num.tryParse(prediction?.lat ?? "000");
     onboardingRequest?.organizationRequest?.phoneNumber =
         onboardingRequest?.staffRequest?.phoneNumber;
 
@@ -233,9 +235,7 @@ class AuthVM extends BaseVM {
           ));
         }
       }
-    }else{
-
-    }
+    } else {}
   }
 
   void proceedToSecondPage() {
@@ -435,6 +435,48 @@ class AuthVM extends BaseVM {
     //  }
   }
 
+  Future<void> proceedPasswordDelivery() async {
+    signupRequest?.password = password.text;
+    isLoading(true);
+    final response =
+        await locator<AuthenticationService>().signUp(signupRequest);
+
+    if (response.status == 200 || response.status == 201) {
+      if (response.data != null) {
+        // _preference.saveProfile(response.data!.);
+        Logger().i("response :${response.data}");
+        // final UserType userType =
+        //     response.data!.userType == userTypeToString(UserType.courier)
+        //         ? UserType.courier
+        //         : UserType.business;
+        print("userType: ${userTypeToString(UserType.courier)}");
+        // ignore: use_build_context_synchronously
+        NavigationService.pushScreen(context,
+            screen: SignupOtpPage(
+              request: signupRequest,
+              userType: UserType.courier,
+              from: SignupPage.routeName,
+            ),
+            withNavBar: true);
+      }
+    } else {
+      if (response.status != 200 || response.status != 201) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text(
+            'An error has occurred',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.red,
+          duration: Duration(seconds: 3),
+        ));
+      }
+      //ViewUtil.sh
+    }
+    isLoading(false);
+
+    //  }
+  }
+
   String userTypeToString(UserType type) {
     switch (type) {
       case UserType.personal:
@@ -507,7 +549,8 @@ class AuthVM extends BaseVM {
     }
   }
 
-  Future<void> _fetchAndNavigateToProfile(User user, UserType userType, SignupRequest request) async {
+  Future<void> _fetchAndNavigateToProfile(
+      User user, UserType userType, SignupRequest request) async {
     isLoading(true);
     try {
       final profileResponse = userType == UserType.personal
@@ -539,7 +582,8 @@ class AuthVM extends BaseVM {
 
       // Check if the current user's email matches the request email
       if (currentUser != null && currentUser.email == request.email) {
-        print("User is already signed in with the same email: ${currentUser.email}");
+        print(
+            "User is already signed in with the same email: ${currentUser.email}");
         return; // Exit as the user is already signed in
       } else {
         // If a different user is signed in, sign them out first
@@ -553,9 +597,11 @@ class AuthVM extends BaseVM {
       if (signInMethods.isNotEmpty) {
         // User exists, attempt to sign in
         try {
-          final signIn = await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
+          final signIn =
+              await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
             email: user.email ?? "",
-            password: request.password ?? "", // Ensure you have the correct password
+            password:
+                request.password ?? "", // Ensure you have the correct password
           );
 
           // User signed in successfully, save Firebase User ID
@@ -569,8 +615,8 @@ class AuthVM extends BaseVM {
         }
       } else {
         // User doesn't exist, create a new account
-        final credential = await fireAuth.FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
+        final credential =
+            await fireAuth.FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: user.email ?? "",
           password: request.password ?? "",
         );
@@ -578,7 +624,8 @@ class AuthVM extends BaseVM {
         // Split the name into firstName and lastName
         List<String> nameParts = (user.name ?? "").split(" ");
         String firstName = nameParts.isNotEmpty ? nameParts[0] : "";
-        String lastName = nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "";
+        String lastName =
+            nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "";
         Map<String, dynamic>? metadata = user.toJson();
 
         // Create user in Firestore for Firebase Chat
@@ -595,17 +642,18 @@ class AuthVM extends BaseVM {
         // Save the new Firebase user ID
         if (credential.user != null) {
           _preference.saveCurrentFirebaseUserID(credential.user!);
-          print("New user created and signed in successfully: ${credential.user!.uid}");
+          print(
+              "New user created and signed in successfully: ${credential.user!.uid}");
         }
       }
     } on fireAuth.FirebaseAuthException catch (e) {
       print("Error during sign up or sign in: $e");
       if (e.code == 'email-already-in-use') {
-        _preference.saveCurrentFirebaseUserID(fireAuth.FirebaseAuth.instance.currentUser!);
+        _preference.saveCurrentFirebaseUserID(
+            fireAuth.FirebaseAuth.instance.currentUser!);
       }
     }
   }
-
 
   void setId(IdType idType) {
     if (idType == IdType.document) {
