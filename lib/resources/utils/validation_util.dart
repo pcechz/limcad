@@ -6,12 +6,24 @@ class ValidationUtil {
     if (password.isEmpty) {
       errMessage = "Password is required. ";
     }
-    if (!RegExp(r"[A-Z]").hasMatch(password)) {}
-    if (!RegExp(r"[a-z]").hasMatch(password)) {}
-    if (!RegExp(r"[0-9]").hasMatch(password)) {}
-    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {}
-    if (password.length < 8 || password.length > 30) {}
-    if (password.contains(" ")) {}
+    if (!RegExp(r"[A-Z]").hasMatch(password)) {
+      return "upper case character(s) missing";
+    }
+    if (!RegExp(r"[a-z]").hasMatch(password)) {
+      return "lower case character(s) missing";
+    }
+    if (!RegExp(r"[0-9]").hasMatch(password)) {
+      return "alphanumeric character(s) missing";
+    }
+    if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {
+      return "special character(s) missing";
+    }
+    if (password.length < 8 || password.length > 30) {
+      return "incomplete password length";
+    }
+    if (password.contains(" ")) {
+      return "remove empty spaces";
+    }
     return errMessage.isEmpty ? null : errMessage;
   }
 

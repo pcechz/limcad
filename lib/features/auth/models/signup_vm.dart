@@ -217,6 +217,17 @@ class AuthVM extends BaseVM {
         print("Sign up request: ${signupRequest?.password}");
         print("Sign up request: ${signupRequest?.email}");
         proceedLogin(userType, signupRequest);
+      } else {
+        if (response.status != 200 || response.status != 201) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            content: Text(
+              'An error has occurred',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red,
+            duration: Duration(seconds: 3),
+          ));
+        }
       }
     }
   }
