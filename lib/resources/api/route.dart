@@ -14,6 +14,8 @@ enum ApiType {
   changeLaundrAbout,
   passwordResetCodeRequest,
   passwordReset,
+  createUserWallet,
+  getUserWallet,
   laundyServiceItems,
   laundries,
   createLaundryServiceItems,
@@ -131,6 +133,18 @@ class ApiRoute implements APIRouteConfigurable {
       case ApiType.passwordReset:
         return RequestOptions(
             path: "/auth/password-reset", method: ApiMethod.post, data: data);
+
+      case ApiType.createUserWallet:
+        return RequestOptions(
+            path: '/customer-wallets/$routeParams',
+            method: ApiMethod.post,
+            extra: authorize);
+
+      case ApiType.getUserWallet:
+        return RequestOptions(
+            path: '/customer-wallets/$routeParams',
+            method: ApiMethod.get,
+            extra: authorize);
 
       case ApiType.laundyServiceItems:
         return RequestOptions(

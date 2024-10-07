@@ -29,7 +29,7 @@ import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:logger/logger.dart';
 import 'package:nb_utils/nb_utils.dart';
 
-enum ProfileOption { about, addAddress, fetchProfile }
+enum ProfileOption { about, addAddress, fetchProfile, description }
 
 enum BottomSheetOption { accountName, phoneNumber, emailAddress, dob, address }
 

@@ -7,6 +7,7 @@ import 'package:limcad/features/CourierAccount/Analytics/widget/earning_chart.da
 import 'package:limcad/features/CourierAccount/Delivery/delivery.dart';
 import 'package:limcad/features/CourierAccount/Home/courier_home.dart';
 import 'package:limcad/features/analytics/analytics.dart';
+import 'package:limcad/features/chat/chats_screen.dart';
 import 'package:limcad/features/chat/room.dart';
 import 'package:limcad/features/dashboard/business_dashboard.dart';
 import 'package:limcad/features/dashboard/dashboard.dart';
@@ -282,7 +283,7 @@ class _HomePageState extends State<HomePage>
           Dashboard(),
           ExploreScreen(),
           OrdersPage(),
-          RoomsPage(),
+          ChatsScreen(),
           ProfilePage(userType: widget.userType!)
         ];
       case UserType.business:
@@ -290,7 +291,7 @@ class _HomePageState extends State<HomePage>
           BusinessDashboard(),
           //AnalyticsPage(),
           BusinessOrdersPage(),
-          RoomsPage(),
+          ChatsScreen(),
           ProfilePage(userType: widget.userType!)
         ];
       case UserType.courier:

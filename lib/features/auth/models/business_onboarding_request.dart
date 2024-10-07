@@ -84,16 +84,20 @@ class OrganizationRequest {
   String? name;
   String? address;
   String? location;
+  num? longitude;
+  num? latitude;
   String? email;
   String? phoneNumber;
 
   OrganizationRequest(
-      {this.name, this.address, this.location, this.email, this.phoneNumber});
+      {this.name, this.address, this.location, this.longitude, this.latitude, this.email, this.phoneNumber});
 
   OrganizationRequest.fromJson(Map<String, dynamic> json) {
     name = json['name'];
     address = json['address'];
     location = json['location'];
+    latitude = json['latitude'];
+    longitude = json['longitude'];
     email = json['email'];
     phoneNumber = json['phoneNumber'];
   }
@@ -103,6 +107,8 @@ class OrganizationRequest {
     data['name'] = this.name;
     data['address'] = this.address;
     data['location'] = this.location;
+    data['longitude'] = this.longitude;
+    data['latitude'] = this.latitude;
     data['email'] = this.email;
     data['phoneNumber'] = this.phoneNumber;
     return data;

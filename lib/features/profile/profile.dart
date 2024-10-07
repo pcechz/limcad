@@ -10,7 +10,7 @@ import 'package:limcad/features/profile/model/profile_view_model.dart';
 import 'package:limcad/features/profile/profile_address.dart';
 import 'package:limcad/features/profile/profile_details.dart';
 import 'package:limcad/features/profile/referrals.dart';
-import 'package:limcad/features/wallet.dart';
+import 'package:limcad/features/wallet/wallet.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -131,7 +131,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       thickness: 0.5,
                     ).paddingSymmetric(horizontal: 16),
                   ],
-                ).hideIf(userTypeToString(widget.userType) == "PERSONAL"),
+                ).hideIf(userTypeToString(widget.userType) != "BUSINESS"),
                 ListTile(
                   onTap: () {},
                   title: const Text("Staff Management"),

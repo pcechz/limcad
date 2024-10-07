@@ -41,7 +41,8 @@ class LaundryDetailScreenState extends State<LaundryDetailScreen> {
           model.init(context, LaundryOption.about, widget.laundry);
         },
         builder: (BuildContext context, model, child) => Scaffold(
-              body: DefaultTabController(
+              body:
+              DefaultTabController(
                 length: 4,
                 child: NestedScrollView(
                   headerSliverBuilder:

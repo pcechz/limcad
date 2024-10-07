@@ -9,6 +9,7 @@ class CustomColors {
   static const limcardFaint = Color(0xFFB5CFE1);
   static const limcardSecondary = Color(0xFFDFECF5);
   static const limcardSecondary2 = Color(0xFFF3F3F3);
+  static const chatReciverBubble = Color(0xFFE3E3E3);
   static const Color backgroundColor = Color(0xFFF8F8F8);
   static const Color rpLighterGreen = Color(0xFF1CA78B);
   static const Color limcadYellow = Color(0xFFF6C61C);

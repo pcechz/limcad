@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:limcad/features/auth/services/signup_service.dart';
 import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/profile/model/profile_view_model.dart';
 import 'package:limcad/resources/locator.dart';
 import 'package:limcad/resources/routes.dart';
@@ -19,8 +20,10 @@ class GalleryWidget extends StatefulWidget {
   static String tag = '/GalleryWidget';
 
   final LaundryItem? laundry;
+  final UserType? userType;
 
-  const GalleryWidget({Key? key, this.laundry}) : super(key: key);
+  const GalleryWidget({Key? key, this.laundry, this.userType}) : super(key: key);
+
 
   @override
   _GalleryWidgetState createState() => _GalleryWidgetState();

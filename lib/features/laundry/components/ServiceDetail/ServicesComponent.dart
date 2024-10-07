@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/utils/assets/asset_util.dart';
 import 'package:limcad/resources/utils/custom_colors.dart';
@@ -12,8 +13,9 @@ class ServicesComponent extends StatefulWidget {
   static String tag = '/LSServicesComponent';
 
   final LaundryItem? laundry;
+  final UserType? userType;
 
-  const ServicesComponent({Key? key, this.laundry}) : super(key: key);
+  const ServicesComponent({Key? key, this.laundry, this.userType}) : super(key: key);
 
   @override
   ServicesComponentState createState() =>
