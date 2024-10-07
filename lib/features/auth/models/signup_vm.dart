@@ -345,11 +345,11 @@ class AuthVM extends BaseVM {
           buttonText: "Continue",
           dialogAction1: () async {
             Navigator.pop(context);
-            userType == UserType.personal
+            userType == UserType.personal || userType ==  UserType.courier
                 ? _preference.saveLoginDetails(response.data!.user!)
                 : _preference.saveBusinessLoginDetails(response.data!.user!);
             isLoading(true);
-            final profileResponse = userType == UserType.personal
+            final profileResponse = userType == UserType.personal || userType ==  UserType.courier
                 ? await locator<AuthenticationService>().getProfile()
                 : await locator<AuthenticationService>().getBusinessProfile();
             isLoading(false);
