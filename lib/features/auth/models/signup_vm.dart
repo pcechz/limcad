@@ -20,6 +20,7 @@ import 'package:limcad/features/auth/auth/signup_otp.dart';
 import 'package:limcad/features/auth/auth/signup_payment_details.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/onboarding/verify_id.dart';
+import 'package:limcad/features/wallet/services/wallet_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/api/base_response.dart';
 import 'package:limcad/resources/api/response_code.dart';
@@ -185,6 +186,7 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest ??= StaffRequest(addressRequest: []);
     onboardingRequest?.staffRequest!.addressRequest ??= [];
     onboardingRequest?.organizationRequest ??= OrganizationRequest();
+    onboardingRequest?.staffRequest!.addressRequest?.clear();
     onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
         additionalInfo: addressController.text,
         name: "Address",
@@ -198,6 +200,8 @@ class AuthVM extends BaseVM {
     onboardingRequest?.organizationRequest?.email =
         onboardingRequest?.staffRequest?.email;
     onboardingRequest?.organizationRequest?.location = addressController.text;
+    onboardingRequest?.organizationRequest?.longitude = num.tryParse(prediction?.lng ?? "000");
+    onboardingRequest?.organizationRequest?.latitude = num.tryParse(prediction?.lat ?? "000");
     onboardingRequest?.organizationRequest?.phoneNumber =
         onboardingRequest?.staffRequest?.phoneNumber;
 
@@ -206,7 +210,7 @@ class AuthVM extends BaseVM {
         .createBusinessAccount(onboardingRequest!);
     isLoading(false);
 
-    if (response.status == 200) {
+    if (response.status == 200 || response.status == 201) {
       if (context.mounted) {
         // NavigationService.pushScreen(context,
         //     screen: const HomePage("business"), withNavBar: false);
@@ -216,6 +220,8 @@ class AuthVM extends BaseVM {
         print("Sign up request: ${signupRequest?.email}");
         proceedLogin(userType, signupRequest);
       }
+    }else{
+
     }
   }
 
@@ -428,8 +434,8 @@ class AuthVM extends BaseVM {
       final response =
           await locator<AuthenticationService>().login(request, userType);
 
-      if (response.status == ResponseCode.success) {
-        await _handleSuccessfulLogin(response.data, userType);
+      if (response.status == ResponseCode.success || response.status == 201) {
+        await _handleSuccessfulLogin(response.data, userType, request);
       } else if (response.status == ResponseCode.unauthorized) {
         if (context.mounted) {
           NavigationService.pushScreen(
@@ -451,14 +457,14 @@ class AuthVM extends BaseVM {
   }
 
   Future<void> _handleSuccessfulLogin(
-      LoginResponse? data, UserType userType) async {
+      LoginResponse? data, UserType userType, SignupRequest request) async {
     if (data?.token != null) {
       await _saveToken(data!);
     }
 
     if (data?.user != null) {
       await _saveUserDetails(data!.user!, userType);
-      await _fetchAndNavigateToProfile(userType);
+      await _fetchAndNavigateToProfile(data!.user!, userType, request);
     }
   }
 
@@ -470,12 +476,16 @@ class AuthVM extends BaseVM {
   Future<void> _saveUserDetails(User user, UserType userType) async {
     if (userType == UserType.personal) {
       _preference.saveLoginDetails(user);
+      final wallet = await locator<WalletService>().createUserWallet(user.id);
+      if (wallet.data != null) {
+        _preference.saveWalletDetails(wallet.data!);
+      }
     } else {
       _preference.saveBusinessLoginDetails(user);
     }
   }
 
-  Future<void> _fetchAndNavigateToProfile(UserType userType) async {
+  Future<void> _fetchAndNavigateToProfile(User user, UserType userType, SignupRequest request) async {
     isLoading(true);
     try {
       final profileResponse = userType == UserType.personal
@@ -484,24 +494,7 @@ class AuthVM extends BaseVM {
 
       if (profileResponse.status == ResponseCode.success &&
           profileResponse.data != null) {
-        // final credential =
-        // await fireAuth.FirebaseAuth.instance.createUserWithEmailAndPassword(
-        //   email: signupRequest?.email ?? "",
-        //   password: signupRequest?.password ?? "",
-        // );
-        // await FirebaseChatCore.instance.createUserInFirestore(
-        //   types.User(
-        //     firstName: "Limcad",
-        //     id: credential.user!.uid,
-        //     imageUrl: 'https://i.pravatar.cc/300?u=${signupRequest?.email}',
-        //     lastName: "Laundry",
-        //   ),
-        // );
-        //
-        // await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
-        //   email: signupRequest?.email ?? "",
-        //   password: signupRequest?.password ?? "",
-        // );
+        signUpOrSignInFireBase(user, request);
         print("the user userType: ${userType}");
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
@@ -517,6 +510,81 @@ class AuthVM extends BaseVM {
       isLoading(false);
     }
   }
+
+  Future<void> signUpOrSignInFireBase(User user, SignupRequest request) async {
+    try {
+      // Get the current Firebase user
+      final currentUser = fireAuth.FirebaseAuth.instance.currentUser;
+
+      // Check if the current user's email matches the request email
+      if (currentUser != null && currentUser.email == request.email) {
+        print("User is already signed in with the same email: ${currentUser.email}");
+        return; // Exit as the user is already signed in
+      } else {
+        // If a different user is signed in, sign them out first
+        await fireAuth.FirebaseAuth.instance.signOut();
+      }
+
+      // Fetch sign-in methods for the email
+      List<String> signInMethods = await fireAuth.FirebaseAuth.instance
+          .fetchSignInMethodsForEmail(user.email ?? "");
+
+      if (signInMethods.isNotEmpty) {
+        // User exists, attempt to sign in
+        try {
+          final signIn = await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: user.email ?? "",
+            password: request.password ?? "", // Ensure you have the correct password
+          );
+
+          // User signed in successfully, save Firebase User ID
+          if (signIn.user != null) {
+            _preference.saveCurrentFirebaseUserID(signIn.user!);
+            print("Existing user signed in successfully: ${signIn.user!.uid}");
+          }
+        } catch (signInError) {
+          // Handle error when signing in, such as wrong password
+          print("Error during sign-in: $signInError");
+        }
+      } else {
+        // User doesn't exist, create a new account
+        final credential = await fireAuth.FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+          email: user.email ?? "",
+          password: request.password ?? "",
+        );
+
+        // Split the name into firstName and lastName
+        List<String> nameParts = (user.name ?? "").split(" ");
+        String firstName = nameParts.isNotEmpty ? nameParts[0] : "";
+        String lastName = nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "";
+        Map<String, dynamic>? metadata = user.toJson();
+
+        // Create user in Firestore for Firebase Chat
+        await FirebaseChatCore.instance.createUserInFirestore(
+          types.User(
+            firstName: firstName,
+            id: credential.user!.uid,
+            metadata: metadata,
+            imageUrl: 'https://i.pravatar.cc/300?u=${user.email}',
+            lastName: lastName,
+          ),
+        );
+
+        // Save the new Firebase user ID
+        if (credential.user != null) {
+          _preference.saveCurrentFirebaseUserID(credential.user!);
+          print("New user created and signed in successfully: ${credential.user!.uid}");
+        }
+      }
+    } on fireAuth.FirebaseAuthException catch (e) {
+      print("Error during sign up or sign in: $e");
+      if (e.code == 'email-already-in-use') {
+        _preference.saveCurrentFirebaseUserID(fireAuth.FirebaseAuth.instance.currentUser!);
+      }
+    }
+  }
+
 
   void setId(IdType idType) {
     if (idType == IdType.document) {

@@ -100,7 +100,7 @@ class AuthenticationService with ListenableServiceMixin {
               "password": staffRequest.password,
               "roleEnums": staffRequest.roleEnums,
               "userType": staffRequest.userType?.toUpperCase(),
-              "gender": staffRequest.gender,
+              "gender": staffRequest.gender?.toUpperCase(),
               "addressRequest":
                   staffRequest.addressRequest?.map((e) => e.toJson()).toList(),
             }
@@ -110,6 +110,8 @@ class AuthenticationService with ListenableServiceMixin {
               "name": organizationRequest.name,
               "address": organizationRequest.address,
               "location": organizationRequest.location,
+              "longitude": organizationRequest.longitude,
+              "latitude": organizationRequest.latitude,
               "email": organizationRequest.email,
               "phoneNumber": organizationRequest.phoneNumber,
             }

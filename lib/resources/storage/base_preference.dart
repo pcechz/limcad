@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:limcad/features/auth/models/login_response.dart';
 import 'package:limcad/features/auth/models/signup_response.dart';
+import 'package:limcad/features/wallet/models/wallet_model.dart';
 import 'package:limcad/resources/models/profile.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:firebase_auth/firebase_auth.dart' as firebaseUser;
 
 class BasePreference {
   static BasePreference? instance;
@@ -22,7 +24,9 @@ class BasePreference {
 
   static const _token = "token";
   static const _loginResponse = "loginResponse";
+  static const _walletResponse = "walletResponse";
   static const _profile = "profile";
+  static const _firebaseProfileID = "firebaseProfileID";
   static const _isRegistered = "isRegistered";
   static const _businessLoginResponse = "businessloginResponse";
   static const _hasAddedAnAboutUs = "hasAddedAnAboutUs";
@@ -55,6 +59,14 @@ class BasePreference {
     preferences.setString(_loginResponse, json.encode(profile.toJson()));
   }
 
+  void saveWalletDetails(WalletModel wallet) {
+    preferences.setString(_walletResponse, json.encode(wallet.toJson()));
+  }
+
+  void saveCurrentFirebaseUserID(firebaseUser.User user) {
+    preferences.setString(_firebaseProfileID, user.uid);
+  }
+
   void saveBusinessLoginDetails(User profile) {
     preferences.setString(
         _businessLoginResponse, json.encode(profile.toJson()));
@@ -64,6 +76,22 @@ class BasePreference {
     String? string = preferences.getString(_businessLoginResponse);
     if (string != null) {
       return User().fromJson(json.decode(string));
+    }
+    return null;
+  }
+
+  WalletModel? getWalletDetails() {
+    String? string = preferences.getString(_walletResponse);
+    if (string != null) {
+      return WalletModel().fromJson(json.decode(string));
+    }
+    return null;
+  }
+
+  String? getCurrentFirebaseUserID() {
+    String? string = preferences.getString(_firebaseProfileID);
+    if (string != null) {
+      return string;
     }
     return null;
   }

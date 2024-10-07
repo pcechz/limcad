@@ -5,6 +5,7 @@ import 'package:limcad/features/auth/services/signup_service.dart';
 import 'package:limcad/features/dashboard/dashboard_service.dart';
 import 'package:limcad/features/giftcards/services/gift_card_service.dart';
 import 'package:limcad/features/laundry/services/laundry_service.dart';
+import 'package:limcad/features/wallet/services/wallet_service.dart';
 import 'package:limcad/resources/api/api_client.dart';
 import 'package:limcad/resources/api/authentication_interceptor.dart';
 import 'package:limcad/resources/api/log_interceptor.dart';
@@ -34,6 +35,7 @@ void setupLocator({FlavorConfig? instance}) {
 
   GetIt.I.registerLazySingleton(() => AuthenticationService());
   GetIt.I.registerLazySingleton(() => LaundryService());
+  GetIt.I.registerLazySingleton(() => WalletService());
   GetIt.I.registerLazySingleton(() => DashboardService());
   GetIt.I.registerLazySingleton(() => GiftCardService());
 }

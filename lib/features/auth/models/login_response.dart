@@ -57,4 +57,5 @@ class User implements FromJson<User> {
     data['verified'] = verified;
     return data;
   }
+
 }
