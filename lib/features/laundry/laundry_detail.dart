@@ -4,6 +4,7 @@ import 'package:limcad/features/laundry/components/ServiceDetail/AboutComponent.
 import 'package:limcad/features/laundry/components/ServiceDetail/ServicesComponent.dart';
 import 'package:limcad/features/laundry/model/laundry_vm.dart';
 import 'package:limcad/features/laundry/select_clothe.dart';
+import 'package:limcad/features/onboarding/get_started.dart';
 import 'package:limcad/features/order/review.dart';
 import 'package:limcad/features/order/review_page.dart';
 import 'package:limcad/resources/routes.dart';

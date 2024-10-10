@@ -1,54 +1,25 @@
-import 'dart:math';
-
 import 'package:camera/camera.dart';
-import 'package:firebase_auth/firebase_auth.dart' as fireAuth;
 import 'package:flutter/material.dart';
-import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_places_autocomplete_text_field/model/prediction.dart';
-import 'package:limcad/features/auth/auth/business_signup.dart';
-import 'package:limcad/features/auth/auth/business_signup_continuation.dart';
-import 'package:limcad/features/auth/auth/login.dart';
-import 'package:limcad/features/auth/auth/signup.dart';
-import 'package:limcad/features/auth/models/business_onboarding_request.dart';
-import 'package:limcad/features/auth/models/login_response.dart';
-import 'package:limcad/features/auth/models/signup_request.dart';
-import 'package:limcad/features/auth/models/signup_response.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:limcad/features/auth/services/signup_service.dart';
-import 'package:limcad/features/auth/auth/create_password.dart';
-import 'package:limcad/features/auth/auth/signup_otp.dart';
-import 'package:limcad/features/auth/auth/signup_payment_details.dart';
 import 'package:limcad/features/dashboard/dashboard_service.dart';
 import 'package:limcad/features/dashboard/model/laundry_model.dart';
 import 'package:limcad/features/onboarding/get_started.dart';
-import 'package:limcad/features/onboarding/verify_id.dart';
 import 'package:limcad/resources/api/api_client.dart';
-import 'package:limcad/resources/api/base_response.dart';
-import 'package:limcad/resources/api/response_code.dart';
 import 'package:limcad/resources/base_vm.dart';
-import 'package:limcad/resources/bottom_home.dart';
 import 'package:limcad/resources/locator.dart';
-import 'package:limcad/resources/models/change_profile_response.dart';
-import 'package:limcad/resources/models/general_response.dart';
-import 'package:limcad/resources/models/profile.dart';
-import 'package:limcad/resources/models/state_model.dart';
-import 'package:limcad/resources/routes.dart';
 import 'package:limcad/resources/storage/base_preference.dart';
-import 'package:limcad/resources/utils/assets/asset_util.dart';
-import 'package:limcad/resources/utils/custom_colors.dart';
-import 'package:limcad/resources/utils/extensions/widget_extension.dart';
-import 'package:limcad/resources/widgets/view_utils/view_utils.dart';
 import 'package:logger/logger.dart';
-import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-
-import 'package:nb_utils/nb_utils.dart';
-import 'package:stacked/stacked_annotations.dart';
+import 'package:geolocator/geolocator.dart';
+import 'dart:math' show asin, cos, pi, sin, sqrt;
 
 
 
 class DashboardVM extends BaseVM {
   final apiService = locator<APIClient>();
   late BuildContext context;
+  double userLatitude = 0.0;
+  double userLongitude = 0.0;
 
   String title = "";
   String? email;
@@ -73,23 +44,85 @@ class DashboardVM extends BaseVM {
   UserType? userType;
   List<LaundryItem>? laundryOrganisations = [];
   LaundryItem? selectedOrganisation;
+  final TextEditingController searchController = TextEditingController();
+  Set<Marker> markers = {};
+  BitmapDescriptor markerIcon = BitmapDescriptor.defaultMarker;
+  late LatLng currentLocation;
+  final GlobalKey fabKey = GlobalKey();
 
   bool otpSent = false;
 
   bool isShimmerLoading = false;
 
-  void init(BuildContext context,
-      [ UserType? userT]) async {
+  Future<void> init(BuildContext context, [UserType? userT]) async  {
     userType = userT;
 
-      if(userT == UserType.personal){
-        fetchOrganisations();
-      }
-
-
-
     _preference = await BasePreference.getInstance();
+
+    if(userT == UserType.personal){
+        await getUserLocation();
+      fetchOrganisations();
+    }
   }
+
+
+  Future<void> getUserLocation() async {
+    // Check for location permissions
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied.');
+    }
+
+    // Get the current location
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    userLatitude = position.latitude;
+    userLongitude = position.longitude;
+    notifyListeners();
+  }
+
+
+
+  double calculateDistance(double lat1, double lon1, double lat2, double lon2) {
+    const R = 6371; // Radius of Earth in kilometers
+    var dLat = _degToRad(lat2 - lat1);
+    var dLon = _degToRad(lon2 - lon1);
+    var a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degToRad(lat1)) * cos(_degToRad(lat2)) *
+            sin(dLon / 2) * sin(dLon / 2);
+    var c = 2 * asin(sqrt(a));
+    return R * c;
+  }
+
+  double _degToRad(double deg) {
+    return deg * (pi / 180);
+  }
+
+
+  void setMarkersForNearbyServices() {
+    markers.clear(); // Clear existing markers
+    for (var laundry in laundryOrganisations!) {
+      markers.add(Marker(
+        markerId: MarkerId(laundry.id.toString()), // Use unique identifier
+        position: LatLng(laundry.latitude!, laundry.longitude!),
+        infoWindow: InfoWindow(title: laundry.name),
+      ));
+    }
+    notifyListeners(); // Notify listeners to update UI
+  }
+
 
 
   void fetchOrganisations() async {
@@ -98,10 +131,16 @@ class DashboardVM extends BaseVM {
       notifyListeners();
 
       final response = await locator<DashboardService>().getLaundryServices();
-      Logger().i("Response received: $response");
-
       if (response?.data?.items != null && response!.data!.items!.isNotEmpty) {
-        laundryOrganisations = response.data!.items!.reversed.toList();
+        laundryOrganisations = response.data!.items!.map((laundry) {
+          double distance = calculateDistance(
+              userLatitude, userLongitude, laundry.latitude!, laundry.longitude!);
+          laundry.distance = distance; // Store the calculated distance in km
+          return laundry;
+        }).toList();
+
+        // Sort by distance (closest first)
+        laundryOrganisations!.sort((a, b) => a.distance!.compareTo(b.distance!));
       } else {
         laundryOrganisations = [];
       }

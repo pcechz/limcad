@@ -50,6 +50,8 @@ class LaundryItem {
   String? phoneNumber;
   LaundryAbout? laundryAbout;
   String? logoPath;
+  double? distance;
+
 
   LaundryItem({
     this.address,
@@ -62,6 +64,8 @@ class LaundryItem {
     this.phoneNumber,
     this.laundryAbout,
     this.logoPath,
+    this.distance,
+
   });
 
   factory LaundryItem.fromJson(Map<String, dynamic> json) {

@@ -44,7 +44,7 @@ class _MessagesScreenState extends State<MessagesScreen> {
     getPref() async {
     BasePreference _preference = await BasePreference.getInstance();
         setState(() {
-          receiverId = _preference.getCurrentFirebaseUserID() ?? "";
+          receiverId = _preference.getProfileDetails()?.id.toString() ?? "";
         });
   }
 

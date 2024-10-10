@@ -63,9 +63,9 @@ class BasePreference {
     preferences.setString(_walletResponse, json.encode(wallet.toJson()));
   }
 
-  void saveCurrentFirebaseUserID(firebaseUser.User user) {
-    preferences.setString(_firebaseProfileID, user.uid);
-  }
+  // void saveCurrentFirebaseUserID(firebaseUser.User user) {
+  //   preferences.setString(_firebaseProfileID, user.uid);
+  // }
 
   void saveBusinessLoginDetails(User profile) {
     preferences.setString(
@@ -88,13 +88,13 @@ class BasePreference {
     return null;
   }
 
-  String? getCurrentFirebaseUserID() {
-    String? string = preferences.getString(_firebaseProfileID);
-    if (string != null) {
-      return string;
-    }
-    return null;
-  }
+  // String? getCurrentFirebaseUserID() {
+  //   String? string = preferences.getString(_firebaseProfileID);
+  //   if (string != null) {
+  //     return string;
+  //   }
+  //   return null;
+  // }
 
   User? getLoginDetails() {
     String? string = preferences.getString(_loginResponse);

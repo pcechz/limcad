@@ -103,13 +103,23 @@ class ServiceItemWidgetState extends State<ServiceItemWidget> {
               ],
             ),
             Text(widget.dataModel.name ?? "", overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500)).padding(left: 8, bottom: 4),
+            // SizedBox(
+            //   width: 178,
+            //   child: Text(widget.dataModel?.address ?? "",
+            //       overflow: TextOverflow.ellipsis,
+            //       maxLines: 1,
+            //       style: secondaryTextStyle(
+            //           color: Colors.black38, size: 14)).padding(left: 8, bottom: 4),
+            // ),
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Row(
                 children: [
                   Icon(Icons.location_on,
                       color: CustomColors.limcadPrimary, size: 14),
-                  Text("0.5km", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: grey)).padding(left: 2),
-
+                  Text(
+                    "${widget.dataModel.distance?.toStringAsFixed(2) ?? ''} km",
+                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: grey),
+                  ).padding(left: 2),
                 ],
               ),
 
@@ -117,16 +127,32 @@ class ServiceItemWidgetState extends State<ServiceItemWidget> {
                 children: [
                   Icon(Icons.access_time_filled_rounded,
                       color: CustomColors.limcadPrimary, size: 14),
-                  Text("2 min", style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: grey)).padding(left: 2),
+                  Text(calculateTimeToPlace(widget.dataModel.distance ?? 0.0), style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: grey)).padding(left: 2),
 
                 ],
               ),
-            ],).padding(right: 59, left: 8),
+            ],).padding(right: 8, left: 8),
             Text("N1,000-N5,000", overflow: TextOverflow.ellipsis, maxLines: 2, style: TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: CustomColors.limcadPrimary)).padding(left: 8, bottom: 8, top: 8),
 
           ],
         ),
       ),
     );
+  }
+
+
+  String calculateTimeToPlace(double distanceInKm, {double speedInKmPerHour = 60}) {
+    // Calculate time in hours
+    double timeInHours = distanceInKm / speedInKmPerHour;
+
+    // Convert hours to minutes
+    int hours = timeInHours.floor();
+    int minutes = ((timeInHours - hours) * 60).round();
+
+    if (hours > 0) {
+      return "$hours hr ${minutes > 0 ? "$minutes min" : ""}";
+    } else {
+      return "$minutes min";
+    }
   }
 }
