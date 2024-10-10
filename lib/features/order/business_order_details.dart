@@ -16,9 +16,10 @@ import 'package:stacked/stacked.dart';
 
 class BusinessOrdersDetailsPage extends StatefulWidget {
   static const String routeName = "/BusinessOrdersDetailsPage";
-final LaundryOrder? order;
+  final LaundryOrder? order;
   const BusinessOrdersDetailsPage({
-    Key? key, this.order,
+    Key? key,
+    this.order,
   }) : super(key: key);
 
   @override
@@ -36,7 +37,8 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
       onViewModelReady: (model) {
         this.model = model;
         model.context = context;
-        model.init(context, LaundryOption.businessOrderDetails, null,  widget.order?.id);
+        model.init(context, LaundryOption.businessOrderDetails, null,
+            widget.order?.id);
       },
       builder: (BuildContext context, model, child) => DefaultScaffold2(
         showAppBar: true,
@@ -68,7 +70,8 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                         'Email':
                             "${model.businessOrderDetails?.customer?.email}",
                         'Rating': "4.5",
-                        'Verified payment': "₦${model.businessOrderDetails?.amountPaid}",
+                        'Verified payment':
+                            "₦${model.businessOrderDetails?.amountPaid}",
                       }).paddingSymmetric(vertical: 16, horizontal: 16)
                     ],
                   )).paddingBottom(24),
@@ -81,9 +84,7 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                   child: Column(
                     children: [
                       ViewUtil.orderInfo(
-                              'Order info',
-                              model.orderItems,
-                              model.totalPrice)
+                              'Order info', model.orderItems, model.totalPrice)
                           .paddingSymmetric(vertical: 16, horizontal: 16),
                     ],
                   )).paddingBottom(16),
@@ -108,31 +109,86 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                           fontSize: 16,
                           color: Colors.black,
                         )),
-                    SizedBox(
-                      width: 80,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          _showBottomSheet(context, model.businessOrderDetails);
-                        },
-                        style: ElevatedButton.styleFrom(
-                          foregroundColor: CustomColors.limcadPrimary,
-                          backgroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(color: CustomColors.limcadPrimary),
+                    // SizedBox(
+                    //   width: 140,
+                    //   child: ElevatedButton(
+                    //     onPressed: () {
+                    //       _showBottomSheet(context, model.businessOrderDetails);
+                    //     },
+                    //     style: ElevatedButton.styleFrom(
+                    //       foregroundColor: CustomColors.limcadPrimary,
+                    //       backgroundColor: Colors.white,
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(30.0),
+                    //         side: BorderSide(color: CustomColors.limcadPrimary),
+                    //       ),
+                    //       // padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                    //     ),
+                    //     child: Text(
+                    //       model.businessOrderDetails?.status == "COMPLETED"
+                    //           ? 'Ready to deliver'
+                    //           : 'Update',
+                    //       overflow: TextOverflow.visible,
+                    //       style: const TextStyle(
+                    //         fontWeight: FontWeight.w500,
+                    //         fontSize: 14,
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+
+                    // Display the "Update" button
+                    if (model.businessOrderDetails?.status != "COMPLETED")
+                      SizedBox(
+                        width: 80,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _showBottomSheet(
+                                context, model.businessOrderDetails);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: CustomColors.limcadPrimary,
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                              side:
+                                  BorderSide(color: CustomColors.limcadPrimary),
+                            ),
                           ),
-                          // padding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
-                        ),
-                        child: const Text(
-                          'Update',
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14,
+                          child: const Text(
+                            'Update',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 14,
+                            ),
                           ),
                         ),
                       ),
-                    ),
+
+                    // Display the "Ready to deliver" button when the status is "Completed"
+                    if (model.businessOrderDetails?.status == "COMPLETED")
+                      SizedBox(
+                        width: 150,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // You can add functionality here for the "Ready to deliver" button
+                            print("Order is ready to deliver!");
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: CustomColors.limcadPrimary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0, vertical: 16.0),
+                          ),
+                          child: const Text(
+                            'Ready to deliver',
+                            style: TextStyle(fontSize: 14, color: Colors.white),
+                          ),
+                        ),
+                      ),
                   ],
                 ).paddingSymmetric(vertical: 16, horizontal: 16),
               )
@@ -143,7 +199,8 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
     );
   }
 
-  void _showBottomSheet(BuildContext context, BusinessOrderDetailResponse? businessOrderDetails) {
+  void _showBottomSheet(
+      BuildContext context, BusinessOrderDetailResponse? businessOrderDetails) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -195,7 +252,8 @@ class _BusinessOrdersDetailsPageState extends State<BusinessOrdersDetailsPage> {
                     child: ElevatedButton(
                       onPressed: () {
                         Navigator.pop(context);
-                        model.updateStatus(model.orderStatus, businessOrderDetails);
+                        model.updateStatus(
+                            model.orderStatus, businessOrderDetails);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: CustomColors.limcadPrimary,

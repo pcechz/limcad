@@ -168,7 +168,8 @@ class AuthVM extends BaseVM {
     signupRequest?.addressRequest?.add(AddressRequest(
         additionalInfo: addressController.text,
         name: "Main Address",
-        lgaRequest: LgaRequest(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
+        lgaRequest: LgaRequest(
+            lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
 
     print('Signup Request: ${signupRequest?.toJson()}');
 
@@ -190,7 +191,8 @@ class AuthVM extends BaseVM {
     onboardingRequest?.staffRequest!.addressRequest?.add(AddressRequest(
         additionalInfo: addressController.text,
         name: "Address",
-        lgaRequest: LgaRequest(lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
+        lgaRequest: LgaRequest(
+            lgaId: selectedLGA?.id?.lgaId, stateId: selectedState?.stateId)));
     onboardingRequest?.staffRequest?.gender = gender;
     onboardingRequest?.staffRequest?.roleEnums = ["ADMINISTRATOR"];
     onboardingRequest?.staffRequest?.userType = userType?.name.toString();
@@ -202,6 +204,10 @@ class AuthVM extends BaseVM {
     onboardingRequest?.organizationRequest?.location = addressController.text;
     onboardingRequest?.organizationRequest?.phoneNumber =
         onboardingRequest?.staffRequest?.phoneNumber;
+    onboardingRequest?.organizationRequest?.longitude =
+        num.tryParse(prediction?.lng ?? "000");
+    onboardingRequest?.organizationRequest?.latitude =
+        num.tryParse(prediction?.lat ?? "000");
 
     isLoading(true);
     final response = await locator<AuthenticationService>()
@@ -345,11 +351,12 @@ class AuthVM extends BaseVM {
           buttonText: "Continue",
           dialogAction1: () async {
             Navigator.pop(context);
-            userType == UserType.personal || userType ==  UserType.courier
+            userType == UserType.personal || userType == UserType.courier
                 ? _preference.saveLoginDetails(response.data!.user!)
                 : _preference.saveBusinessLoginDetails(response.data!.user!);
             isLoading(true);
-            final profileResponse = userType == UserType.personal || userType ==  UserType.courier
+            final profileResponse = userType == UserType.personal ||
+                    userType == UserType.courier
                 ? await locator<AuthenticationService>().getProfile()
                 : await locator<AuthenticationService>().getBusinessProfile();
             isLoading(false);
@@ -359,8 +366,7 @@ class AuthVM extends BaseVM {
               if (context.mounted) {
                 Navigator.pushAndRemoveUntil(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => HomePage(userType)),
+                    MaterialPageRoute(builder: (context) => HomePage(userType)),
                     (Route<dynamic> route) => false);
                 // NavigationService.pushScreen(context,
                 //     screen: HomePage(userType), withNavBar: false);
@@ -544,7 +550,8 @@ class AuthVM extends BaseVM {
     }
   }
 
-  Future<void> _fetchAndNavigateToProfile(User user, UserType userType, SignupRequest request) async {
+  Future<void> _fetchAndNavigateToProfile(
+      User user, UserType userType, SignupRequest request) async {
     isLoading(true);
     try {
       final profileResponse = userType == UserType.personal
@@ -558,9 +565,8 @@ class AuthVM extends BaseVM {
         if (context.mounted) {
           Navigator.pushAndRemoveUntil(
               context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage(userType)),
-                  (Route<dynamic> route) => false);
+              MaterialPageRoute(builder: (context) => HomePage(userType)),
+              (Route<dynamic> route) => false);
         }
       } else {
         throw Exception('Failed to fetch user profile');
@@ -577,7 +583,8 @@ class AuthVM extends BaseVM {
 
       // Check if the current user's email matches the request email
       if (currentUser != null && currentUser.email == request.email) {
-        print("User is already signed in with the same email: ${currentUser.email}");
+        print(
+            "User is already signed in with the same email: ${currentUser.email}");
         return; // Exit as the user is already signed in
       } else {
         // If a different user is signed in, sign them out first
@@ -591,9 +598,11 @@ class AuthVM extends BaseVM {
       if (signInMethods.isNotEmpty) {
         // User exists, attempt to sign in
         try {
-          final signIn = await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
+          final signIn =
+              await fireAuth.FirebaseAuth.instance.signInWithEmailAndPassword(
             email: user.email ?? "",
-            password: request.password ?? "", // Ensure you have the correct password
+            password:
+                request.password ?? "", // Ensure you have the correct password
           );
 
           // User signed in successfully, save Firebase User ID
@@ -607,8 +616,8 @@ class AuthVM extends BaseVM {
         }
       } else {
         // User doesn't exist, create a new account
-        final credential = await fireAuth.FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
+        final credential =
+            await fireAuth.FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: user.email ?? "",
           password: request.password ?? "",
         );
@@ -616,7 +625,8 @@ class AuthVM extends BaseVM {
         // Split the name into firstName and lastName
         List<String> nameParts = (user.name ?? "").split(" ");
         String firstName = nameParts.isNotEmpty ? nameParts[0] : "";
-        String lastName = nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "";
+        String lastName =
+            nameParts.length > 1 ? nameParts.sublist(1).join(" ") : "";
         Map<String, dynamic>? metadata = user.toJson();
 
         // Create user in Firestore for Firebase Chat
@@ -633,17 +643,18 @@ class AuthVM extends BaseVM {
         // Save the new Firebase user ID
         if (credential.user != null) {
           _preference.saveCurrentFirebaseUserID(credential.user!);
-          print("New user created and signed in successfully: ${credential.user!.uid}");
+          print(
+              "New user created and signed in successfully: ${credential.user!.uid}");
         }
       }
     } on fireAuth.FirebaseAuthException catch (e) {
       print("Error during sign up or sign in: $e");
       if (e.code == 'email-already-in-use') {
-        _preference.saveCurrentFirebaseUserID(fireAuth.FirebaseAuth.instance.currentUser!);
+        _preference.saveCurrentFirebaseUserID(
+            fireAuth.FirebaseAuth.instance.currentUser!);
       }
     }
   }
-
 
   void setId(IdType idType) {
     if (idType == IdType.document) {
@@ -676,19 +687,19 @@ class AuthVM extends BaseVM {
   void goToHome() {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(
-            builder: (context) => HomePage(userType)),
-            (Route<dynamic> route) => false);
+        MaterialPageRoute(builder: (context) => HomePage(userType)),
+        (Route<dynamic> route) => false);
   }
 
-   setStateValue(String value) async {
-    selectedState = states.firstWhere((element) => element.stateName?.toLowerCase() == value.toLowerCase() );
+  setStateValue(String value) async {
+    selectedState = states.firstWhere(
+        (element) => element.stateName?.toLowerCase() == value.toLowerCase());
     if (selectedState != null) {
       getStateID(selectedState?.stateId);
       isLoading(true);
       try {
-        final response =
-            await locator<AuthenticationService>().getLGAs(selectedState?.stateId);
+        final response = await locator<AuthenticationService>()
+            .getLGAs(selectedState?.stateId);
         if (response.data != null && response.data!.isNotEmpty) {
           lgas.addAll(response.data!.toList());
         } else {
@@ -743,14 +754,15 @@ class AuthVM extends BaseVM {
   }
 
   changePassword() async {
-
     isLoading(true);
-    final response = await locator<AuthenticationService>()
-        .changePassword(emailController.text,  otpController.text, userType!.name, password.text);
+    final response = await locator<AuthenticationService>().changePassword(
+        emailController.text,
+        otpController.text,
+        userType!.name,
+        password.text);
     isLoading(false);
     if (response.status == ResponseCode.success ||
         response.status == ResponseCode.success04) {
-
       // ignore: use_build_context_synchronously
       ViewUtil.showDynamicDialogWithButton(
           barrierDismissible: false,
@@ -790,14 +802,11 @@ class AuthVM extends BaseVM {
           dialogAction1: () async {
             Navigator.pop(context);
             NavigationService.pushScreen(context,
-                screen:
-                 LoginPage(theUsertype: userType),
-                withNavBar: false);
-
+                screen: LoginPage(theUsertype: userType), withNavBar: false);
           });
 
       notifyListeners();
-    }else{
+    } else {
       ViewUtil.showSnackBar(response.message ?? "An error occurred", true);
     }
   }
